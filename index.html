@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -81,13 +81,13 @@
 
 <meta name="description" content="The unfed mind devours itself.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Li Zehao">
+<meta property="og:title" content="Li Zehao&#39; Blog">
 <meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="Li Zehao">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
 <meta property="og:description" content="The unfed mind devours itself.">
 <meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Li Zehao">
+<meta name="twitter:title" content="Li Zehao&#39; Blog">
 <meta name="twitter:description" content="The unfed mind devours itself.">
 
 
@@ -96,7 +96,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Mist',
+    scheme: 'Muse',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -124,7 +124,7 @@
 
 
 
-  <title>Li Zehao</title>
+  <title>Li Zehao' Blog</title>
   
 
 
@@ -155,7 +155,7 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Li Zehao</span>
+        <span class="site-title">Li Zehao' Blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -271,7 +271,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="name" content="Li Zehao' Blog">
     </span>
 
     
@@ -333,7 +333,92 @@
       
         
           
-            
+            <hr>
+<h3 id="1-博客环境配置"><a href="#1-博客环境配置" class="headerlink" title="1.博客环境配置"></a>1.博客环境配置</h3><hr>
+<ul>
+<li><strong>安装homebrew</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>安装git</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install git</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>安装nodejs</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install node</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>检查nodejs和git版本</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git --version</span><br><span class="line">node -v</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>安装Hexo</strong><br>按照几个博客安装hexo都失败了，最后按照这个官方文档安装成功<br>Hexo文档<a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener">https://hexo.io/zh-cn/</a><br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p27" alt="e18d7c4bee75b1f48f6fc58d1d98cdb0.png"><br>安装完可以看到自定义的博客文件夹内的文件：<br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p25" alt="c002f10965411d6aa23085b5bf70a911.png"><br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p26" alt="31622a0cfb6d18296cd983a740563a1c.png"><br><strong>文件功能介绍</strong></p>
+<blockquote>
+<p>_config.yml<br>网站的 配置 信息，您可以在此配置大部分的参数。<br>package.json<br>应用程序的信息。</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>scaffolds<br>模版 文件夹。当您新建文章时，Hexo 会根据 scaffold 来建立文件。<br>Hexo的模板是指在新建的markdown文件中默认填充的内容。例如，如果您修改scaffold/post.md中的Front-matter内容，那么每次新建一篇文章时都会包含这个修改。</p>
+</blockquote>
+<blockquote>
+<p>source<br>资源文件夹是存放用户资源的地方。除_posts 文件夹之外，开头命名为 _ (下划线)的文件 / 文件夹和隐藏的文件将会被忽略。Markdown 和 HTML 文件会被解析并放到 public 文件夹，而其他文件会被拷贝过去。<br>themes<br>主题 文件夹。Hexo 会根据主题来生成静态页面。</p>
+</blockquote>
+<hr>
+<h3 id="2-搭建博客"><a href="#2-搭建博客" class="headerlink" title="2.搭建博客"></a>2.搭建博客</h3><hr>
+<p><strong>Hexo几个重要命令</strong></p>
+<blockquote>
+<p>generate<br>$ hexo generate<br>生成静态文件。<br>简写为：<br>$ hexo g</p>
+</blockquote>
+<blockquote>
+<p>publish<br>$ hexo publish [layout] <filename><br>发表草稿。</filename></p>
+</blockquote>
+<blockquote>
+<p>server<br>$ hexo server<br>启动服务器。默认情况下，访问网址为： <a href="http://localhost:4000/。" target="_blank" rel="noopener">http://localhost:4000/。</a></p>
+</blockquote>
+<blockquote>
+<p>deploy<br>$ hexo deploy<br>部署网站。<br>该命令可以简写为：<br>$ hexo d</p>
+</blockquote>
+<p>输入命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+<p>打开<a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a><br>可以看到如下界面<br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p28" alt="e972ea88c6d3b3d22ada7fd68bdfb7dd.png"></p>
+<hr>
+<h3 id="3-选择主题"><a href="#3-选择主题" class="headerlink" title="3.选择主题"></a>3.选择主题</h3><hr>
+<p>首先在Hexo官方主题页中下载<br><a href="https://hexo.io/themes/" target="_blank" rel="noopener">https://hexo.io/themes/</a></p>
+<p><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p29" alt="2ae24e540c5683fe2d3d587f3b70f047.png"><br>找到一个自己喜欢的，然后点进去，找到Github链接,<br>我是用的这个主题，点进去按照下面的安装步骤安装即可。<br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p30" alt="975e541fd48eeef9362f81034277629f.png"><br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p31" alt="39b92ba92bcb66fe9a38291cb45d94c6.png"></p>
+<p>配置的时候出现了好几个错误，<br>主要是权限的错误，还有hexo命令错误，（命令一定要在hexo自定义的那个文件内执行，先cd folder）百度google解决了，最后生成的画面如下<br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p32" alt="6bb4fc4705b0758242a49b295cbaa290.png"></p>
+<hr>
+<h3 id="4-关联Github"><a href="#4-关联Github" class="headerlink" title="4.关联Github"></a>4.关联Github</h3><hr>
+<p><strong>1.注册github</strong>，创建名为username.github.io的仓库，如<br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p33" alt="c503275e1d3d9ee0f5a908f8aeefbe1d.png"></p>
+<p><strong>2.进入myblog文件内找到_config.yml</strong><br>在最后一行把deploy后面改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">type:git</span><br><span class="line">repository: https://github.com/zibinanhai/zibinanhai.github.io.git</span><br><span class="line">branch: master</span><br></pre></td></tr></table></figure></p>
+<p>其中zibinanhai/zibinanhai.github.io改为自己用户名</p>
+<p>注意：所有的冒号后面都要确认有一个空格，否则会出现类似这样的错误：<br>FATAL bad indentation of a mapping entry at line 82, column 13:<br>repository: <a href="https://github.com/zibinanhai/" target="_blank" rel="noopener">https://github.com/zibinanhai/</a> …<br><strong>3.执行</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure></p>
+<p>若执行hexo g出错则执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo --save</span><br></pre></td></tr></table></figure></p>
+<p>若执行hexo d出错则执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure></p>
+<p>错误修正后再次执行hexo g和hexo d上传到服务器。<br>（我执行这两个命令失败，在前面加了sudo后解决）</p>
+<p><strong>注意：</strong>如果是第一次关联github，会出现这个画面：<br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p34" alt="207f39f23a841db6656114a065b0a149.png"><br>按照提示输入github邮箱和用户名：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config -globaluser.email&quot;you@example.com&quot;</span><br><span class="line">git config --global user.name &quot;Your Name&quot;</span><br></pre></td></tr></table></figure></p>
+<p>然后继续hexo d，输入用户名和密码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username for &apos;https://github.com&apos;:</span><br><span class="line">password for &apos;https://github.com&apos;:</span><br></pre></td></tr></table></figure></p>
+<p>hexo d执行成功后便可通过<a href="https://zibinanhai.github.io访问博客，和http://localhost:4000本地内容相同。" target="_blank" rel="noopener">https://zibinanhai.github.io访问博客，和http://localhost:4000本地内容相同。</a></p>
+<p><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p35" alt="c9d5697ae9474ea86f4654a295f5f2dc.png"></p>
+<hr>
+<h3 id="5-添加ssh-keys"><a href="#5-添加ssh-keys" class="headerlink" title="5.添加ssh keys"></a>5.添加ssh keys</h3><hr>
+<p>添加ssh keys更新博客的时候不用输入用户名和密码，输入以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your_email@exampl&quot;</span><br></pre></td></tr></table></figure></p>
+<p>成功运行后可以看见</p>
+<p><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p36" alt="08981e9c18460bac283a40c2896c84b6.png"><br>然后进入文件夹<br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p37" alt="49824ba83fdb6ea62621b854890a95aa.png"><br>打开<img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p38" alt="47f5975af7dcc0e577f15fb3c92f96d7.png"><br>把里面的信息复制进GitHub的Add ssh key路径GitHub-&gt;Setting-&gt;SSH keys-&gt;add SSH key中即可。<br>Title里填写任意标题，将复制的内容粘贴到key中，点击Add key完成添加。<br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p39" alt="78ab28a5b4f7037d989ed203c30f1c82.png"><br>出现这个页面就OK</p>
+<hr>
+<h3 id="6-绑定个人域名"><a href="#6-绑定个人域名" class="headerlink" title="6.绑定个人域名"></a>6.绑定个人域名</h3><hr>
+<p>目前博客的地址是username.github.io，我们也可以绑定自己的域名。</p>
+<p>首先现在阿里云等网站买一个域名<br><strong>第一次买域名的同学注意，域名买了后先要进行实名认证后才能使用</strong>，刚开始DNS一直错误我还不知道怎么回事。</p>
+<p>实名认证好了以后，进入博客项目中的source文件夹，添加CNAME文件，里面写上自己购买的域名。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd myblog/source</span><br><span class="line">echo lizehao.info &gt; CNAME</span><br></pre></td></tr></table></figure></p>
+<p>然后清理缓存发布<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo hexo clean</span><br><span class="line">sudo hexo g -d</span><br></pre></td></tr></table></figure></p>
+<p>然后进入github中博客项目的setting界面，看底下Githubpages，看域名是否正确，如下图<br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p40" alt="12b8c0656ceb1c14683b54e90cb88707.png"><br>最后在购买域名的网站里，添加一条记录即可<br><img src="evernotecid://D38DE260-AAD4-4BA6-99A1-1DD4B6162ABA/appyinxiangcom/22984557/ENResource/p41" alt="a1854d350a4c6a9cc7e4152458527f82.png"></p>
+<p>记录值写上自己github博客默认地址。</p>
+<p>过20分钟后打开自己的域名就好了。</p>
+<hr>
+<h3 id="7-Next配置"><a href="#7-Next配置" class="headerlink" title="7.Next配置"></a>7.Next配置</h3><hr>
+<p>关于主题配置参考Next官网和一些博客，写的详细些：  </p>
+<blockquote>
+<p><a href="http://theme-next.iissnan.com/" target="_blank" rel="noopener">http://theme-next.iissnan.com/</a><br><a href="https://segmentfault.com/p/1210000009545001/read" target="_blank" rel="noopener">https://segmentfault.com/p/1210000009545001/read</a></p>
+</blockquote>
+<p><strong>注意：配置cofig文件时冒号后面要加一个空格，否则会出错</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">can not read a block mapping entry; a multiline key may not be an implicit key at line 14, column 1:</span><br></pre></td></tr></table></figure></p>
+
           
         
       
@@ -390,7 +475,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="name" content="Li Zehao' Blog">
     </span>
 
     
@@ -609,7 +694,7 @@
 
 
 
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
 
 
 
