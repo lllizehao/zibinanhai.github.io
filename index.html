@@ -289,6 +289,156 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://lizehao.info/HEXO写作/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/kaws1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/HEXO写作/" itemprop="url">HEXO写作</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-25T19:01:04+08:00">
+                2019-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这篇文章讲了用HEXO写博客的步骤，以及如何插入图片。</p>
+<p>&lt;! – more –&gt;</p>
+<h1 id="HEXO写作"><a href="#HEXO写作" class="headerlink" title="HEXO写作"></a>HEXO写作</h1><hr>
+<h2 id="新建文档"><a href="#新建文档" class="headerlink" title="新建文档"></a>新建文档</h2><p><code>$ hexo new &quot;article title&quot;</code></p>
+<p>上述命令的结果是在<strong>/hexo/source/_posts</strong>路径下新建了</p>
+<h2 id="一个article-md文件，然后就可以打开编辑器写作了。"><a href="#一个article-md文件，然后就可以打开编辑器写作了。" class="headerlink" title="一个article.md文件，然后就可以打开编辑器写作了。"></a>一个article.md文件，然后就可以打开编辑器写作了。</h2><h2 id="文档格式"><a href="#文档格式" class="headerlink" title="文档格式"></a>文档格式</h2><p>新建文档后打开article.md文件，里面已经有以下内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: JAVA基础</span><br><span class="line">date: 2019-03-20 18:51:09</span><br><span class="line">tags:</span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
+<p>这些内容是 MarkDown 文档在被解析为静态网页文件时的相关配置，这些配置参数一般位于文件中最上方以——分隔的区域。</p>
+<ul>
+<li>title是文件名。也是网页显示的文章标题。</li>
+<li>date是建文档的当地时区时间</li>
+<li>tags可以用-开头为文章添加标签，如：<br>-Markdown<br>当文档被解析为静态网页后就可以看到效果</li>
+</ul>
+<hr>
+<h2 id="文章分类"><a href="#文章分类" class="headerlink" title="文章分类"></a>文章分类</h2><h2 id="Categories是文章的分类，和标签不一样的是，分类和目录一样是有层次性的，比如，JAVA-JVM"><a href="#Categories是文章的分类，和标签不一样的是，分类和目录一样是有层次性的，比如，JAVA-JVM" class="headerlink" title="Categories是文章的分类，和标签不一样的是，分类和目录一样是有层次性的，比如，JAVA/JVM "></a>Categories是文章的分类，和标签不一样的是，分类和目录一样是有层次性的，比如，JAVA/JVM </h2><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>手动设置文章摘要，只需要写上摘要并在后面加上<br><!-- more —>即可，如：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: JAVA基础</span><br><span class="line">date: 2019-03-20 18:51:09</span><br><span class="line">tags:</span><br><span class="line">- Markdown</span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">这是一个摘要</span><br><span class="line"></span><br><span class="line">&lt;!-- more --&gt;</span><br><span class="line"></span><br><span class="line">正文</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a>插入图片</h2><ul>
+<li><p>首先配置根目录下的_config.yml文件：<br>把<br><code>post_asset_folder : false</code><br>改为<br><code>post_asset_folder : true</code></p>
+</li>
+<li><p>现在我们再hexo new “title”后，source/_post下就会出现文章同名的一个文件夹，我们可以把图片或者别的资源放进这个文件夹方便引用</p>
+</li>
+<li><p>现在引用图片用<br><code>![](image.jpg)</code></p>
+</li>
+<li><p>如果希望图片出现在首页，则用：<br><code></code></p>
+</li>
+</ul>
+<hr>
+<h2 id="生成文件"><a href="#生成文件" class="headerlink" title="生成文件"></a>生成文件</h2><ul>
+<li>为了避免错误，生成静态文件前，先运行以下命令来清除缓存：<br><code>$ hexo clean</code></li>
+<li>然后生成静态文件：<br><code>$ hexo generate</code></li>
+</ul>
+--></p>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://lizehao.info/GithubPages-Hexo-Next搭建个人技术博客/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -402,132 +552,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://lizehao.info/hello-world/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Li Zehao">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/kaws1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Li Zehao' Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-31T01:38:51+08:00">
-                2018-12-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
-<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/hello-world/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -584,6 +608,15 @@
 
             
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
             
 
           </nav>
