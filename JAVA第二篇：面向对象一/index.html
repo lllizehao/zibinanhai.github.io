@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JAVA,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本篇文章主要总结了面向对象、类和对象、Java存储区域、封装、继承等基础知识。">
+<meta name="keywords" content="JAVA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA第二篇：面向对象一">
+<meta property="og:url" content="http://lizehao.info/JAVA第二篇：面向对象一/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本篇文章主要总结了面向对象、类和对象、Java存储区域、封装、继承等基础知识。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://lizehao.info/JAVA第二篇：面向对象一/变量分类.jpg">
+<meta property="og:image" content="http://lizehao.info/JAVA第二篇：面向对象一/访问权限.jpg">
+<meta property="og:updated_time" content="2020-05-23T18:40:49.536Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JAVA第二篇：面向对象一">
+<meta name="twitter:description" content="前言 本篇文章主要总结了面向对象、类和对象、Java存储区域、封装、继承等基础知识。">
+<meta name="twitter:image" content="http://lizehao.info/JAVA第二篇：面向对象一/变量分类.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://lizehao.info/JAVA第二篇：面向对象一/">
+
+
+
+
+
+  <title>JAVA第二篇：面向对象一 | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://lizehao.info/JAVA第二篇：面向对象一/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JAVA第二篇：面向对象一</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-12T04:19:39+08:00">
+                2020-04-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章主要总结了面向对象、类和对象、Java存储区域、封装、继承等基础知识。</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="面向对象OOP（一）"><a href="#面向对象OOP（一）" class="headerlink" title="面向对象OOP（一）"></a>面向对象OOP（一）</h1><hr>
+<h2 id="1-面向对象概述"><a href="#1-面向对象概述" class="headerlink" title="1.面向对象概述"></a>1.面向对象概述</h2><h3 id="面向对象和面向过程区别"><a href="#面向对象和面向过程区别" class="headerlink" title="面向对象和面向过程区别"></a>面向对象和面向过程区别</h3><p>面向对象是交给对象去做（java），面向过程是自己一步一步做（c）<br>如：前者是去饭店吃饭，让别人做。后者是自己一步一步买菜做饭<br>前者是把脏衣服给别人洗。后者是自己一步一步洗衣服 </p>
+<p>面向对象思想特点**<br>将我们从执行者变成了指挥者 </p>
+<h3 id="面向对象开发"><a href="#面向对象开发" class="headerlink" title="面向对象开发"></a>面向对象开发</h3><p>不断的创造对象、使用对象、指挥对象做事。 </p>
+<h3 id="面向对象特征"><a href="#面向对象特征" class="headerlink" title="面向对象特征"></a>面向对象特征</h3><p><strong>encapsulation</strong>封装<br><strong>inheritance</strong>继承<br><strong>polymorphism</strong>多态 </p>
+<h2 id="2-类、对象"><a href="#2-类、对象" class="headerlink" title="2. 类、对象"></a>2. 类、对象</h2><hr>
+<h3 id="类简介"><a href="#类简介" class="headerlink" title="类简介"></a>类简介</h3><ul>
+<li>类（class）是构造对象的模板，由类构造（constrist）对象的过程叫做”创建类的实例”</li>
+<li>封装是把数据和行为装在一个包里，对象的使用者不需要了解内部细节</li>
+<li>对象中的数据称为实例域（instance fields）</li>
+<li>操纵数据的过程成为方法（method）</li>
+<li>每个对象都有一组特定的实例域值，这些值的集合就是这个对象的当前状态（state）</li>
+</ul>
+<h3 id="对象的三个特征"><a href="#对象的三个特征" class="headerlink" title="对象的三个特征"></a>对象的三个特征</h3><ol>
+<li>行为 behavior</li>
+<li>状态 state</li>
+<li>标识 identity</li>
+</ol>
+<h3 id="OOP编程：首先设计类-然后往每个类中添加方法"><a href="#OOP编程：首先设计类-然后往每个类中添加方法" class="headerlink" title="OOP编程：首先设计类 然后往每个类中添加方法"></a>OOP编程：首先设计类 然后往每个类中添加方法</h3><h3 id="类之间的关系"><a href="#类之间的关系" class="headerlink" title="类之间的关系"></a>类之间的关系</h3><ol>
+<li>依赖  use-a的关系，最常见的关系，应该尽可能减少依赖，让类之间耦合度最小</li>
+<li>聚合 has-a的关系，例如订单对象包含一些项目对象。意味着a的对象包含b的对象</li>
+<li>继承 is-a的关系，意味着特殊与一般，比如rushoder和oder的关系</li>
+</ol>
+<hr>
+<h2 id="3-堆、栈、方法区"><a href="#3-堆、栈、方法区" class="headerlink" title="3.堆、栈、方法区"></a>3.堆、栈、方法区</h2><hr>
+<h3 id="堆区"><a href="#堆区" class="headerlink" title="堆区:"></a>堆区:</h3><p>1.<strong>存储的全部是对象</strong>，每个对象都包含一个与之对应的class的信息。(class的目的是得到操作指令)<br>2.jvm只有一个堆区(heap)被所有线程共享，堆中不存放基本类型和对象引用，<strong>只存放对象本身</strong> </p>
+<hr>
+<h3 id="栈区"><a href="#栈区" class="headerlink" title="栈区:"></a>栈区:</h3><p>1.<strong>每个线程包含一个栈区</strong>，栈中只保存基础数据类型的对象和自定义对象的引用(不是对象)，对象都存放在堆区中<br>2.每个栈中的数据(原始类型和对象引用)都是<strong>私有</strong>的，其他栈不能访问。<br>3.栈分为3个部分：基本类型变量区、执行环境上下文、操作指令区(存放操作指令)。 </p>
+<hr>
+<h4 id="方法区"><a href="#方法区" class="headerlink" title="方法区:"></a>方法区:</h4><p>1.又叫静态区，跟堆一样，被所有的线程共享。方法区包含所有的class和static变量。<br>2.方法区中包含的都是在整个程序中永远唯一的元素，如class，static变量。 </p>
+<hr>
+<h2 id="4-JAVA的引用"><a href="#4-JAVA的引用" class="headerlink" title="4.JAVA的引用"></a>4.JAVA的引用</h2><hr>
+<ul>
+<li>JAVA中<strong>引用变量存的是地址值</strong>，类似于被限制的指针，不能指向内存任意位置。 </li>
+<li>JAVA有完整的垃圾回收机制，当一个对象没有被引用时，JAVA会定时清理垃圾，不用自己手动释放空间 </li>
+</ul>
+<hr>
+<h2 id="5-成员变量和局部变量"><a href="#5-成员变量和局部变量" class="headerlink" title="5.成员变量和局部变量"></a>5.成员变量和局部变量</h2><hr>
+<ol>
+<li>成员变量在类中方法外，局部变量在方法定义中过着方法声明上</li>
+<li>成员变量在堆（属于对象），局部变量在栈（属于方法）</li>
+<li>成员变量随着对象创建存在 ，对象消失而消失，局部变量随着方法调用而存在，调用完毕消失。</li>
+<li>成员变量有默认初始值，局部变量没有初始化值，必须赋值才能用。</li>
+<li>局部变量可以和成员变量同名，就近原则（方法里有局部的就用局部的，没有就用方法外的成员变量）</li>
+<li>数据类型包括基本数据类型（byte.short.int…）、引用数据类型（数组.类，接口，枚举）</li>
+</ol>
+<ul>
+<li><strong>形式参数是基本数据类型的时候，传进去的是值</strong></li>
+<li><strong>形式参数是引用数据类型的时候，传进去的是地址值</strong><br><img src="变量分类.jpg" alt=""> </li>
+</ul>
+<hr>
+<h2 id="6-匿名对象"><a href="#6-匿名对象" class="headerlink" title="6.匿名对象"></a>6.匿名对象</h2><hr>
+<ul>
+<li><p>有名字的对象：<code>Car  c1 = new Car();</code></p>
+<pre><code>` c1.run;`
+</code></pre><p> 匿名对象：        <code>new Car().run();</code></p>
+</li>
+<li><p>匿名对象只适用于对方法的一次调用，多次的话就会产生多个对象，不如用有名字的对象，创建一次多次调用</p>
+</li>
+<li>匿名对象可以调用属性，但是没有意义，调用后就成为垃圾，赋值要用有名字的对象</li>
+</ul>
+<hr>
+<h2 id="7-封装概念"><a href="#7-封装概念" class="headerlink" title="7.封装概念"></a>7.封装概念</h2><hr>
+<ol>
+<li>隐藏对象的属性和实现细节，仅对外提供公共访问方式</li>
+<li>好处：提高代码复用性<pre><code>提高安全性
+</code></pre></li>
+<li>原则：将不需要对外提供的内容隐藏<pre><code>把属性隐藏，提供公共方法对其访问
+</code></pre></li>
+<li>实现封装的关键是<strong>绝对不让类的方法访问别的类的实例域</strong> 这意味着一个类可以全面改变存储数据的方式</li>
+</ol>
+<hr>
+<h2 id="8-Private封装应用"><a href="#8-Private封装应用" class="headerlink" title="8.Private封装应用"></a>8.Private封装应用</h2><hr>
+<ul>
+<li>如果没有封装，安全性可能有问题（年龄设置为负数是合法的）</li>
+<li>private一个变量，则只有这个类可以访问，外界访问可以设置set函数和get函数，具体要求可以在函数语句里面要求。</li>
+<li>如<code>private int age</code>，在别的类里就不能改age，需要用自己设置的setAge()方法和getAge()方法来设置和调用。然后在setAge函数里面写上年龄要求，报错等信息。</li>
+<li>私有只是封装的一种体现形式</li>
+</ul>
+<hr>
+<h2 id="9-This应用"><a href="#9-This应用" class="headerlink" title="9.This应用"></a>9.This应用</h2><hr>
+<ul>
+<li>This是用来区分成员变量和局部变量重名，当setAge方法调用传进来的局部变量age，并赋值给对象的成员变量age时，由于就近原则<br><code>age = age</code>相当于局部变量赋值给局部变量</li>
+</ul>
+<p>这个时候需要用This来解决重名问题：<br><code>this.age = age;</code><br>这行代码是把传进来的局部变量age的值赋值给对象的成员变量age</p>
+<hr>
+<h2 id="10-继承extends"><a href="#10-继承extends" class="headerlink" title="10.继承extends"></a>10.继承extends</h2><hr>
+<h2 id="举例："><a href="#举例：" class="headerlink" title="举例："></a>举例：</h2><p><code>class Cat extends Animal {  }</code></p>
+<h2 id="1-继承的好处"><a href="#1-继承的好处" class="headerlink" title="1.继承的好处"></a>1.继承的好处</h2><ul>
+<li>提高代码复用性</li>
+<li>提高代码可维护性</li>
+<li>让类与类产生关系，是多态的前提</li>
+</ul>
+<h2 id="2-继承的坏处"><a href="#2-继承的坏处" class="headerlink" title="2. 继承的坏处"></a>2. 继承的坏处</h2><ul>
+<li>类的耦合行增强了</li>
+</ul>
+<h2 id="3-JAVA继承的特点"><a href="#3-JAVA继承的特点" class="headerlink" title="3. JAVA继承的特点"></a>3. JAVA继承的特点</h2><ul>
+<li>JAVA只支持单继承，不支持多继承（只能有一个爸爸）<br>（两个父类可能有同名的方法，多继承有安全隐患）</li>
+<li>JAVA支持多层继承（继承爸爸，爸爸继承👴🏻）</li>
+<li>子类可以用父类的  父类不可以用子类的</li>
+<li>共性看顶层（父类的父类），所有功能看最底层</li>
+</ul>
+<h2 id="4-继承的注意事项"><a href="#4-继承的注意事项" class="headerlink" title="4. 继承的注意事项"></a>4. 继承的注意事项</h2><ul>
+<li>子类只能继承父类中所有非私有的成员方法和成员变量</li>
+<li>子类不能继承父类构造方法（构造方法要和类名一样）</li>
+<li>子类与父类有同名变量的时候，就近原则用（一般用不到）</li>
+</ul>
+<h2 id="5-this-和super"><a href="#5-this-和super" class="headerlink" title="5. this 和super"></a>5. this 和super</h2><ul>
+<li>This可以调用本类变量 和父类变量（本类没有的时候）</li>
+<li>Super是调用父类的变量</li>
+</ul>
+<h2 id="6-子类中所有构造方法都会默认访问父类中空参数的构造方法"><a href="#6-子类中所有构造方法都会默认访问父类中空参数的构造方法" class="headerlink" title="6. 子类中所有构造方法都会默认访问父类中空参数的构造方法"></a>6. 子类中所有构造方法都会默认访问父类中<em>空参数的构造方法</em></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class Father () &#123;</span><br><span class="line">	public Father() &#123;</span><br><span class="line">		System.out.println(“父类构造方法”);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Son extends Father &#123;</span><br><span class="line">	public Son () &#123;</span><br><span class="line">		System.out.ptintln(&quot;子类构造方法&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码的结果是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">父类构造方法</span><br><span class="line">子类构造方法</span><br></pre></td></tr></table></figure>
+<p>因为系统会在子类构造方法中默认加一句<br><code>super();</code><br>来访问父类的构造方法</p>
+<ul>
+<li>原因是子类会继承父类数据，所以先要初始化父类的数据，才能初始化子类的数据</li>
+<li>每一条构造方法第一句都会默认加上super(); 最上层的父类默认继承的Object类</li>
+<li>当父类只有有参构造时，子类必须用类似以下的语句<br><code>super(name, age)</code><br>来访问父类的有参构造，否则会出错</li>
+</ul>
+<h2 id="7-子类和父类有同名方法的时候，用子类的方法叫重写"><a href="#7-子类和父类有同名方法的时候，用子类的方法叫重写" class="headerlink" title="7. 子类和父类有同名方法的时候，用子类的方法叫重写"></a>7. 子类和父类有同名方法的时候，用子类的方法叫<em>重写</em></h2><ul>
+<li>如果这时候还想调用父类的同名方法时，可以用super.method()调用 </li>
+</ul>
+<hr>
+<h2 id="11-重写"><a href="#11-重写" class="headerlink" title="11.重写"></a>11.重写</h2><hr>
+<h2 id="1-当子类需要父类功能但是某些方法需要有特定功能时，用重写"><a href="#1-当子类需要父类功能但是某些方法需要有特定功能时，用重写" class="headerlink" title="1. 当子类需要父类功能但是某些方法需要有特定功能时，用重写"></a>1. 当子类需要父类功能但是某些方法需要有特定功能时，用重写</h2><h2 id="2-重写注意事项"><a href="#2-重写注意事项" class="headerlink" title="2. 重写注意事项"></a>2. 重写注意事项</h2><ul>
+<li>父类的私有方法不能重写（因为不能继承）</li>
+<li>参数必须相同</li>
+<li>构造方法不能重写（因为不能继承，构造方法要和类名一样）</li>
+<li>重写父类方法时，权限大于等于父类（最好一致）</li>
+<li>public &gt; protected &gt; default(包访问权限) &gt; private<br><img src="访问权限.jpg" alt=""></li>
+<li>静态方法必须用静态方法重写（只能覆盖，不算重写 ）</li>
+</ul>
+<h2 id="overload重载"><a href="#overload重载" class="headerlink" title="overload重载"></a>overload重载</h2><ul>
+<li>重载是在一个类里面，方法名字相同但是参数不同</li>
+<li>可以改变返回类型 </li>
+<li>可以改变访问修饰符</li>
+<li>最常用的是构造器的重载</li>
+</ul>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/JAVA第一篇：JAVA基础/" rel="next" title="JAVA第一篇：JAVA基础">
+                <i class="fa fa-chevron-left"></i> JAVA第一篇：JAVA基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/JAVA第三篇：如何写JAVA程序/" rel="prev" title="JAVA第三篇：如何写JAVA程序">
+                JAVA第三篇：如何写JAVA程序 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/1.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#面向对象OOP（一）"><span class="nav-number"></span> <span class="nav-text">面向对象OOP（一）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-面向对象概述"><span class="nav-number"></span> <span class="nav-text">1.面向对象概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#面向对象和面向过程区别"><span class="nav-number">1.</span> <span class="nav-text">面向对象和面向过程区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#面向对象开发"><span class="nav-number">2.</span> <span class="nav-text">面向对象开发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#面向对象特征"><span class="nav-number">3.</span> <span class="nav-text">面向对象特征</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-类、对象"><span class="nav-number"></span> <span class="nav-text">2. 类、对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类简介"><span class="nav-number">1.</span> <span class="nav-text">类简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象的三个特征"><span class="nav-number">2.</span> <span class="nav-text">对象的三个特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OOP编程：首先设计类-然后往每个类中添加方法"><span class="nav-number">3.</span> <span class="nav-text">OOP编程：首先设计类 然后往每个类中添加方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类之间的关系"><span class="nav-number">4.</span> <span class="nav-text">类之间的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-堆、栈、方法区"><span class="nav-number"></span> <span class="nav-text">3.堆、栈、方法区</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#堆区"><span class="nav-number">1.</span> <span class="nav-text">堆区:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#栈区"><span class="nav-number">2.</span> <span class="nav-text">栈区:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方法区"><span class="nav-number">2.1.</span> <span class="nav-text">方法区:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-JAVA的引用"><span class="nav-number"></span> <span class="nav-text">4.JAVA的引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-成员变量和局部变量"><span class="nav-number"></span> <span class="nav-text">5.成员变量和局部变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-匿名对象"><span class="nav-number"></span> <span class="nav-text">6.匿名对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-封装概念"><span class="nav-number"></span> <span class="nav-text">7.封装概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-Private封装应用"><span class="nav-number"></span> <span class="nav-text">8.Private封装应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-This应用"><span class="nav-number"></span> <span class="nav-text">9.This应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-继承extends"><span class="nav-number"></span> <span class="nav-text">10.继承extends</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举例："><span class="nav-number"></span> <span class="nav-text">举例：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-继承的好处"><span class="nav-number"></span> <span class="nav-text">1.继承的好处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-继承的坏处"><span class="nav-number"></span> <span class="nav-text">2. 继承的坏处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-JAVA继承的特点"><span class="nav-number"></span> <span class="nav-text">3. JAVA继承的特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-继承的注意事项"><span class="nav-number"></span> <span class="nav-text">4. 继承的注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-this-和super"><span class="nav-number"></span> <span class="nav-text">5. this 和super</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-子类中所有构造方法都会默认访问父类中空参数的构造方法"><span class="nav-number"></span> <span class="nav-text">6. 子类中所有构造方法都会默认访问父类中空参数的构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-子类和父类有同名方法的时候，用子类的方法叫重写"><span class="nav-number"></span> <span class="nav-text">7. 子类和父类有同名方法的时候，用子类的方法叫重写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-重写"><span class="nav-number"></span> <span class="nav-text">11.重写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-当子类需要父类功能但是某些方法需要有特定功能时，用重写"><span class="nav-number"></span> <span class="nav-text">1. 当子类需要父类功能但是某些方法需要有特定功能时，用重写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-重写注意事项"><span class="nav-number"></span> <span class="nav-text">2. 重写注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#overload重载"><span class="nav-number"></span> <span class="nav-text">overload重载</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
