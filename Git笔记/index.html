@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Git,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 这篇文章是学习Git过程中的笔记">
+<meta name="keywords" content="Git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git笔记">
+<meta property="og:url" content="https://lizehao.info/Git笔记/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 这篇文章是学习Git过程中的笔记">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lizehao.info/Git笔记/1.jpg">
+<meta property="og:image" content="https://lizehao.info/Git笔记/2.jpg">
+<meta property="og:image" content="https://lizehao.info/Git笔记/3.jpg">
+<meta property="og:updated_time" content="2020-06-14T23:53:57.263Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git笔记">
+<meta name="twitter:description" content="前言 这篇文章是学习Git过程中的笔记">
+<meta name="twitter:image" content="https://lizehao.info/Git笔记/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/Git笔记/">
+
+
+
+
+
+  <title>Git笔记 | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/Git笔记/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Git笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-15T07:39:48+08:00">
+                2020-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>这篇文章是学习Git过程中的笔记</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>版本控制系统解决了代码管理的问题（每次改动需要副本，每个人的改动也不一样），自动管理版本。<br>Linus花了两周时间自己用C写了一个分布式版本控制系统</p>
+<h3 id="2-分布式和集中式"><a href="#2-分布式和集中式" class="headerlink" title="2.分布式和集中式"></a>2.分布式和集中式</h3><p>CVS及SVN都是集中式的版本控制系统，而Git是分布式版本控制系统</p>
+<ul>
+<li>集中式就是有一个相当于”图书馆”的服务器，干活前先要从服务器取到最新版本，干完活上传到服务器<br>缺点：必须联网才能工作，安全性低</li>
+<li>分布式：每个人电脑里都有完整的版本库，就不需要联网了，和别人协作的时候，互相推送给对方改动即可。<h3 id="3-安装"><a href="#3-安装" class="headerlink" title="3.安装"></a>3.安装</h3>mac下载安装包手动安装即可（也可以用Homebrew）<br>在命令行用以下两行代码设置本台机器的名字和邮件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config —global user.name “Your Name”</span><br><span class="line">git config —global user.email “email@example.com”</span><br></pre></td></tr></table></figure>
+<h3 id="4-提交"><a href="#4-提交" class="headerlink" title="4.提交"></a>4.提交</h3><ul>
+<li>初始化一个Git仓库，使用git init命令。</li>
+<li>git add 提交文件或者修改</li>
+<li>git commit -m “这次改了什么的说明”，可以add几次再commit一次</li>
+<li>add不用双引号，commit -m要双引号</li>
+<li>git status命令可以让我们时刻掌握仓库当前的状态</li>
+<li>git diff顾名思义就是查看difference，看具体修改了什么内容</li>
+<li>git log 更改日志</li>
+<li>如果嫌输出信息太多，看得眼花缭乱的，可以试试加上—pretty=oneline参数<h3 id="5-回退版本"><a href="#5-回退版本" class="headerlink" title="5.回退版本"></a>5.回退版本</h3></li>
+<li>git reset —hard HEAD^<br>回退版本，HEAD^就是上个版本，HEAD^^是上上个版本，HEAD~100是前100个版本</li>
+<li>当错删了，命令行没关时，去前面找HEAD，就是oneline的每个版本前面的字符串，前几位即可<br>git reset —hard 1094a</li>
+<li>Git提供了一个命令git reflog用来记录你的每一次命令：</li>
+<li>总结：HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset —hard commit_id。<h3 id="6-工作区和暂缓区"><a href="#6-工作区和暂缓区" class="headerlink" title="6.工作区和暂缓区"></a>6.工作区和暂缓区</h3>一个文件夹就是一个工作区，隐藏目录.git是版本库<br>![][1.jpg]<img src="/Git笔记/1.jpg" title="This is an image"><br>stage是暂缓区 ，add就是把文件添加到暂缓区<br>commit就是把暂缓区的内容提交到当前分支<br>add以后：<br><img src="2.jpg" alt=""><br>commit以后<br><img src="3.jpg" alt=""></li>
+</ul>
+<h3 id="撤销修改"><a href="#撤销修改" class="headerlink" title="撤销修改"></a>撤销修改</h3><ul>
+<li><code>git checkout — file</code>可以丢弃工作区的修改：<br>file在工作区—&gt;则回到分支版本库状态<br>file在暂缓区–&gt;则回到刚add的状态<br>总之，回到最近一次commit/add的状态（其实就是还原到最新版本，暂缓区如果有更新就比分支版本库新一个版本）</li>
+<li>总结：<br>场景1：直接丢弃工作区的修改时，用命令<br>git checkout — file<br>场景2：想丢弃暂缓区的改动时，两步，<br>第一步：git reset HEAD file，把暂缓区的修改撤销，重新放到工作区<br>第二步：git checkout — file<br>场景3：已经提交<br>参考回退版本<h3 id="删除文件"><a href="#删除文件" class="headerlink" title="删除文件"></a>删除文件</h3>当你要删除文件的时候，可以采用命令：rm test.txt<br>这个时候（也就是说这个时候只执行了rm test.txt）有两种情况</li>
+<li>第一种情况:的确要把test.txt删掉，那么可以执行 git rm test.txt git commit -m “remove test.txt” 然后文件就被删掉了</li>
+<li>第二种情况:删错文件了，不应该删test.txt，注意这时只执行了rm test.txt，还没 有提交，所以可以执行git checkout test.txt将文件恢复。<br>（执行完git commit -m “remove test.txt”后就不能能用checkout恢复，commit之后版本库里的文件也没了，自然没办法用checkout恢复，而是要用其他的办法）</li>
+<li>git checkout  — file就是用版本库（暂缓区也在版本库）里的版本替换工作区的版本，无论工作区修改删除，都可以”一键还原”<h3 id="9-远程仓库"><a href="#9-远程仓库" class="headerlink" title="9.远程仓库"></a>9.远程仓库</h3></li>
+<li><code>ssh-keygen -t rsa -C “youremail@example.com”</code>创建ssh key</li>
+<li>一直默认回车即可，可以在用户主目录里找到.ssh目录，里面有id_rsa和id_rsa.pub两个文件，这两个就是SSH Key的秘钥对，id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥</li>
+<li>登陆GitHub，打开“Account settings”，“SSH Keys”页面：<br>然后，点“Add SSH Key”，填上任意Title，在Key文本框里粘贴id_rsa.pub文件的内容即可</li>
+<li>为什么GitHub需要SSH Key呢？因为GitHub需要识别出你推送的提交确实是你推送的，而不是别人冒充的，而Git支持SSH协议，所以，GitHub只要知道了你的公钥，就可以确认只有你自己才能推送</li>
+<li>可以添加多个电脑的key。<h3 id="添加远程仓库"><a href="#添加远程仓库" class="headerlink" title="添加远程仓库"></a>添加远程仓库</h3>要关联一个远程库，使用命令<br>git remote add origin  <a href="https://github.com/用户名/仓库名m" target="_blank" rel="noopener">https://github.com/用户名/仓库名m</a><br>关联后，使用命令<br>git push -u origin master第一次推送master分支的所有内容；<br>此后，每次本地提交后，只要有必要，就可以使用命令<br>git push origin master推送最新修改<h3 id="11-分支"><a href="#11-分支" class="headerlink" title="11.分支"></a>11.分支</h3><h3 id="Git鼓励大量使用分支："><a href="#Git鼓励大量使用分支：" class="headerlink" title="Git鼓励大量使用分支："></a>Git鼓励大量使用分支：</h3>###<br>查看分支：<br>git branch<br>创建分支：<br>git branch <name><br>切换分支：<br>git checkout <name> 或者<br>git switch <name><br>创建+切换分支：<br>git checkout -b <name> 或者<br>git switch -c <name><br>合并某分支到当前分支：<br>git merge <name><br>删除分支：<br>git branch -d <name><h2 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h2></name></name></name></name></name></name></name></li>
+<li>git tag <tagname> 用于新建一个标签，默认为<br>HEAD（最新提交的commit上） ，也可以指定一个commit id；</tagname></li>
+<li>git tag -a <tagname> -m “blablabla…”### 可以指定标签信息；</tagname></li>
+<li>git tag可以查看所有标签。<h3 id="13-操作标签"><a href="#13-操作标签" class="headerlink" title="13.操作标签"></a>13.操作标签</h3></li>
+<li>git push origin <tagname> 可以推送一个本地标签；</tagname></li>
+<li>git push origin —tags 可以推送全部未推送过的本地标签；</li>
+<li>git tag -d <tagname> 可以删除一个本地标签；</tagname></li>
+<li>git push origin :refs/tags/<tagname> 可以删除一个远程标签。</tagname></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Git/" rel="tag"># Git</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/读书笔记-把时间当朋友（上）/" rel="next" title="读书笔记-把时间当朋友（上）">
+                <i class="fa fa-chevron-left"></i> 读书笔记-把时间当朋友（上）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-分布式和集中式"><span class="nav-number">3.</span> <span class="nav-text">2.分布式和集中式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-安装"><span class="nav-number">4.</span> <span class="nav-text">3.安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-提交"><span class="nav-number">5.</span> <span class="nav-text">4.提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-回退版本"><span class="nav-number">6.</span> <span class="nav-text">5.回退版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-工作区和暂缓区"><span class="nav-number">7.</span> <span class="nav-text">6.工作区和暂缓区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#撤销修改"><span class="nav-number">8.</span> <span class="nav-text">撤销修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除文件"><span class="nav-number">9.</span> <span class="nav-text">删除文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-远程仓库"><span class="nav-number">10.</span> <span class="nav-text">9.远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加远程仓库"><span class="nav-number">11.</span> <span class="nav-text">添加远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-分支"><span class="nav-number">12.</span> <span class="nav-text">11.分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git鼓励大量使用分支："><span class="nav-number">13.</span> <span class="nav-text">Git鼓励大量使用分支：</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#标签"><span class="nav-number"></span> <span class="nav-text">标签</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#13-操作标签"><span class="nav-number">1.</span> <span class="nav-text">13.操作标签</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
