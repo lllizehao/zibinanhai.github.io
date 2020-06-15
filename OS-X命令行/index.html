@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本篇文章记录了Mac常用的命令行，便于忘记时查看 OS X命令行和Linux命令行大部分相同，由于Mbp16装虚拟机驱动有问题，并且大学时期已经用过LInux，所以目前先只用Mac">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OS X命令行">
+<meta property="og:url" content="https://lizehao.info/OS-X命令行/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本篇文章记录了Mac常用的命令行，便于忘记时查看 OS X命令行和Linux命令行大部分相同，由于Mbp16装虚拟机驱动有问题，并且大学时期已经用过LInux，所以目前先只用Mac">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-15T00:35:44.767Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OS X命令行">
+<meta name="twitter:description" content="前言 本篇文章记录了Mac常用的命令行，便于忘记时查看 OS X命令行和Linux命令行大部分相同，由于Mbp16装虚拟机驱动有问题，并且大学时期已经用过LInux，所以目前先只用Mac">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/OS-X命令行/">
+
+
+
+
+
+  <title>OS X命令行 | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/OS-X命令行/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">OS X命令行</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-15T08:34:14+08:00">
+                2020-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章记录了Mac常用的命令行，便于忘记时查看</p>
+<p>OS X命令行和Linux命令行大部分相同，由于Mbp16装虚拟机驱动有问题，并且大学时期已经用过LInux，所以目前先只用Mac</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h2 id="1、文件操作："><a href="#1、文件操作：" class="headerlink" title="1、文件操作："></a>1、文件操作：</h2><ul>
+<li>cd：用于切换到目标目录。</li>
+<li>pwd:用于查看当前所在的路径</li>
+<li>ls：用于查看文件与目录。(ls -l 查看文件详细信息)</li>
+<li>mkdir：用于新建文件夹。</li>
+<li>mv：用于移动文件、目录或更名。</li>
+<li>rm：用于删除文件或目录。</li>
+<li>cp：用于复制文件，可以复制多个文件</li>
+<li><p>tar：对文件进行打包备份，默认情况不压缩，指定相应参数后，会调用相应的压缩程序（如gzip和bzip2等）进行压缩或者解压。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-cvf     # 常用，只要记住c是用来表示打包文件</span><br><span class="line">-xvf     # 用来解包的。</span><br><span class="line">如：</span><br><span class="line">tar -cvf /etc/tmp/etc.tar(打包后的文件路径和名字) /etc(要打包的文件路径)   &lt;== 仅打包，不压缩！</span><br><span class="line">tar -zcvf /etc/tmp/etc.tar.gz(要打包压缩的文件路径和名字) /etc(要打包的文件路径) &lt;== 打包后，gzip压缩</span><br><span class="line">tar -jcvf /etc/tmp/etc.tar.bz2(要打包压缩的文件路径和名字) /etc(要打包的文件路径) &lt;== 打包后，bzip2压缩</span><br><span class="line"></span><br><span class="line">tar -zxvf /tmp/etc.tar.gz &lt;== 在当前目录解压，如果要解压在其他地方先cd过去</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>grep：文本搜索工具，可以使用正则表达式搜索文本并打印，非常强大。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">grep [-acinv][—color=auto] ‘想要搜索字符串’ filename </span><br><span class="line">或</span><br><span class="line">cat filename | grep ‘字符串’ [-acinv][—color=auto] </span><br><span class="line">参数：</span><br><span class="line">-a ：将 binary 文件以 text 文件的方式搜寻数据</span><br><span class="line">-c ：计算找到 ‘搜寻字符串’ 的次数</span><br><span class="line">-i ：忽略大小写</span><br><span class="line">-n ：顺便输出行号</span><br><span class="line">-v ：反向选择，即显示出没有 ‘搜寻字符串’ 的内容！</span><br><span class="line">—color=auto ：将找到的关键词部分加上颜色的显示</span><br><span class="line"></span><br><span class="line">grep还支持正则表达式，有机会再写一章来记正则表达式</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="2、文件搜索"><a href="#2、文件搜索" class="headerlink" title="2、文件搜索"></a>2、文件搜索</h2><ul>
+<li><p>find 经常使用的查找命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">格式：find path(搜索路径,为空时默认为当前目录) -option(搜索条件) [-print][-exec -ok command] &#123;&#125;\</span><br><span class="line">简单来说:find &lt;路径&gt; &lt;-条件&gt; &lt;结果处理&gt;</span><br><span class="line"></span><br><span class="line">常用搜索条件(不全)：</span><br><span class="line">-name filename              </span><br><span class="line">查找名为filename的文件</span><br><span class="line">-user username              #查找属于username的文件</span><br><span class="line">-group groupname            #查找属于username的文件</span><br><span class="line">-mtime -n +n                #按文件更改时间来查找文件，-n指n天以内，+n指n天以前</span><br><span class="line">-ctime -n +n                #按文件创建时间来查找文件，-n指n天以内，+n指n天以前</span><br><span class="line">-newer f1 !f2               #查更改时间比f1新但比f2旧的文件</span><br><span class="line">-type b/d/c/p/l/f           #查是块设备、目录、字符设备、管道、符号链接、普通文件</span><br><span class="line">-size n[c]                  #查长度为n块[或n字节]的文件</span><br><span class="line">-depth                      #使查找在进入子目录前先行查找完本目录</span><br><span class="line">-mount                      #查文件时不跨越文件系统mount点</span><br><span class="line">-follow                     #如果遇到符号链接文件，就跟踪链接所指的文件</span><br><span class="line"></span><br><span class="line">如:</span><br><span class="line">find /Users/DFei_He/desktop -name ‘*.html&apos; 搜索桌面所有html文件</span><br><span class="line">find .   -perm   755 查看目录下权限为755的文件</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>locate 相当于’find -name’操作，但是搜索速度比find快。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#因为它搜索的是数据库所以速度快。</span><br><span class="line">#数据库位置在/var/lib/locatedb。保存了本地所有文件信息</span><br><span class="line">#该数据库每天更新一次，所以查找当天新增文件，需先updatedb更新数据库</span><br><span class="line"></span><br><span class="line">#但是在Mac上第一次使用locate的时候，系统会提示你未创建数据库</span><br><span class="line">WARNING: The locate database (/var/db/locate.database) does not exist.</span><br><span class="line">...</span><br><span class="line">#根据提示，我们创建数据库</span><br><span class="line">sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist</span><br><span class="line">#执行后会发现失败了，并没有变化，这时候需要另一个命令</span><br><span class="line">sudo /usr/libexec/locate.updatedb</span><br><span class="line"></span><br><span class="line">#更新过后就可以通过locate来进行搜索了。</span><br><span class="line">格式：</span><br><span class="line">locate file 搜索所有文件名中有‘file’字符串的文件</span><br><span class="line">locate ~/m 搜索根目录下以m开头的文件</span><br><span class="line">locate -i /etc/sh 搜索etc目录下sh开头的文件，忽略大小写</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>whereis：只能搜索程序名，如whereis php</p>
+<h2 id="3、文本操作"><a href="#3、文本操作" class="headerlink" title="3、文本操作"></a>3、文本操作</h2></li>
+<li>cat：查看文本文件的内容。</li>
+<li>vim：用于文本编辑。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">插入：i,I,a,A,o,O</span><br><span class="line">删除： 删除前n行(:1,n d),删除全部(:1,%d)</span><br><span class="line">行号：显示(:set number),隐藏(:set nonumber)</span><br><span class="line">退出： 退出(:q),保存退出(:wq),强制退出(:q!),保存只读文件(:w !sudo tee %)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>对vim的配置可以修改vimrc(位置位于/usr/share/vim/vimrc，mac用户建议(vim ~/.vimrc)进行操作，因为原文件的权限很高，我尝试了很多方法包括root权限也无法进行修改)</p>
+<h2 id="4、网络"><a href="#4、网络" class="headerlink" title="4、网络"></a>4、网络</h2><ul>
+<li><p>ping：测试网络连通情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">原理是发送ECHO_REQUEST包到你指定的地址,从来来判断是否连通.</span><br><span class="line">如：</span><br><span class="line">ping baidu.com      会源源不断得发包给baidu。Ctrl+C终止</span><br><span class="line">也可以通过参数控制发包数</span><br><span class="line">ping -c 4 baidu.com 发送4个包给baidu，发完终止</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>traceroute：可以看出每一次hop(心跳)花费的时间来查看网络终端或者延迟的地方。</p>
+</li>
+<li>host：DNS查询，通过域名和ip中的其中一个来获取另外一个。</li>
+<li>whois：查看该站点的持有者</li>
+<li><p>ifconfig：查看设备和网络情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ifconfig [-a]  查看所有的网络接口</span><br><span class="line">ifconfig [设备名，如en0] [down/up]：设备开关</span><br><span class="line">ifconfig [设备名，如en0] hw ether [Mac地址] 修改MAC地址</span><br><span class="line">ifconfig [设备名，如en0] add/del [IPv6地址] 给网卡添加/删除IPv6地址</span><br><span class="line">ifconfig [设备名，如en0] [ip地址] 给设备配置IP地址</span><br><span class="line">ifconfig [设备名，如en0] [ip地址] netmask [掩码] 给设备配置IP地址，加上子掩码</span><br><span class="line">ifconfig [设备名，如en0] [ip地址] netmask [掩码] broadcast [广播地址] 给设备配置IP地址，加上掩码和广播地址</span><br><span class="line">ifconfig [设备名，如en0] mtu [数字] 设置设备的最大传输单元[bytes]</span><br><span class="line">ifconfig [设备] [arp/-arp] 启用/关闭 ARP协议</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>netstat：显示网络状态信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">-a (all)显示所有选项，默认不显示LISTEN相关</span><br><span class="line">-t (tcp)仅显示tcp相关选项</span><br><span class="line">-u (udp)仅显示udp相关选项</span><br><span class="line">-n 拒绝显示别名，能显示数字的全部转化成数字。</span><br><span class="line">-l 仅列出有在 Listen (监听) 的服務状态</span><br><span class="line"></span><br><span class="line">-p 显示建立相关链接的程序名</span><br><span class="line">-r 显示路由信息，路由表</span><br><span class="line">-e 显示扩展信息，例如uid等</span><br><span class="line">-s 按各个协议进行统计</span><br><span class="line">-c 每隔一个固定时间，执行该netstat命令。</span><br><span class="line"></span><br><span class="line">-------</span><br><span class="line">netstat -a 查看所有端口</span><br><span class="line">netstat -at/au 查看所有tcp/udp端口</span><br><span class="line"></span><br><span class="line">netstat -l 查看所有监听的端口</span><br><span class="line">netstat -lt/lu/lx 查看所有监听的tcp/udp/unix端口</span><br><span class="line">a</span><br><span class="line">netstat -s 查看所有端口的统计信息</span><br><span class="line">netstat -st/su 查看tcp/udp的端口的统计信息</span><br><span class="line"></span><br><span class="line">netstat -r 查看核心路由信息</span><br><span class="line"></span><br><span class="line">另外如</span><br><span class="line">netstat -ap | grep ssh查找程序运行的端口s</span><br><span class="line">netstat -an | grep ‘:8080’找出指定端口的进程</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="5、进程等系统管理"><a href="#5、进程等系统管理" class="headerlink" title="5、进程等系统管理"></a>5、进程等系统管理</h2><ul>
+<li>stat：显示指定文件详细信息</li>
+<li>df：查看磁盘使用情况</li>
+<li>du：查看目录或文件大小</li>
+<li>who：显示登录了的用户</li>
+<li>whoami：显示当前的用户</li>
+<li>uname：显示系统信息</li>
+<li><p>ps：显示当前进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a 查看所有进程</span><br><span class="line">c 显示程序真正的指令名词 </span><br><span class="line">e显示每个程序的环境变量 </span><br><span class="line">f显示程序间互相关系</span><br><span class="line">u 以用户为主的格式来显示程序状况。</span><br><span class="line">x 显示所有程序，不以终端机来区分。</span><br><span class="line"></span><br><span class="line">常用ps aux命令和grep文本查找命令通过管道过滤再操作</span><br><span class="line">如：ps aux | grep tomcat</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>top：实时显示进程的动态</p>
+</li>
+<li>kill：杀进程<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kill &lt;pid&gt;  最安全的kill命令，不杀死子进程</span><br><span class="line">kill -l &lt;pid&gt; 杀死父进程的同时还尝试杀死子进程，但不一定尝试成功</span><br><span class="line">killall &lt;httpd&gt;杀死同一个进程组的所有进程，后接进程名，非pid</span><br><span class="line">kill -HUP &lt;pid&gt; 杀死进程并重启,常用于配置文件修改</span><br><span class="line">kill -9 &lt;pid&gt;强制杀死进程，谨慎使用，可能会导致系统关闭</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="6、文件权限相关"><a href="#6、文件权限相关" class="headerlink" title="6、文件权限相关"></a>6、文件权限相关</h2><ul>
+<li>chmod：更改文件的权限。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">chmod [ugoa][[+-=][rwxX]…][,…]</span><br><span class="line">u 表示该文件的拥有者，g 表示与该文件的拥有者属于同一个群体(group)者，o 表示其他以外的人，a 表示这三者皆是。</span><br><span class="line">+ 表示增加权限、- 表示取消权限、= 表示唯一设定权限。</span><br><span class="line">r 表示可读取，w 表示可写入，x 表示可执行，X 表示只有当该文件是个子目录或者该文件已经被设定过为可执行。</span><br><span class="line">-R : 对目前目录下的所有文件与子目录进行相同的权限变更(即以递回的方式逐个变更)</span><br><span class="line"></span><br><span class="line">如：chmod ugo+r file1.txt 所有人可读</span><br><span class="line">chmod -R a+r * 将目前目录下的所有文件与子目录皆设为任何人可读取 </span><br><span class="line"></span><br><span class="line">&gt; 数字权限:  </span><br><span class="line">1、一般三位数，第一位数表示文件拥有者的权限，第二位表示文件所在的group的成员的权限，第三位表示除此之外其他用户的权限。  </span><br><span class="line">2、数字一般有7、5、4等。分解成二进制是111，101，100，也是三位数，位数和权限分别表示读、写、可执行权限。  </span><br><span class="line">&gt;&gt;如：</span><br><span class="line">chmod 755 file 文件所有者可读可写可执行，同一个group的用户可读可执行，其他用户可读可执行   </span><br><span class="line">chmod 777 file 所有用户可读可写可执行权限   </span><br><span class="line">另外：   </span><br><span class="line">chmod 4755 file 具有root权限</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>作者：He_Define<br>链接：<a href="https://www.jianshu.com/p/456003ed9df0" target="_blank" rel="noopener">https://www.jianshu.com/p/456003ed9df0</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Mac命令行/" rel="next" title="OS X命令行">
+                <i class="fa fa-chevron-left"></i> OS X命令行
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/JAVA第二篇：面向对象一/" rel="prev" title="JAVA第二篇：面向对象一">
+                JAVA第二篇：面向对象一 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#1、文件操作："><span class="nav-number"></span> <span class="nav-text">1、文件操作：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、文件搜索"><span class="nav-number"></span> <span class="nav-text">2、文件搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、文本操作"><span class="nav-number"></span> <span class="nav-text">3、文本操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、网络"><span class="nav-number"></span> <span class="nav-text">4、网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、进程等系统管理"><span class="nav-number"></span> <span class="nav-text">5、进程等系统管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、文件权限相关"><span class="nav-number"></span> <span class="nav-text">6、文件权限相关</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
