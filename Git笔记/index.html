@@ -85,14 +85,14 @@
 <meta property="og:site_name" content="Li Zehao&#39; Blog">
 <meta property="og:description" content="前言 这篇文章是学习Git过程中的笔记">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lizehao.info/Git笔记/1.jpg">
 <meta property="og:image" content="https://lizehao.info/Git笔记/2.jpg">
 <meta property="og:image" content="https://lizehao.info/Git笔记/3.jpg">
-<meta property="og:updated_time" content="2020-06-14T23:57:12.313Z">
+<meta property="og:image" content="https://lizehao.info/Git笔记/4.jpg">
+<meta property="og:updated_time" content="2020-06-15T01:18:17.621Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git笔记">
 <meta name="twitter:description" content="前言 这篇文章是学习Git过程中的笔记">
-<meta name="twitter:image" content="https://lizehao.info/Git笔记/1.jpg">
+<meta name="twitter:image" content="https://lizehao.info/Git笔记/2.jpg">
 
 
 
@@ -328,22 +328,23 @@
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config —global user.name “Your Name”</span><br><span class="line">git config —global user.email “email@example.com”</span><br></pre></td></tr></table></figure>
 <h3 id="4-提交"><a href="#4-提交" class="headerlink" title="4.提交"></a>4.提交</h3><ul>
-<li>初始化一个Git仓库，使用git init命令。</li>
-<li>git add 提交文件或者修改</li>
-<li>git commit -m “这次改了什么的说明”，可以add几次再commit一次</li>
-<li>add不用双引号，commit -m要双引号</li>
-<li>git status命令可以让我们时刻掌握仓库当前的状态</li>
-<li>git diff顾名思义就是查看difference，看具体修改了什么内容</li>
-<li>git log 更改日志</li>
-<li>如果嫌输出信息太多，看得眼花缭乱的，可以试试加上—pretty=oneline参数<h3 id="5-回退版本"><a href="#5-回退版本" class="headerlink" title="5.回退版本"></a>5.回退版本</h3></li>
-<li>git reset —hard HEAD^<br>回退版本，HEAD^就是上个版本，HEAD^^是上上个版本，HEAD~100是前100个版本</li>
-<li>当错删了，命令行没关时，去前面找HEAD，就是oneline的每个版本前面的字符串，前几位即可<br>git reset —hard 1094a</li>
+<li>提交前，先要初始化仓库，在一个文件夹里，输入命令<br><code>git init</code>就会初始化，并且文件夹会生成一个.git文件夹(默认隐藏)</li>
+<li><code>git add</code> 提交文件或者修改</li>
+<li><code>git add .</code>     提交全部文件夹</li>
+<li><code>git commit -m “这次改了什么的说明”</code>，可以add几次再commit一次<br>add后面的文件不用双引号，commit -m要双引号</li>
+<li><code>git status</code>命令可以让我们时刻掌握仓库当前的状态</li>
+<li><code>git diff</code>顾名思义就是查看difference，看具体修改了什么内容</li>
+<li><code>git log</code> 更改日志</li>
+<li>如果嫌输出信息太多，看得眼花缭乱的，可以试试<br><code>git log —pretty=oneline</code><h3 id="5-回退版本"><a href="#5-回退版本" class="headerlink" title="5.回退版本"></a>5.回退版本</h3></li>
+<li><code>git reset —hard HEAD^</code><br>回退版本，HEAD^就是上个版本，HEAD^^是上上个版本，HEAD~100是前100个版本</li>
+<li>当错删了，命令行没关时，去前面找HEAD，<br>就是<code>git log —pretty=oneline</code>的每个版本前面的字符串，前几位即可<br><code>git reset —hard 1094a</code></li>
 <li>Git提供了一个命令git reflog用来记录你的每一次命令：</li>
-<li>总结：HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset —hard commit_id。<h3 id="6-工作区和暂缓区"><a href="#6-工作区和暂缓区" class="headerlink" title="6.工作区和暂缓区"></a>6.工作区和暂缓区</h3>一个文件夹就是一个工作区，隐藏目录.git是版本库<br>![][1.jpg]<img src="/Git笔记/1.jpg" title="This is an image"><br>stage是暂缓区 ，add就是把文件添加到暂缓区<br>commit就是把暂缓区的内容提交到当前分支<br>add以后：<br><img src="2.jpg" alt=""><br>commit以后<br><img src="3.jpg" alt=""></li>
+<li>总结：HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令<br><code>git reset —hard commit_id</code><h3 id="6-工作区和暂缓区"><a href="#6-工作区和暂缓区" class="headerlink" title="6.工作区和暂缓区"></a>6.工作区和暂缓区</h3>一个文件夹就是一个工作区，隐藏目录.git是版本库<br>![][1.jpg]<br>stage是暂缓区 ，add就是把文件添加到暂缓区<br>commit就是把暂缓区的内容提交到当前分支<br>add以后：<br><img src="2.jpg" alt=""><br>commit以后<br><img src="3.jpg" alt=""></li>
 </ul>
-<h3 id="撤销修改"><a href="#撤销修改" class="headerlink" title="撤销修改"></a>撤销修改</h3><ul>
+<h3 id="7-撤销修改"><a href="#7-撤销修改" class="headerlink" title="7.撤销修改"></a>7.撤销修改</h3><ul>
 <li><code>git checkout — file</code>可以丢弃工作区的修改：<br>file在工作区—&gt;则回到分支版本库状态<br>file在暂缓区–&gt;则回到刚add的状态<br>总之，回到最近一次commit/add的状态（其实就是还原到最新版本，暂缓区如果有更新就比分支版本库新一个版本）</li>
-<li>总结：<br>场景1：直接丢弃工作区的修改时，用命令<br>git checkout — file<br>场景2：想丢弃暂缓区的改动时，两步，<br>第一步：git reset HEAD file，把暂缓区的修改撤销，重新放到工作区<br>第二步：git checkout — file<br>场景3：已经提交<br>参考回退版本<h3 id="删除文件"><a href="#删除文件" class="headerlink" title="删除文件"></a>删除文件</h3>当你要删除文件的时候，可以采用命令：rm test.txt<br>这个时候（也就是说这个时候只执行了rm test.txt）有两种情况</li>
+<li>总结：<br>场景1：直接丢弃工作区的修改时，用命令<br><code>git checkout — file</code><br>场景2：想丢弃暂缓区的改动时，两步，<br>第一步：<code>git reset HEAD file</code>，把暂缓区的修改撤销，重新放到工作区<br>第二步：<code>git checkout — file</code><br>场景3：已经提交<br>参考回退版本<h3 id="删除文件"><a href="#删除文件" class="headerlink" title="删除文件"></a>删除文件</h3></li>
+<li>当你要删除文件的时候，可以采用命令：<code>rm test.txt</code><br>这个时候（也就是说这个时候只执行了rm test.txt）有两种情况</li>
 <li>第一种情况:的确要把test.txt删掉，那么可以执行 git rm test.txt git commit -m “remove test.txt” 然后文件就被删掉了</li>
 <li>第二种情况:删错文件了，不应该删test.txt，注意这时只执行了rm test.txt，还没 有提交，所以可以执行git checkout test.txt将文件恢复。<br>（执行完git commit -m “remove test.txt”后就不能能用checkout恢复，commit之后版本库里的文件也没了，自然没办法用checkout恢复，而是要用其他的办法）</li>
 <li>git checkout  — file就是用版本库（暂缓区也在版本库）里的版本替换工作区的版本，无论工作区修改删除，都可以”一键还原”<h3 id="9-远程仓库"><a href="#9-远程仓库" class="headerlink" title="9.远程仓库"></a>9.远程仓库</h3></li>
@@ -351,14 +352,37 @@
 <li>一直默认回车即可，可以在用户主目录里找到.ssh目录，里面有id_rsa和id_rsa.pub两个文件，这两个就是SSH Key的秘钥对，id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥</li>
 <li>登陆GitHub，打开“Account settings”，“SSH Keys”页面：<br>然后，点“Add SSH Key”，填上任意Title，在Key文本框里粘贴id_rsa.pub文件的内容即可</li>
 <li>为什么GitHub需要SSH Key呢？因为GitHub需要识别出你推送的提交确实是你推送的，而不是别人冒充的，而Git支持SSH协议，所以，GitHub只要知道了你的公钥，就可以确认只有你自己才能推送</li>
-<li>可以添加多个电脑的key。<h3 id="添加远程仓库"><a href="#添加远程仓库" class="headerlink" title="添加远程仓库"></a>添加远程仓库</h3>要关联一个远程库，使用命令<br>git remote add origin  <a href="https://github.com/用户名/仓库名m" target="_blank" rel="noopener">https://github.com/用户名/仓库名m</a><br>关联后，使用命令<br>git push -u origin master第一次推送master分支的所有内容；<br>此后，每次本地提交后，只要有必要，就可以使用命令<br>git push origin master推送最新修改<h3 id="11-分支"><a href="#11-分支" class="headerlink" title="11.分支"></a>11.分支</h3><h3 id="Git鼓励大量使用分支："><a href="#Git鼓励大量使用分支：" class="headerlink" title="Git鼓励大量使用分支："></a>Git鼓励大量使用分支：</h3>###<br>查看分支：<br>git branch<br>创建分支：<br>git branch <name><br>切换分支：<br>git checkout <name> 或者<br>git switch <name><br>创建+切换分支：<br>git checkout -b <name> 或者<br>git switch -c <name><br>合并某分支到当前分支：<br>git merge <name><br>删除分支：<br>git branch -d <name><h2 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h2></name></name></name></name></name></name></name></li>
-<li>git tag <tagname> 用于新建一个标签，默认为<br>HEAD（最新提交的commit上） ，也可以指定一个commit id；</tagname></li>
+<li>可以添加多个电脑的key。<h3 id="添加远程仓库"><a href="#添加远程仓库" class="headerlink" title="添加远程仓库"></a>添加远程仓库</h3></li>
+<li>要关联一个远程库，使用命令<br><code>git remote add origin  https://github.com/用户名/仓库名m</code></li>
+<li><p>关联后，使用命令<br><code>git push -u origin master</code>第一次推送master分支的所有内容；</p>
+<p>注意:　如果新建远程仓库不是空的，例如你勾选了Initialize this repository with a README。那么你通过命令<code>$ git push -u origin master</code>是会报错的，如下：</p>
+<p><img src="4.jpg" alt=""><br>这是由于你新创建的那个仓库里面的README文件不在本地仓库目录中，这时我们可以通过以下命令先将内容合并：<br><code>$ git pull —rebase origin master</code><br>再输入:<br><code>$ git push origin master</code><br>此后，每次本地提交后，只要有必要，就可以使用命令<br><code>git push origin master</code>推送最新修改</p>
+</li>
+</ul>
+<h3 id="11-分支"><a href="#11-分支" class="headerlink" title="11.分支"></a>11.分支</h3><ul>
+<li><p>Git鼓励大量使用分支：</p>
+</li>
+<li><p>查看分支：<br><code>git branch</code></p>
+</li>
+<li>创建分支：<br><code>git branch &lt;name&gt;</code></li>
+<li>切换分支：<br><code>git checkout &lt;name&gt;</code>或者<br><code>git switch &lt;name&gt;</code></li>
+<li>创建+切换分支：<br><code>git checkout -b &lt;name&gt;</code> 或者<br><code>git switch -c &lt;name&gt;</code></li>
+<li>合并某分支到当前分支：<br><code>git merge &lt;name&gt;</code></li>
+<li><p>删除分支：<br><code>git branch -d &lt;name&gt;</code>标签</p>
+</li>
+<li><p>git tag <tagname> 用于新建一个标签，默认为<br>HEAD（最新提交的commit上） ，也可以指定一个commit id；</tagname></p>
+</li>
 <li>git tag -a <tagname> -m “blablabla…”### 可以指定标签信息；</tagname></li>
-<li>git tag可以查看所有标签。<h3 id="13-操作标签"><a href="#13-操作标签" class="headerlink" title="13.操作标签"></a>13.操作标签</h3></li>
-<li>git push origin <tagname> 可以推送一个本地标签；</tagname></li>
-<li>git push origin —tags 可以推送全部未推送过的本地标签；</li>
-<li>git tag -d <tagname> 可以删除一个本地标签；</tagname></li>
-<li>git push origin :refs/tags/<tagname> 可以删除一个远程标签。</tagname></li>
+<li>git tag可以查看所有标签。<h3 id="12-标签"><a href="#12-标签" class="headerlink" title="12.标签"></a>12.标签</h3></li>
+<li><code>git tag &lt;tagname&gt;</code> 用于新建一个标签，默认为<br>HEAD（最新提交的commit上） ，也可以指定一个commit id；</li>
+<li><code>git tag -a &lt;tagname&gt; -m “blablabla…”###</code>可以指定标签信息；</li>
+<li><code>git tag</code>可以查看所有标签。</li>
+</ul>
+<h3 id="操作标签"><a href="#操作标签" class="headerlink" title="操作标签"></a>操作标签</h3><ul>
+<li><code>git push origin &lt;tagname&gt;</code> 可以推送一个本地标签；</li>
+<li><code>git push origin —tags</code>可以推送全部未推送过的本地标签；</li>
+<li><code>git tag -d &lt;tagname&gt;</code> 可以删除一个本地标签；</li>
+<li><code>git push origin :refs/tags/&lt;tagname&gt;</code> 可以删除一个远程标签。</li>
 </ul>
 
       
@@ -523,7 +547,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简介"><span class="nav-number">2.</span> <span class="nav-text">1.简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-分布式和集中式"><span class="nav-number">3.</span> <span class="nav-text">2.分布式和集中式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-安装"><span class="nav-number">4.</span> <span class="nav-text">3.安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-提交"><span class="nav-number">5.</span> <span class="nav-text">4.提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-回退版本"><span class="nav-number">6.</span> <span class="nav-text">5.回退版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-工作区和暂缓区"><span class="nav-number">7.</span> <span class="nav-text">6.工作区和暂缓区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#撤销修改"><span class="nav-number">8.</span> <span class="nav-text">撤销修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除文件"><span class="nav-number">9.</span> <span class="nav-text">删除文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-远程仓库"><span class="nav-number">10.</span> <span class="nav-text">9.远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加远程仓库"><span class="nav-number">11.</span> <span class="nav-text">添加远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-分支"><span class="nav-number">12.</span> <span class="nav-text">11.分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git鼓励大量使用分支："><span class="nav-number">13.</span> <span class="nav-text">Git鼓励大量使用分支：</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#标签"><span class="nav-number"></span> <span class="nav-text">标签</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#13-操作标签"><span class="nav-number">1.</span> <span class="nav-text">13.操作标签</span></a></li></ol></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简介"><span class="nav-number">2.</span> <span class="nav-text">1.简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-分布式和集中式"><span class="nav-number">3.</span> <span class="nav-text">2.分布式和集中式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-安装"><span class="nav-number">4.</span> <span class="nav-text">3.安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-提交"><span class="nav-number">5.</span> <span class="nav-text">4.提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-回退版本"><span class="nav-number">6.</span> <span class="nav-text">5.回退版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-工作区和暂缓区"><span class="nav-number">7.</span> <span class="nav-text">6.工作区和暂缓区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-撤销修改"><span class="nav-number">8.</span> <span class="nav-text">7.撤销修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除文件"><span class="nav-number">9.</span> <span class="nav-text">删除文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-远程仓库"><span class="nav-number">10.</span> <span class="nav-text">9.远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加远程仓库"><span class="nav-number">11.</span> <span class="nav-text">添加远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-分支"><span class="nav-number">12.</span> <span class="nav-text">11.分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-标签"><span class="nav-number">13.</span> <span class="nav-text">12.标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作标签"><span class="nav-number">14.</span> <span class="nav-text">操作标签</span></a></li></ol></div>
             
 
           </div>
