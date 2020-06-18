@@ -243,6 +243,448 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/第三篇-Spring-MVC和HTTP/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/第三篇-Spring-MVC和HTTP/" itemprop="url">第三篇 Spring MVC和HTTP</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-18T23:56:13+08:00">
+                2020-06-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p> 1.HTTP</p>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP" target="_blank" rel="noopener">学习HTTP</a><br>HTTP是一种能够获取如 HTML 这样的网络资源的通信协议，它是在 Web 上进行数据交换的基础，是一种 client-server 协议，也就是说，请求通常是由像浏览器这样的接受方发起的。一个完整的Web文档通常是由不同的子文档拼接而成的，像是文本、布局描述、图片、视频、脚本等等。<br><img src="1.png" alt=""><br><img src="2.png" alt=""></p>
+<h3 id="基于HTTP的组件系统"><a href="#基于HTTP的组件系统" class="headerlink" title="基于HTTP的组件系统"></a>基于HTTP的组件系统</h3><ul>
+<li><p>HTTP是一个client-server协议：请求通过一个实体被发出，实体也就是用户代理。大多数情况下，这个用户代理都是指浏览器</p>
+</li>
+<li><p>每一个发送到服务器的请求，都会被服务器处理并返回一个消息，也就是<em>response。</em>在这个请求与响应之间，还有许许多多的被称为proxies的实体，他们的作用与表现各不相同，比如有些是网关，还有些是caches等。（实际上，在一个浏览器和处理请求的服务器之间，还有路由器、调制解调器等。由于Web的层次设计，那些在网络层和传输层的细节都被隐藏起来了）<br><img src="3.png" alt=""></p>
+</li>
+<li>客户端<br>浏览器首先发送一个请求来获取页面的HTML文档，再解析文档中的资源信息发送其他请求，获取可执行脚本或CSS样式来进行页面布局渲染，以及一些其它页面资源（如图片和视频等）。然后，浏览器将这些资源整合到一起，展现出一个完整的文档，也就是网页。浏览器执行的脚本可以在之后的阶段获取更多资源，并相应地更新网页。</li>
+<li>Web服务端<br>在上述通信过程的另一端，是由Web Server来<em>服务</em>并提供客户端所请求的文档。Server只是虚拟意义上代表一个机器：它可以是共享负载（负载均衡）的一组服务器组成的计算机集群，也可以是一种复杂的软件，通过向其他计算机（如缓存，数据库服务器，电子商务服务器 …）发起请求来获取部分或全部资源<br><img src="4.png" alt=""></li>
+<li>代理（Proxies）<br>在浏览器和服务器之间，有许多计算机和其他设备转发了HTTP消息。（大部分在传输层、网络层、物理层，但对应用层是透明的）<br>在应用层的，被称为代理Proxies，它可以透明或非透明，代理的作用：</li>
+</ul>
+<ol>
+<li>缓存（可以是公开的也可以是私有的，像浏览器的缓存）</li>
+<li>过滤（像反病毒扫描，家长控制…）</li>
+<li>负载均衡（让多个服务器服务不同的请求）</li>
+<li>认证（对不同资源进行权限管理）</li>
+<li>日志记录（允许存储历史信息）<h3 id="HTTP-流"><a href="#HTTP-流" class="headerlink" title="HTTP 流"></a>HTTP 流</h3></li>
+</ol>
+<ul>
+<li>当客户端想要和服务端进行信息交互时,过程表现为下面几步：</li>
+</ul>
+<ol>
+<li>打开一个TCP连接：TCP连接被用来发送一条或多条请求，以及接受响应消息。</li>
+<li>发送一个HTTP报文：HTTP报文（在HTTP/2之前）是语义可读的。在HTTP/2中，这些简单的消息被封装在了帧中，这使得报文不能被直接读取，但是原理仍是相同的。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET / HTTP/1.1</span><br><span class="line">Host: developer.mozilla.org</span><br><span class="line">Accept-Language: fr</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><img src="5.png" alt=""></p>
+<ol start="3">
+<li>读取服务端返回的报文信息：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Sat, 09 Oct 2010 14:28:02 GMT</span><br><span class="line">Server: Apache</span><br><span class="line">Last-Modified: Tue, 01 Dec 2009 20:18:22 GMT</span><br><span class="line">ETag: “51142bc1-7449-479b075b2891b”</span><br><span class="line">Accept-Ranges: bytes</span><br><span class="line">Content-Length: 29769</span><br><span class="line">Content-Type: text/html</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html… (here comes the 29769 bytes of the requested web page)`</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><img src="6.png" alt=""></p>
+<ol start="4">
+<li>关闭连接或者为后续请求重用连接<h3 id="HTTP方法"><a href="#HTTP方法" class="headerlink" title="HTTP方法"></a>HTTP方法</h3><img src="7.png" alt=""></li>
+</ol>
+<ul>
+<li>写入数据用post，获取数据用get</li>
+<li>GET - 从指定的资源请求数据。（也是向服务器提交数据）<br>POST - 向指定的资源提交要被处理的数据</li>
+<li>put支持幂等性<br>不支持幂等性的话，发帖网络断掉，重发，就会发两次（支付必须支持）</li>
+<li>post可以代替delete</li>
+<li>如下情况使用GET方法：<br>客户端与服务端的交互像是一个<strong>提问</strong>(如查询操作、搜索操作、读操作)</li>
+<li>如下情况使用POST方法：<br>1.交互是一个<strong>命令或订单</strong>(order)，比提问包含更多信息<br>2.交互改变了服务器端的资源并被用户察觉，例如订阅某项服务<br>3.用户需要对交互产生的结果负责</li>
+<li><img src="8.png" alt=""></li>
+</ul>
+<hr>
+<h2 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h2><h3 id="服务端三层架构"><a href="#服务端三层架构" class="headerlink" title="服务端三层架构"></a>服务端三层架构</h3><p>表现层、业务层、数据访问层<br><img src="9.png" alt=""><br>SpringMVC主要解决表现层<br>Model本来就有，所以表现层主要编写Controller和View（模板）</p>
+<h3 id="MVC主要解决表现层，含义："><a href="#MVC主要解决表现层，含义：" class="headerlink" title="MVC主要解决表现层，含义："></a>MVC主要解决表现层，含义：</h3><ul>
+<li>Controller：控制层——浏览器请求访问控制器，调用业务层处理，然后封装到Model</li>
+<li>Model:模型层——控制层和视图层的纽带</li>
+<li>View： 视图层——生成html返回给浏览器<h3 id="核心组件："><a href="#核心组件：" class="headerlink" title="核心组件："></a>核心组件：</h3>前端控制器：DispatcherServlet<br>即下图的Front Controller（前端控制器）<br><img src="10.png" alt=""><br>MVC底层是前段控制器来调度的，</li>
+</ul>
+<ol>
+<li>前端控制器接受浏览器请求,传给Controller</li>
+<li>Controller生成model返回给前端控制器</li>
+<li>前段控制器再把model传给视图模板</li>
+<li>视图模板再生成动态网页，返回给前端控制器</li>
+<li>前端控制器把Html返回给浏览器<blockquote>
+<p>整个流程都是在Tomcat里面运行的</p>
+</blockquote>
+<h3 id="Thymeleaf模板引擎"><a href="#Thymeleaf模板引擎" class="headerlink" title="Thymeleaf模板引擎"></a>Thymeleaf模板引擎</h3></li>
+</ol>
+<ul>
+<li>模板引擎的作用就是生成动态的HTML<br><img src="11.png" alt=""><br>最火的两个模板引擎是Thymeleaf和Freemarker，如果要了解Freemarker可以看看另一篇文章<a href="https://lizehao.info/Freemarker入门/#more">Freemarker入门</a>，或者去官方手册学习。</li>
+<li>什么是thymeleaf:  <blockquote>
+<ol>
+<li>java模板引擎，能够处理HTML，XML,JavaScript，CSS甚至是纯文本。类似于JSP和Freemarker，<br>2.作用就是把各个用户的公用的东西（页面）做一个提取，然后再根据不同的数据对页面进行渲染<br>3.自然模板，原型即页面<br>4.遵循Web的标准，支持HTML5<br><a href="https://www.jianshu.com/p/d1370aeb0881" target="_blank" rel="noopener">Thymeleaf基本语法</a></li>
+</ol>
+</blockquote>
+</li>
+<li>thymeleaf基本语法<br><img src="12.png" alt=""></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/第一篇Spring-Boot、Maven入门以及开发环境配置/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/第一篇Spring-Boot、Maven入门以及开发环境配置/" itemprop="url">第一篇Spring Boot、Maven入门以及开发环境配置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-18T23:55:13+08:00">
+                2020-06-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章记录了学习SpringBoot和Maven基础的笔记，以及基于SpringBoot、SSM、Redis、Kafka等技术的讨论社区项目的开发环境配置</p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/第一篇Spring-Boot、Maven入门以及开发环境配置/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/第二篇-Spring入门/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/第二篇-Spring入门/" itemprop="url">第二篇 Spring入门</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-18T23:54:48+08:00">
+                2020-06-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章记录了学习Spring基础的笔记，以及IoC原理、个人理解和Spring Ioc容器的使用。</p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/第二篇-Spring入门/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://lizehao.info/Freemarker入门/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1113,387 +1555,13 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lizehao.info/JAVA第一篇：JAVA基础/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Li Zehao">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/boy.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Li Zehao' Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/JAVA第一篇：JAVA基础/" itemprop="url">JAVA第一篇：JAVA基础</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-04T00:21:20+08:00">
-                2020-03-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
-<p>本篇文章主要总结了JAVA环境、命名规则、通用语法、基本数据类型和数据类型的转换以及字符串的基本知识</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/JAVA第一篇：JAVA基础/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lizehao.info/HEXO写作/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Li Zehao">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/boy.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Li Zehao' Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/HEXO写作/" itemprop="url">HEXO写作</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-25T19:01:04+08:00">
-                2019-02-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
-<p>这篇文章讲了用HEXO写博客的步骤<br>以及如何插入图片</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/HEXO写作/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lizehao.info/GithubPages-Hexo搭建个人技术博客/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Li Zehao">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/boy.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Li Zehao' Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/GithubPages-Hexo搭建个人技术博客/" itemprop="url">GithubPages+Hexo+Next搭建个人博客</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-06T06:22:43+08:00">
-                2019-01-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
-<p>这篇文章写了基于Hexo和GithubPages从零开始搭建<br>个人博客的步骤，主题配置选用Next。</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/GithubPages-Hexo搭建个人技术博客/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1539,7 +1607,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1552,7 +1620,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

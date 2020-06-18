@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本篇文章记录了学习Spring基础的笔记，以及IoC原理、个人理解和Spring Ioc容器的使用。">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第二篇 Spring入门">
+<meta property="og:url" content="https://lizehao.info/第二篇-Spring入门/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本篇文章记录了学习Spring基础的笔记，以及IoC原理、个人理解和Spring Ioc容器的使用。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lizehao.info/第二篇-Spring入门/1.png">
+<meta property="og:image" content="https://lizehao.info/第二篇-Spring入门/2.png">
+<meta property="og:image" content="https://lizehao.info/第二篇-Spring入门/3.png">
+<meta property="og:updated_time" content="2020-06-18T16:06:03.314Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第二篇 Spring入门">
+<meta name="twitter:description" content="前言 本篇文章记录了学习Spring基础的笔记，以及IoC原理、个人理解和Spring Ioc容器的使用。">
+<meta name="twitter:image" content="https://lizehao.info/第二篇-Spring入门/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/第二篇-Spring入门/">
+
+
+
+
+
+  <title>第二篇 Spring入门 | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/第二篇-Spring入门/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第二篇 Spring入门</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-18T23:54:48+08:00">
+                2020-06-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章记录了学习Spring基础的笔记，以及IoC原理、个人理解和Spring Ioc容器的使用。</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h2 id="1-Spring全家桶"><a href="#1-Spring全家桶" class="headerlink" title="1.Spring全家桶"></a>1.Spring全家桶</h2><ul>
+<li>Spring是一套框架，被称为Spring全家桶：<br>Spring Framework( 核心)<br>Spring Boot(构建项目，在此基础上进行Spring开发)<br>Spring Cloud(微服务，可以把项目拆分为一些子项目)<br>Spring Cloud Date Flow（把多个客户端数据集成）<br><img src="1.png" alt=""></li>
+<li>Spring.io里面有各种Spring的介绍</li>
+</ul>
+<hr>
+<h2 id="2-Spring-Framework简介"><a href="#2-Spring-Framework简介" class="headerlink" title="2.Spring Framework简介"></a>2.Spring Framework简介</h2><h3 id="Spring-Core"><a href="#Spring-Core" class="headerlink" title="Spring Core"></a>Spring Core</h3><ul>
+<li>IoC(面向对象)、AOP(面相切面)是管理对象的思想，有了这两种思想可以管理一切Bean</li>
+<li>由Spring管理的对象叫做Bean<br>beans可以理解为一个类,这个类满足<br>1、所有属性为private<br>2、提供默认构造方法<br>3、提供getter和setter<br>4、实现serializable接口<blockquote>
+<p>Java的”对象序列化”能让你将一个实现了Serializable接口的对象转换成一组byte，这样日后要用这个对象时候，你就能把这些byte数据恢复出来，并据此重新构建那个对象了。这一点甚至在跨网络的环境下也是如此，这就意味着序列化机制能自动补偿操作系统方面的差异。也就是说，你可以在Windows机器上创键一个对象，序列化之后，再通过网络传到Unix机器上，然后在那里进行重建。你不用担心在不同的平台上数据是怎样表示的，byte顺序怎样，或者别的什么细节。</p>
+</blockquote>
+<h3 id="Spring-Date-Access"><a href="#Spring-Date-Access" class="headerlink" title="Spring Date Access"></a>Spring Date Access</h3>Transactions（管理事务）、Spring MyBatis（管理MyBatis）<h3 id="Web-Servlet"><a href="#Web-Servlet" class="headerlink" title="Web Servlet"></a>Web Servlet</h3>Spring MVC<h3 id="Integration-整合"><a href="#Integration-整合" class="headerlink" title="Integration(整合)"></a>Integration(整合)</h3>Email、Scheduling、AMOP(消息队列)、Security</li>
+</ul>
+<h2 id="3-IoC"><a href="#3-IoC" class="headerlink" title="3.IoC"></a>3.IoC</h2><h3 id="Inversion-of-Control"><a href="#Inversion-of-Control" class="headerlink" title="Inversion of Control"></a>Inversion of Control</h3><ul>
+<li>控制反转，是一种面向对象的设计思想<br>可以看这篇回答先了解个大慨<br><a href="https://www.zhihu.com/question/23277575/answer/169698662" target="_blank" rel="noopener">IoC知乎回答</a></li>
+<li>IoC(Inversion of Control)：控制反转。<br><strong>控制</strong>：当前对象对内部成员的控制权。<br><strong>反转</strong>：这种控制权不由当前对象管理了，由其他(类,第三方容器)来管理。<br>控制反转是为了降低类与类之间的耦合度。</li>
+<li>DI(Dependency Injection)：依赖注入。<br>IOC不够开门见山，于是Martin Fowler提出了DI(dependency injection)来替代</li>
+<li>控制反转是目的，依赖注入是实现控制反转的手段。<br>依赖注入是通过IoC Container实现的 <h3 id="个人对IoC的理解"><a href="#个人对IoC的理解" class="headerlink" title="个人对IoC的理解"></a>个人对IoC的理解</h3><ul>
+<li>最开始，A类和B类之间要协作的话，A类里面new一个B类对象，这样A类就依赖B类，如果有一系列的依赖，底层类要改动，上层的类都要改动</li>
+</ul>
+</li>
+<li>然后有了依赖倒置原则实现控制反转<blockquote>
+<p>《敏捷软件开发》十一章<br>依赖倒置原则：</p>
+<ol>
+<li>高层模块不应该依赖底层模块，二者都应该依赖抽象<br>2.抽象不应该依赖细节，细节应该依赖抽象<br>然后我们就不在 A类里newB类对象，只把B类对象引用传过来，各层把new对象的权利交了出去，交给外部。<br>这样就不用管底层类的改动就不会影响上层类</li>
+</ol>
+</blockquote>
+</li>
+<li>最后有了依赖注入来实现控制反转<br><img src="2.png" alt=""><br>虽然依赖倒置原则可以实现控制反转，但是有很多项目有很多层的依赖，这样创建一个高层类，需要从底层一层层new，而依赖注入就把这些操作封装在一个容器里，这个容器就像一个对象生产工厂，我们需要一个对象，直接从这个工厂里领。</li>
+</ul>
+<hr>
+<h2 id="4-Spring-IoC实现和IoC容器的使用"><a href="#4-Spring-IoC实现和IoC容器的使用" class="headerlink" title="4.Spring IoC实现和IoC容器的使用"></a>4.Spring IoC实现和IoC容器的使用</h2><h3 id="Spring-IoC是怎么实现的"><a href="#Spring-IoC是怎么实现的" class="headerlink" title="Spring IoC是怎么实现的"></a>Spring IoC是怎么实现的</h3><p><img src="3.png" alt=""><br>给IoC Container传入Bean和配置文件，然后就可以取我们需要的对象</p>
+<ul>
+<li>Application类，运行的时候不止启动了Tomcat，还自动帮我们创建了IoC容器<br>这个类有一个@SpringBootApplication注解，这个注解是由其他注解组成的<br>@SpringBootConfiguration（表示是配置文件）<br>@EnableAutoConfiguration（表示自动配置）<br>@Componentscan(会扫描这个配置类所在的包和子包下的Bean）</li>
+<li>在Bean上加上@Component、@Controller（处理请求）、@Service（处理业务）、@Repository（处理数据库）)<br>就都会被扫描到(后三个是通过@Component实现的)</li>
+<li>如果测试包下的配置类里要用main下的配置类作为自己的配置类<code>@ContextConfiguration(classes = CommunityApplication.class)</code><h3 id="怎么使用Ioc容器"><a href="#怎么使用Ioc容器" class="headerlink" title="怎么使用Ioc容器"></a>怎么使用Ioc容器</h3></li>
+<li>哪个类想使用IoC容器，就实现接口：<br><code>implements ApplicationContextAware</code><br>并实现方法<br><code>setApplicationContext（ApplicationContext applicationContext）</code><br>传入的接口ApplicationContext就是一个Spring容器，它是Spring容器顶层接口BeanFactory的子接口 </li>
+<li><p>接受Spring容器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private ApplicationContext applicationContext;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">public void setApplicationContext(ApplicationContext applicationContext) throws BeansException &#123;</span><br><span class="line">	this.applicationContext = applicationContext;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用容器创建bean：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void contextLoads() &#123;</span><br><span class="line">	//从容器中获取需要的bean</span><br><span class="line">	AlphaDao alphaDao = applicationContext.getBean(AlphaDao.class);</span><br><span class="line">	System.*out*.println(alphaDao.select());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果一个接口有多种实现类，IoC容器就不知道调用哪一个，可以在想优先调用的实现类上加上注解<br><code>@Primary</code><br>这也是一种面向接口的思想，我们调用接口，当实现类有变化的时候，调用的代码不用改变，在需要调用的实现类上加上@Primary注解即可</p>
+</li>
+<li><p>可能大部分地方需要接口的A实现类(Primary)，但有些地方需要接口的B实现类，我们也可以通过注解指定<br>通过在B实现类的注解后面加上一个简单的名字：<br><code>@Repository(“name”)</code><br>然后从容器中需要特定取B实现类的时候就用:<br><code>AlphaDao alphaDao = applicationContext.getBean(“name”,AlphaDao.class);</code></p>
+</li>
+<li><p>通过IoC容器初始化和销毁Bean<br>在bean的初始化方法上加上@PostConstrucr，就会在构造方法后调用这个初始化方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@PostConstruct</span><br><span class="line">public void init()&#123;</span><br><span class="line">    System.*out*.println(“初始化AlphaService”);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在bean的销毁方法前加上@PreDestroy，就会在销毁前调用这个方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@PreDestroy</span><br><span class="line">public void destroy()&#123;</span><br><span class="line">    System.*out*.println(“销毁AlphaService”);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>被IoC容器初始化的Bean默认是单例的，只实例化一次，如果想每次获取bean都实例化不，可以在bean上加上注解:<br><code>@Scope(“prototype”)</code></p>
+<ul>
+<li>以上都是针对自己写的bean，如果是第三方的bean，没法修改代码，可以用配置类，普通的配置类要加上注解@Configuration<br>要定义第三方的Bean，要在配置类里的方法上加上注解@Bean，方法名就是Bean名<blockquote>
+<p>Spring的@Bean注解用于告诉方法，产生一个Bean对象，然后这个Bean对象交给Spring管理。产生这个Bean对象的方法Spring只会调用一次，随后这个Spring将会将这个Bean对象放在自己的IOC容器中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class AlphaConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public SimpleDateFormat simpleDateFormat()&#123;</span><br><span class="line">        return new SimpleDateFormat(“yyyy-mm-dd”);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ul>
+<p>测试运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testBeanConfig()&#123;</span><br><span class="line">	SimpleDateFormat simpleDateFormat =</span><br><span class="line">			applicationContext.getBean(SimpleDateFormat.class);</span><br><span class="line">	System.*out*.println(simpleDateFormat.format(new Date()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>上面是手动创建Bean,下面用依赖注入  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@Autowired</span><br><span class="line">private AlphaDao alphaDao;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>然后就可以调用对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testDI() &#123;</span><br><span class="line">	System.out.println(alphaDao);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>直接在配置文件定义，就会自动注入</p>
+<ul>
+<li>需要自定义注入的接口的某个实现类，加一个注解即可:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@Autowired</span><br><span class="line">@Qualifier(“alphaHibernate”)</span><br><span class="line">private AlphaDao alphaDao;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Freemarker入门/" rel="next" title="Freemarker入门">
+                <i class="fa fa-chevron-left"></i> Freemarker入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/第一篇Spring-Boot、Maven入门以及开发环境配置/" rel="prev" title="第一篇Spring Boot、Maven入门以及开发环境配置">
+                第一篇Spring Boot、Maven入门以及开发环境配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Spring全家桶"><span class="nav-number"></span> <span class="nav-text">1.Spring全家桶</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Spring-Framework简介"><span class="nav-number"></span> <span class="nav-text">2.Spring Framework简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Core"><span class="nav-number">1.</span> <span class="nav-text">Spring Core</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Date-Access"><span class="nav-number">2.</span> <span class="nav-text">Spring Date Access</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-Servlet"><span class="nav-number">3.</span> <span class="nav-text">Web Servlet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Integration-整合"><span class="nav-number">4.</span> <span class="nav-text">Integration(整合)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-IoC"><span class="nav-number"></span> <span class="nav-text">3.IoC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Inversion-of-Control"><span class="nav-number">1.</span> <span class="nav-text">Inversion of Control</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个人对IoC的理解"><span class="nav-number">2.</span> <span class="nav-text">个人对IoC的理解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Spring-IoC实现和IoC容器的使用"><span class="nav-number"></span> <span class="nav-text">4.Spring IoC实现和IoC容器的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-IoC是怎么实现的"><span class="nav-number">1.</span> <span class="nav-text">Spring IoC是怎么实现的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎么使用Ioc容器"><span class="nav-number">2.</span> <span class="nav-text">怎么使用Ioc容器</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
