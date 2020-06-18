@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring Boot,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本文记录了初步学习Freemarker的笔记，但手边资料没有Thymeleaf丰富，所以先转用Thymeleaf">
+<meta name="keywords" content="Spring Boot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Freemarker入门">
+<meta property="og:url" content="https://lizehao.info/Freemarker入门/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本文记录了初步学习Freemarker的笔记，但手边资料没有Thymeleaf丰富，所以先转用Thymeleaf">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lizehao.info/Freemarker入门/1.png">
+<meta property="og:image" content="https://lizehao.info/Freemarker入门/2.png">
+<meta property="og:updated_time" content="2020-06-18T15:34:25.688Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Freemarker入门">
+<meta name="twitter:description" content="前言 本文记录了初步学习Freemarker的笔记，但手边资料没有Thymeleaf丰富，所以先转用Thymeleaf">
+<meta name="twitter:image" content="https://lizehao.info/Freemarker入门/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/Freemarker入门/">
+
+
+
+
+
+  <title>Freemarker入门 | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/Freemarker入门/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Freemarker入门</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-18T23:28:41+08:00">
+                2020-06-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本文记录了初步学习Freemarker的笔记，但手边资料没有Thymeleaf丰富，所以先转用Thymeleaf</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h3 id="1模板-数据模型-输出"><a href="#1模板-数据模型-输出" class="headerlink" title="1模板+数据模型=输出"></a>1模板+数据模型=输出</h3><ul>
+<li>假设一个应用系统需要一个页面，这个页面的某些信息是根据用户而改变的，比如<strong>用户姓名</strong>，并且最新的数据来源于数据库，这样才能随时更新，这样就不能使用静态的html代码。</li>
+<li>此时，可以使用模板，模板和html是一样的，只不过<strong>模板会包含一些指令，模板通过解析可以把它们变成动态的内容</strong></li>
+<li>模板是怎么工作的：<br>模板文件存放在Web服务器上，当有人来访问这个页面， FreeMarker将会介入执行，然后动态转换模板，用最新的数据内容替换模板中 ${<em>…</em>} 的部分， 之后将结果发送到访问者的Web浏览器中。访问者会接收一个类似普通的html的内容，访问者不会察觉到服务端使用的Freemarker</li>
+</ul>
+<h3 id="2-数据模型"><a href="#2-数据模型" class="headerlink" title="2.数据模型"></a>2.数据模型</h3><ul>
+<li>注意，模板并没有程序逻辑去查询访问者是谁等数据，这些数据是在Freemarker外准备的，通常是JAVA编写的代码，模板作者无需知道这些值是如何算出的（这些值也可以被修改）</li>
+<li>为模板准备的数据整体被称作<strong>数据模型</strong> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">(root)</span><br><span class="line"> |</span><br><span class="line"> +- animals</span><br><span class="line"> |   |</span><br><span class="line"> |   +- mouse</span><br><span class="line"> |   |   |   </span><br><span class="line"> |   |   +- size = “small”</span><br><span class="line"> |   |   |   </span><br><span class="line"> |   |   +- price = 50</span><br><span class="line"> |   |</span><br><span class="line"> |   +- elephant</span><br><span class="line"> |   |   |   </span><br><span class="line"> |   |   +- size = “large”</span><br><span class="line"> |   |   |   </span><br><span class="line"> |   |   +- price = 5000</span><br><span class="line"> |   |</span><br><span class="line"> |   +- python</span><br><span class="line"> |       |   </span><br><span class="line"> |       +- size = “medium”</span><br><span class="line"> |       |   </span><br><span class="line"> |       +- price = 4999</span><br><span class="line"> |</span><br><span class="line"> +- message = “It is a test”</span><br><span class="line"> |</span><br><span class="line"> +- misc</span><br><span class="line">     |</span><br><span class="line">     +- foo = “Something”</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>数据模型基本结构是树状的<br>上面扮演目录的角色（root,animals，mouse等）被称为<strong>hashes</strong>（哈希表）<br>存储单值的变量（size，message等）被称为<strong>scalars</strong> (标量）</p>
+<ul>
+<li>如果要在模板中使用子变量， 那应该从根root开始指定它的路径，如：animals.mouse.price</li>
+<li>另外一种很重要的变量是 <strong>sequences</strong> (序列)。 它们像哈希表那样存储子变量，但是子变量没有名字，它们只是列表中的项。<h3 id="3-模板"><a href="#3-模板" class="headerlink" title="3.模板"></a>3.模板</h3></li>
+<li>最简单的模板通常是普通的HTML文件，当客户端访问某个页面时， FreeMarker要发送HTML代码至客户端浏览器中去显示。</li>
+<li>如果想要页面动起来，那么就要在HTML中放置能被FreeMarker所解析的特殊代码片段：</li>
+</ul>
+<ol>
+<li><strong>${…}</strong>： FreeMarker将会输出真实的值来替换大括号内的表达式，这样的表达式被称为 <strong>interpolation</strong>(插值）</li>
+<li><strong>FTL 标签</strong> (FreeMarker模板的语言标签)： FTL标签和HTML标签有一些相似之处，但是它们是FreeMarker的指令，是不会在输出中打印的。 这些标签的名字以 # 开头。</li>
+<li><strong>注释：</strong> 注释和HTML的注释也很相似， 但是它们使用 &lt;#— and —&gt; 来标识。</li>
+</ol>
+<ul>
+<li>其他任何不是以上三者的内容被视为静态文本， 这些东西不会被FreeMarker所解析；会被按照原样输出出来。<h3 id="4-基本指令"><a href="#4-基本指令" class="headerlink" title="4.基本指令"></a>4.基本指令</h3></li>
+<li><strong>if</strong>指令<br><code>Welcome ${user}&lt;#if user == “Big Joe”&gt;, our beloved leader&lt;/#if&gt;!</code><br>true就执行后面的，false那么if之间的就会被忽略<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;#if animals.python.price == 0&gt;</span><br><span class="line">  Pythons are free today!</span><br><span class="line">&lt;/#if&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>当价格为0时，就会打印出 “Pythons are free today!”<br>else<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;#if animals.python.price &lt; animals.elephant.price&gt;</span><br><span class="line">  Pythons are cheaper than elephants today.</span><br><span class="line">&lt;#else&gt;</span><br><span class="line">  Pythons are not cheaper than elephants today.</span><br><span class="line">&lt;/#if&gt;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><strong>list</strong>指令<br>list 指令的一般格式为：<br><code>&lt;#list sequence as loopVariable&gt;  repeatThis  &lt;/#list&gt;</code><br>repeatThis 部分将会在给定的<br>sequence 遍历时在每一项中重复， 从第一项开始，一个接着一个。在所有的重复中，<br>loopVariable将持有当前遍历项的值。 这个变量仅存在于<br><code>&lt;#list</code> 和<code>&lt;/#list&gt;</code> 标签内。</li>
+</ul>
+<ol>
+<li><p>普通</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul&gt;</span><br><span class="line">&lt;#list misc.fruits as fruit&gt;</span><br><span class="line">  &lt;li&gt;$&#123;fruit&#125;</span><br><span class="line">&lt;/#list&gt;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>避免只有0个水果的情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;#list misc.fruits&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">  &lt;#items as fruit&gt;</span><br><span class="line">      &lt;li&gt;$&#123;fruit&#125;</span><br><span class="line">	&lt;/#items&gt;</span><br><span class="line">  &lt;/ul&gt;</span><br><span class="line">&lt;/#list&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>用分隔符分隔列出来的水果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;p&gt;Fruits: &lt;#list misc.fruits as fruit&gt;$&#123;fruit&#125;&lt;#sep&gt;,&lt;/#list&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>被 sep 覆盖的部分(我们也可以这么来写：<code>&lt;#sep&gt;, &lt;/#sep&gt;&lt;/#list&gt;</code>  )只有当还有下一项时才会被执行。 因此最后一个水果后面不会有逗号。</p>
+<h3 id="5-总体结构"><a href="#5-总体结构" class="headerlink" title="5.总体结构"></a>5.总体结构</h3><p><img src="1.png" alt=""></p>
+<h3 id="6-插值"><a href="#6-插值" class="headerlink" title="6.插值"></a>6.插值</h3><p><img src="2.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring-Boot/" rel="tag"># Spring Boot</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/详解TCP报文、三次握手和四次握手/" rel="next" title="详解TCP报文、三次握手和四次握手">
+                <i class="fa fa-chevron-left"></i> 详解TCP报文、三次握手和四次握手
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1模板-数据模型-输出"><span class="nav-number">2.</span> <span class="nav-text">1模板+数据模型=输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-数据模型"><span class="nav-number">3.</span> <span class="nav-text">2.数据模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-模板"><span class="nav-number">4.</span> <span class="nav-text">3.模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-基本指令"><span class="nav-number">5.</span> <span class="nav-text">4.基本指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-总体结构"><span class="nav-number">6.</span> <span class="nav-text">5.总体结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-插值"><span class="nav-number">7.</span> <span class="nav-text">6.插值</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
