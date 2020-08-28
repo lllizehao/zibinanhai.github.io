@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本篇文章先介绍了HTTP的基本特点，然后介绍了Cookie和Session以及两者应用场景，最后用Kaptcha生成验证码">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第九篇 会话管理和生成验证码">
+<meta property="og:url" content="https://lizehao.info/第九篇-会话管理和生成验证码/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本篇文章先介绍了HTTP的基本特点，然后介绍了Cookie和Session以及两者应用场景，最后用Kaptcha生成验证码">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lizehao.info/第九篇-会话管理和生成验证码/1.png">
+<meta property="og:image" content="https://lizehao.info/第九篇-会话管理和生成验证码/2.png">
+<meta property="og:image" content="https://lizehao.info/第九篇-会话管理和生成验证码/3.png">
+<meta property="og:image" content="https://lizehao.info/第九篇-会话管理和生成验证码/4.png">
+<meta property="og:image" content="https://lizehao.info/第九篇-会话管理和生成验证码/5.png">
+<meta property="og:image" content="https://lizehao.info/第九篇-会话管理和生成验证码/6.png">
+<meta property="og:image" content="https://lizehao.info/第九篇-会话管理和生成验证码/7.png">
+<meta property="og:image" content="https://lizehao.info/第九篇-会话管理和生成验证码/8.png">
+<meta property="og:image" content="https://lizehao.info/第九篇-会话管理和生成验证码/9.png">
+<meta property="og:image" content="https://lizehao.info/第九篇-会话管理和生成验证码/1.png">
+<meta property="og:updated_time" content="2020-08-28T08:33:21.596Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第九篇 会话管理和生成验证码">
+<meta name="twitter:description" content="前言 本篇文章先介绍了HTTP的基本特点，然后介绍了Cookie和Session以及两者应用场景，最后用Kaptcha生成验证码">
+<meta name="twitter:image" content="https://lizehao.info/第九篇-会话管理和生成验证码/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/第九篇-会话管理和生成验证码/">
+
+
+
+
+
+  <title>第九篇 会话管理和生成验证码 | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/第九篇-会话管理和生成验证码/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第九篇 会话管理和生成验证码</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-26T20:25:36+08:00">
+                2020-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章先介绍了HTTP的基本特点，然后介绍了Cookie和Session以及两者应用场景，最后用Kaptcha生成验证码</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h2 id="HTTP是无状态的，有会话的"><a href="#HTTP是无状态的，有会话的" class="headerlink" title="HTTP是无状态的，有会话的"></a>HTTP是无状态的，有会话的</h2><h3 id="无状态"><a href="#无状态" class="headerlink" title="无状态"></a>无状态</h3><p>在同一个连接中，两个执行成功的请求之间是没有关系的，所以用户没办法在同一个网站中进行连续的交互。（就是第二次访问服务器不知道和第一次是否是同一个用户） </p>
+<h3 id="有会话"><a href="#有会话" class="headerlink" title="有会话"></a>有会话</h3><p>HTTP Cookies解决了这个问题，把Cookies添加到头部中，创建一个会话让每次请求都能共享相同的上下文信息，达成相同的状态。</p>
+<h3 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h3><ul>
+<li>Cookie的作用就是让服务器记住客户端，是服务器发送到用户浏览器并保存在本地的一小块数据，它会在浏览器下次向同一服务器再发起请求时被携带并发送到服务器上（类似会员卡）</li>
+<li>Cookie主要用于一下三个方面:</li>
+</ul>
+<ol>
+<li>会话状态管理（登录状态，购物车，游戏分数等需要记录的信息）</li>
+<li>个性化设置</li>
+<li>浏览器行为跟踪<br><img src="1.png" alt=""><h3 id="测试cookie"><a href="#测试cookie" class="headerlink" title="测试cookie"></a>测试cookie</h3>首先写一个cookie的测试方法，设置cookie路径为整个项目<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(path = “/cookie/set”,method = RequestMethod.*GET*)</span><br><span class="line">@ResponseBody</span><br><span class="line">public String testCookie(HttpServletResponse response)&#123;</span><br><span class="line">    //创建cookie</span><br><span class="line">    Cookie cookie = new Cookie (“code”, CommunityUtil.*generateUUID*());</span><br><span class="line">    //设置cookie生效范围，避免浪费网络资源</span><br><span class="line">    cookie.setPath(“/community”);</span><br><span class="line">    //cookie默认存在内存里，关掉浏览器就消失了</span><br><span class="line">    //设置cookie存储时间可以存在硬盘里(单位是秒)</span><br><span class="line">    cookie.setMaxAge(60*10);</span><br><span class="line">    //发送cookie</span><br><span class="line">    response.addCookie(cookie);</span><br><span class="line"></span><br><span class="line">    return “test cookie”;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这样浏览器访问服务器，服务器就会返回cookie,如下图<br><img src="2.png" alt=""><br>下一次浏览器访问服务器（在设置的路径范围内），就会携带这个cookie，如下图<br><img src="3.png" alt=""></p>
+<ul>
+<li>使用这个浏览器携带的cookie<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(path = “/cookie/get”,method = RequestMethod.GET)</span><br><span class="line">@ResponseBody</span><br><span class="line">public String getCookie(@CookieValue(“code”) String code )&#123;</span><br><span class="line">    System.out.println(code);</span><br><span class="line">    return “get cookie”;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h2><ul>
+<li>Cookie虽然解决了HTTP无状态的问题，但是不便于存敏感信息（密码），而且每次给服务器传Cookie也增加服务端压力</li>
+<li>Session是JavaEE的标准，在服务端记录客户端信息（不用带会员卡，报电话号码即可）<br>数据存放在服务端更安全，但是也会增加服务端压力。<br><img src="4.png" alt=""><h3 id="Session示例"><a href="#Session示例" class="headerlink" title="Session示例"></a>Session示例</h3></li>
+<li>设置Session<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//Session示例</span><br><span class="line">//Session可以存各种类型数据 ，Cookie只能存String，而且少量</span><br><span class="line">@RequestMapping(path = “/session/set”,method = RequestMethod.*GET*)</span><br><span class="line">@ResponseBody</span><br><span class="line">public String setSession(HttpSession session)&#123;</span><br><span class="line">    session.setAttribute(“id”,1);</span><br><span class="line">    session.setAttribute(“name”, “test”);</span><br><span class="line">    return “set session”;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="5.png" alt=""></p>
+<ul>
+<li>服务端通过SessionId取值<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(path = “/session/get”,method = RequestMethod.*GET*)</span><br><span class="line">@ResponseBody</span><br><span class="line">public String getSession(HttpSession session)&#123;</span><br><span class="line">    System.*out*.println(session.getAttribute(“id”));</span><br><span class="line">    System.*out*.println(session.getAttribute(“name”));</span><br><span class="line">    return “get session”;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="6.png" alt=""><br><img src="7.png" alt=""></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>能用Cookie用Cookie，减少服务器压力，需要有安全保障的信息用Session<br>，分布式部署尽量不用session，问题如下图A<br><img src="8.png" alt=""><br>分布式部署的问题有三种解决方案：</p>
+<ol>
+<li><p>粘性Session，就是同一IP用同一服务器，但是很难保证服务器均衡</p>
+</li>
+<li><p>同步Session,把Session给每个服务器同步，但是服务器压力大而且之间耦合度变高</p>
+</li>
+<li><p>共享Session,单独一台服务器单独处理Session，缺点是，别的服务器都依赖这台服务器<br>主流解决办法：<br>能用Cookie用Cookie,敏感数据存在数据库（Redis比较好r）</p>
+<p><img src="9.png" alt=""></p>
+<h2 id="Kaptcha生成验证码"><a href="#Kaptcha生成验证码" class="headerlink" title="Kaptcha生成验证码"></a>Kaptcha生成验证码</h2><h3 id="导包"><a href="#导包" class="headerlink" title="导包"></a>导包</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.github.penggle&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;kaptcha&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.3.2&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="配置Bean"><a href="#配置Bean" class="headerlink" title="配置Bean"></a>配置Bean</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">//配置类（向项目里面添加一些配置的bean实例时用到</span><br><span class="line">public class kaptchaConfig &#123;</span><br><span class="line">    @Bean</span><br><span class="line">    //方法的返回值是bean容器的实例，注入实例的时候就会自动配置</span><br><span class="line">    public Producer kaptchaProducer()&#123;</span><br><span class="line"></span><br><span class="line">        //设置验证码信息</span><br><span class="line">        Properties properties = new Properties();</span><br><span class="line">        //长宽</span><br><span class="line">        properties.setProperty(“kaptcha.image.width”,”100”);</span><br><span class="line">        properties.setProperty(“kaptcha.image.height”,”40”);</span><br><span class="line">        //字体大小颜色 0,0,0是黑色（红绿蓝的数值）</span><br><span class="line">        properties.setProperty(&quot;kaptcha.textproducer.font.size&quot;,&quot;32&quot;);</span><br><span class="line">        properties.setProperty(&quot;kaptcha.textproducer.font.color”,”0,0,0”);</span><br><span class="line">        //验证码信息</span><br><span class="line">        properties.setProperty(&quot;kaptcha.textproducer.char.String&quot;,&quot;0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;);</span><br><span class="line">        properties.setProperty(&quot;kaptcha.textproducer.char.length&quot;,&quot;4&quot;);</span><br><span class="line">        properties.setProperty(&quot;kaptcha.noise.impl&quot;,&quot;com.google.code.kaptcha.impl.NoNoise&quot;);</span><br><span class="line"></span><br><span class="line">        //把配置给Config,Config再把配置给Kaptcha</span><br><span class="line">        DefaultKaptcha kaptcha = new DefaultKaptcha();</span><br><span class="line">        Config config = new Config(properties);</span><br><span class="line">        kaptcha.setConfig(config);</span><br><span class="line">        return kaptcha;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">*/***</span><br><span class="line">* * 生成验证码，不在getLoginPage()里写*</span><br><span class="line">* * 那个方法只是返回一个html，浏览器会根据图片路径再次访问服务器*</span><br><span class="line">* * 由于返回的是一个图片，不是模板也不是RespondBody，所以要手动*</span><br><span class="line">* * 服务器要记住这个验证码来验证，所以要用Session存（不用Cookie是因为这个是验证信息，属于敏感信息）*</span><br><span class="line">* */*</span><br><span class="line">@RequestMapping(path = &quot;/kaptcha&quot;,method = RequestMethod.GET)</span><br><span class="line">public void getKaptcha(HttpServletResponse response, HttpSession session)&#123;</span><br><span class="line">    //生成验证码</span><br><span class="line">    //已经配置类里配置过，所以直接获得Text就是一个4位字符串</span><br><span class="line">    String text = kaptchaProducer.createText();</span><br><span class="line">    BufferedImage image = kaptchaProducer.createImage(text);</span><br><span class="line"></span><br><span class="line">    //把图片输出给浏览器</span><br><span class="line">    response.setContentType(&quot;image/png&quot;);</span><br><span class="line">    try &#123;</span><br><span class="line">        //Spring MVC会自动关流</span><br><span class="line">        OutputStream os = response.getOutputStream();</span><br><span class="line">        ImageIO.write(image,&quot;png&quot;,os);</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">        logger.error(&quot;响应验证码失败：&quot;+ e.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="显示结果"><a href="#显示结果" class="headerlink" title="显示结果"></a>显示结果</h3><p><img src="1.png" alt=""></p>
+<h3 id="设置登录模板页面"><a href="#设置登录模板页面" class="headerlink" title="设置登录模板页面"></a>设置登录模板页面</h3><p>首先把刷新验证码设置为动态的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=“col-sm-4”&gt;</span><br><span class="line">	&lt;img th:src=“@&#123;/kaptcha&#125;” id=“kaptcha” style=“width:100px;height:40px;” class=“mr-2”/&gt;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>点击刷新验证码按钮的时候，因为验证码图片访问路径没变，浏览器会认为/community/kaptcha是个静态文件，所以要在路径后面加一个无效参数，欺骗浏览器让它每次都获取验证码图片：</li>
+</ul>
+<ol>
+<li>在global.js里设置全局变量，这样避免后面要更改路径<br><code>var CONTEXT_PATH = “/community”;</code></li>
+<li>在Login.html后面加入js：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=“col-sm-4”&gt;</span><br><span class="line">	&lt;img th:src=“@&#123;/kaptcha&#125;” id=“kaptcha” style=“width:100px;height:40px;” class=“mr-2”/&gt;</span><br><span class="line"></span><br><span class="line">&lt;a href=“javascript:refresh_kaptcha();” class=“font-size-12 align-bottom”&gt;刷新验证码&lt;/a&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">	function refresh_kaptcha()&#123;</span><br><span class="line">		var path = CONTEXT_PATH + “/kaptcha?p=“ + Math.random();</span><br><span class="line">		$&#123;“#kaptcha”&#125;.attr(“src”,path);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>测试的时候页面一直在加载，验证码也刷新不出来，检查页面元素，报错是因为找不到refresh_kaptcha(),检查了很久script发现没问题，最后发现是jquery的载入错误，重新换了个jquery的cdn引用<br><figure class="highlight plain"><figcaption><span>src</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/第八篇-开发注册功能/" rel="next" title="第八篇 开发注册功能">
+                <i class="fa fa-chevron-left"></i> 第八篇 开发注册功能
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/第十篇-开发登录、退出功能、显示登录信息和账号设置/" rel="prev" title="第十篇 开发登录、退出功能、显示登录信息和账号设置">
+                第十篇 开发登录、退出功能、显示登录信息和账号设置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP是无状态的，有会话的"><span class="nav-number"></span> <span class="nav-text">HTTP是无状态的，有会话的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#无状态"><span class="nav-number">1.</span> <span class="nav-text">无状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有会话"><span class="nav-number">2.</span> <span class="nav-text">有会话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie"><span class="nav-number">3.</span> <span class="nav-text">Cookie</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试cookie"><span class="nav-number">4.</span> <span class="nav-text">测试cookie</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Session"><span class="nav-number"></span> <span class="nav-text">Session</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Session示例"><span class="nav-number">1.</span> <span class="nav-text">Session示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kaptcha生成验证码"><span class="nav-number"></span> <span class="nav-text">Kaptcha生成验证码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#导包"><span class="nav-number">1.</span> <span class="nav-text">导包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置Bean"><span class="nav-number">2.</span> <span class="nav-text">配置Bean</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Controller"><span class="nav-number">3.</span> <span class="nav-text">Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#显示结果"><span class="nav-number">4.</span> <span class="nav-text">显示结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置登录模板页面"><span class="nav-number">5.</span> <span class="nav-text">设置登录模板页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">6.</span> <span class="nav-text">问题</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

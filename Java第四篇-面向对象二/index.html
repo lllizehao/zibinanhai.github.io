@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本篇文章主要总结了多态、抽象类、接口、修饰符、内部类的知识和一些常用类（Object、String、StringBuffer,基本类型包装类）的用法，最后还总结了Java的引用和正则表达式。">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java第四篇 面向对象二">
+<meta property="og:url" content="https://lizehao.info/Java第四篇-面向对象二/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本篇文章主要总结了多态、抽象类、接口、修饰符、内部类的知识和一些常用类（Object、String、StringBuffer,基本类型包装类）的用法，最后还总结了Java的引用和正则表达式。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lizehao.info/Java第四篇-面向对象二/1.jpg">
+<meta property="og:image" content="https://lizehao.info/Java第四篇-面向对象二/2.jpg">
+<meta property="og:image" content="https://lizehao.info/Java第四篇-面向对象二/3.jpg">
+<meta property="og:image" content="https://lizehao.info/Java第四篇-面向对象二/4.jpg">
+<meta property="og:image" content="https://lizehao.info/Java第四篇-面向对象二/5.jpg">
+<meta property="og:image" content="https://lizehao.info/Java第四篇-面向对象二/6.jpg">
+<meta property="og:image" content="https://lizehao.info/Java第四篇-面向对象二/7.jpg">
+<meta property="og:updated_time" content="2020-08-26T12:57:39.798Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java第四篇 面向对象二">
+<meta name="twitter:description" content="前言 本篇文章主要总结了多态、抽象类、接口、修饰符、内部类的知识和一些常用类（Object、String、StringBuffer,基本类型包装类）的用法，最后还总结了Java的引用和正则表达式。">
+<meta name="twitter:image" content="https://lizehao.info/Java第四篇-面向对象二/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/Java第四篇-面向对象二/">
+
+
+
+
+
+  <title>Java第四篇 面向对象二 | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/Java第四篇-面向对象二/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java第四篇 面向对象二</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-26T20:30:28+08:00">
+                2019-03-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章主要总结了多态、抽象类、接口、修饰符、内部类的知识和一些常用类（Object、String、StringBuffer,基本类型包装类）的用法，最后还总结了Java的引用和正则表达式。</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="多态polymorphic"><a href="#多态polymorphic" class="headerlink" title="多态polymorphic"></a>多态polymorphic</h1><hr>
+<h2 id="多态概述："><a href="#多态概述：" class="headerlink" title="多态概述："></a>多态概述：</h2><p>一个事物存在多种形态，猫即是动物类别也时猫类别</p>
+<h2 id="多态前提"><a href="#多态前提" class="headerlink" title="多态前提"></a>多态前提</h2><ul>
+<li>要有继承关系</li>
+<li>要有方法重写</li>
+<li>要有父类引用指向子类对象<h2 id="成员变量访问"><a href="#成员变量访问" class="headerlink" title="成员变量访问"></a>成员变量访问</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class polymorphic &#123;</span><br><span class="line">	public static void main (String [] args) &#123;</span><br><span class="line">		Father f = new son() ; //父类引用指向子类对象</span><br><span class="line">		System.out.println(f.num);</span><br><span class="line">  		&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Father &#123;</span><br><span class="line">	int num = 10;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Son extends Father &#123;</span><br><span class="line">	int num = 20;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这里输出的结果是10<br>因为f是Farher类型的，它访问的是new son这个对象里面的super部分。<br><strong> 编译看左边，运行看左边（Father）</strong> </p>
+<h2 id="非静态成员方法-编译看左边，运行看右边，动态绑定）"><a href="#非静态成员方法-编译看左边，运行看右边，动态绑定）" class="headerlink" title="非静态成员方法(编译看左边，运行看右边，动态绑定）"></a>非静态成员方法(编译看左边，运行看右边，动态绑定）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">class polymorphic &#123;</span><br><span class="line">	public static void main (String [] args) &#123;</span><br><span class="line">		Father f = ner son();</span><br><span class="line">		f.print();</span><br><span class="line">  		&#125;</span><br><span class="line">&#125;</span><br><span class="line">class Father &#123;</span><br><span class="line">	pulic void print () &#123;</span><br><span class="line"> 		System.out.println(“father”);</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">  class Son extends Father &#123;</span><br><span class="line">	pulic void print () &#123;</span><br><span class="line"> 		System.out.println(“son”);</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个的结果是son<br>编译的时候看的是Father.class里面的print()<br>运行的时候是Son.class里面的print()</p>
+<ul>
+<li>静态方法和成员变量一样 </li>
+<li>编译都看左边，动态运行看右边</li>
+</ul>
+<hr>
+<h2 id="基本数据类型-自动类型提升和强制类型转换"><a href="#基本数据类型-自动类型提升和强制类型转换" class="headerlink" title="基本数据类型 自动类型提升和强制类型转换"></a>基本数据类型 自动类型提升和强制类型转换</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int a = 10;</span><br><span class="line">byte b = 20;</span><br><span class="line">a = b       //自动类型提升</span><br><span class="line">b = (byte)a //强制类型转换</span><br></pre></td></tr></table></figure>
+<p>引用数据类型 向上转型和向下转型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Person p = new SuperMan();//向上转型，SuperMan提升为Person</span><br><span class="line">superMan s = (superMan)p;//向下转型</span><br><span class="line">// p.fly()会出错，因为编译看左边，是Person</span><br><span class="line">s.fly();</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>多态的好处与弊端<br>好处：<br>当几个继承同一个父类的子类需要用同一个方法时，方法的引用变量可以用父类的引用变量<br>比如 Cat Dog Pig 都可以用 方法 eat(Animal a)<br><strong>当做参数的时候用多态最好，因为扩展性强</strong><blockquote>
+<p>关键字 instanceof<br>判断前边的引用是否是后面的数据类型 ，如<br>if (a instanceof Cat)</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h1 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h1><hr>
+<ol>
+<li>abstract class Animal    //抽象类<br>public abstract void eat()    //抽象方法</li>
+<li>抽象类不一定有抽象方法，有抽象方法一定是抽象类或接口</li>
+<li>抽象类不能直接实例化，如<br>Animal a = new Animal();是错的<br>可以用子类多态进行实例化<br>Animal a = new Cat();<br>a.eat  //子类的eat不是抽象方法</li>
+<li>抽象类的子类要不是抽象的，要不就得重写所有抽象方法。</li>
+<li>继承抽象类的时候抽象方法必须重写，为什么还要继承抽象类呢？<br>其实抽象类里面的抽象方法相当于制订了规范，子类必须要写某些方法</li>
+</ol>
+<hr>
+<h1 id="Abstract修饰符"><a href="#Abstract修饰符" class="headerlink" title="Abstract修饰符"></a>Abstract修饰符</h1><hr>
+<ul>
+<li>abstract和static不能共同修饰<br>因为static修饰的方法可以用 类名.方法调用，但是抽象方法不能调用</li>
+<li>abstract不能和final 共存<br>因为abstract修饰方法要让子类强制重写，但是final不让子类重写</li>
+<li>abstract不能和private共存<br>因为private不让子类访问</li>
+</ul>
+<hr>
+<h1 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h1><hr>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>狭义：指java中的interface<br>广义：对外提供规则的都是接口</p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><p>成员变量：只能是常量，并且是静态的公共的<br>            默认修饰符：public  static final</p>
+<blockquote>
+<p>static修饰的成员变量：是<strong>类变量</strong>，在堆中。作用域和类相同<br>不用static修饰的成员变量：是<strong>实例变量</strong>，在栈中，作用域和对应实例相同<br>构造方法：接口中没有构造方法<br>成员方法：接口中成员方法都是抽象的<br>               默认修饰符：public abstract<br>接口中不能定义非抽象方法</p>
+</blockquote>
+<hr>
+<h1 id="类与接口的关系"><a href="#类与接口的关系" class="headerlink" title="类与接口的关系"></a>类与接口的关系</h1><hr>
+<ul>
+<li>类与接口：<br>实现关系，可以单实现也可以多实现<br><code>classs Demo implements InterA,InterB {}</code><br>可以继承一个类的同时实现多个接口</li>
+<li>类与类：<br>继承关系，只能单继承，可以多层继承</li>
+<li>接口与接口<br>继承关系，可以多继承 </li>
+</ul>
+<hr>
+<h1 id="Package"><a href="#Package" class="headerlink" title="Package"></a>Package</h1><hr>
+<ul>
+<li>包相当于文件夹，对class进行分类存放</li>
+<li>多级包用.分隔</li>
+<li>package语句必须是第一条代码</li>
+<li>package语句一个java文件中只能有一个</li>
+<li>不同包下类之间的访问：<br>类名前要加完整的包名（被访问的类要是public的  ）</li>
+</ul>
+<hr>
+<h1 id="Import"><a href="#Import" class="headerlink" title="Import"></a>Import</h1><hr>
+<ul>
+<li>导入包语句要放在package语句下面</li>
+<li>导入包后调用包内的类就不用加包名了</li>
+<li>最好导入具体类，不用*，效率低。</li>
+</ul>
+<hr>
+<h1 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a>修饰符</h1><hr>
+<ol>
+<li>权限修饰符：</li>
+</ol>
+<ul>
+<li>private:     本类</li>
+<li>默认：       本类、同一个包的类</li>
+<li>protected:本类、同一个包的类、不同包下的子类</li>
+<li>public：    本类、同一个包的类、不同包下的子类、不同包下的无关类</li>
+</ul>
+<ol start="2">
+<li>状态修饰符<br>static<br>final</li>
+<li>抽象修饰符<br>abstract</li>
+<li><a href="https://blog.csdn.net/qq_36877577/article/details/64441934" target="_blank" rel="noopener">什么时候定义静态成员</a></li>
+</ol>
+<hr>
+<h1 id="内部类"><a href="#内部类" class="headerlink" title="内部类"></a>内部类</h1><hr>
+<ul>
+<li>InnerClass:<br>内部类是类中定义的类</li>
+<li>访问特点：<br>内部类可以直接访问外部类的成员（私有也可以）<br>外部类要访问内部类的成员(方法)，必须要创建内部类对象 ，如：<br>Outer.Inner 对象名  = new Outer().new Inner();</li>
+<li>当内部类是private的时候，可以用在外部类里写一个public的方法，在public方法中创建这个内部类对象<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class 外部类 &#123;</span><br><span class="line">	private class 内部类&#123;</span><br><span class="line">		内部类成员</span><br><span class="line">	&#125;</span><br><span class="line">	public void test()&#123;</span><br><span class="line">		创建内部类对象；</span><br><span class="line">		调用内部类成员；</span><br><span class="line">         &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这样外部就可以访问这个内部类</p>
+<ul>
+<li><p>被static修饰的内部类，相当于一个静态成员 （一般类不允许用static修饰）</p>
+<blockquote>
+<p>注意，静态成员可以直接类名.调用 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//调用静态内部类里的方法</span><br><span class="line">class Test_InnerClass &#123;</span><br><span class="line">	public static void main (String [] args) &#123;</span><br><span class="line">		Outer.Inner  oi = new Outer.Inner();</span><br><span class="line">              oi.method();</span><br><span class="line"> 		 &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Outer&#123;</span><br><span class="line">	static class Inner &#123;</span><br><span class="line">		public void method()&#123;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">//本来应该是 Outer.new Inner()，书写习惯改为new Outer.Inner()</span><br><span class="line">//因为Inner可以看做静态成员，可以直接用Outer调用，不用实例化。new Inner是因为，要调用内部类的成员，需要先创建对象。</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>如果static修饰的内部类，里面的内部方法也是static的，那就可以直接：<br><code>Outer.Inner.method（）；</code><br>不需要创建对象。</p>
+</li>
+<li><p>以下代码结果是，3  2  1 </p>
+<figure class="highlight plain"><figcaption><span>class Test_Innerclass &#123;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">    public static void main (String [] args)&#123; </span><br><span class="line">        Outer.Inner oi = new Outer().new Inner ();</span><br><span class="line">        oi.method();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Outer &#123;</span><br><span class="line">    public int num = 1;</span><br><span class="line">    class Inner &#123;</span><br><span class="line">        int num = 2;</span><br><span class="line">        public void method ()&#123;</span><br><span class="line">            int num = 3;</span><br><span class="line">            System.out.println(num);//就近原则</span><br><span class="line">            System.out.println(this.num);</span><br><span class="line">            //这个是类，不能用oi.num来调用，先有的类才创建的对象。</span><br><span class="line">            //内部类里调用内部类成员用this.来调用</span><br><span class="line">            System.out.println(Outer.this.num);</span><br><span class="line">            //内部类调用外部类成员，用Outer.this.来调用</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>局部内部类指在外部类的方法里面创建内部类，这个内部类叫局部内部类</li>
+<li>因为这种类是局部的，所以只能在当前方法里面创建该类的对象</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="匿名内部类"><a href="#匿名内部类" class="headerlink" title="匿名内部类"></a>匿名内部类</h1><hr>
+<ul>
+<li>new 类 （）{<br>重写方法；<br>}<br>是指一个继承了这个类的子类的匿名对象，<blockquote>
+<p>{} 相当于给这个类写一个子类</p>
+</blockquote>
+</li>
+<li>new 接口 （）{<br>重写方法；<br>}<br>是指实现这个接口的子类的匿名对象</li>
+<li>大括号里面相当于接口的子类，所以在里面实现接口<blockquote>
+<p>new 接口（）是错的，接口不能实例化</p>
+</blockquote>
+</li>
+<li><p>这样可以直接调用里面的重写的方法，如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">new Inter () &#123;</span><br><span class="line">    public void print () &#123;</span><br><span class="line">	System.out.println(“print”);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;.print();//因为整体是一个对象，所以可以直接调用</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>匿名内部类只在只需要重写一个方法的时候用，否则太麻烦。</p>
+</li>
+<li><p>在开发中应用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class Test_Anonymity &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        student st = new student();</span><br><span class="line">        st.method(new Person() &#123;</span><br><span class="line">            public void eat() &#123;</span><br><span class="line">                System.*out*.println(&quot;eat&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);//这里需要传入person p，可以用匿名内部类,把匿名内部类看作一个对象</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//接口</span><br><span class="line">abstract class  Person&#123;</span><br><span class="line">    public abstract void eat();</span><br><span class="line">        &#125;</span><br><span class="line">class  student &#123;</span><br><span class="line">    public void method (Person p)&#123; //这里可以写一个实现接口的类，用父类引用指向子类对象，也可以用匿名内部类</span><br><span class="line">        p.eat();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//要求在控制台输出”Helloworld”</span><br><span class="line">class Test_1 &#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		Outer.method().show();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">interface Inter &#123;</span><br><span class="line">	void show ();</span><br><span class="line">&#125;</span><br><span class="line">class Outer&#123;</span><br><span class="line">//补齐代码</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p><strong> Outer.method().show()</strong><br>只有接口Inter里面有show方法，所以这句话代表，Outer.method()是一个Inter的子类对象，所以method方法返回的要是一个Inter的子类对象，所以可以返回一个匿名内部类，在内部类里实现show方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class  Outer &#123;</span><br><span class="line">	public static inter method() &#123;</span><br><span class="line">		//static是因为，Outer.method() 是类名直接调用，所以肯定是静态方法</span><br><span class="line">		//返回值是inter是因为，Outer.method()要调用show()方法，所以method返回的只能是Inter型，用Inter指向子类对象</span><br><span class="line">		return new Inter () &#123;</span><br><span class="line">			public void show() &#123;</span><br><span class="line">				System.out.println(“Helloworld”);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;; //return的是一个整体，是一个匿名内部类</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<h1 id="Object类"><a href="#Object类" class="headerlink" title="Object类"></a>Object类</h1><hr>
+<ul>
+<li>API(application Programming Interface)</li>
+<li>JAVA API就是Java提供的类，这些类把底层实现封装了起来</li>
+<li>所有类都会继承object类<h2 id="Object类里面的一些方法"><a href="#Object类里面的一些方法" class="headerlink" title="Object类里面的一些方法"></a>Object类里面的一些方法</h2></li>
+</ul>
+<ol>
+<li>hashcode（）方法<br>hashcode（）方法可以返回对象的地址（在哈希表中的地址，不是物理地址）<br>返回的是一个int值</li>
+<li>getClass()方法<br>返回的是Class ，这个Class是大写的，是一个类，不是关键字class<br>这个类是描述类的类，可以获取对象的字节码文件</li>
+<li><p>toString()方法<br>toString本身格式是：<br>类名  +  @    +  哈西地址值的十六进制格式<br>本身没有意义，但是可以重写toString，写成自己需要的格式，可以更方便的显示属性值 </p>
+<blockquote>
+<p>注意：如果直接打印对象的引用，会默认调用toString方法<br>重写toString注意：<br>在类定义中重写<br>方法名称必须为toString并且没有参数<br>返回类型必须为String</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public String toString () &#123;</span><br><span class="line">	return “我的名字叫” + name “，我的性别是” + gender;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>equals()方法<br>比较两个<strong>对象</strong>是否相等，比较的是两个对象的地址值，没什么意义<br>可以直接比较两个引用变量，所以需要重写equals方法<br>开发中通常比较的是对象的属性值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> public boolean equals(object obj) &#123;</span><br><span class="line">	//注意：重写不能改变参数，所以必须是object obj，这样传入一个子类对象的时候，就是多态，父类引用指向子类对象.但是，父类引用不能访问子类特有的属性，所以需要向下转型，才可以用子类的属性</span><br><span class="line">	student st = (student) obj;</span><br><span class="line">	return this.name.equals(st.name) &amp;&amp; this.age == st.age;</span><br><span class="line">	//注意，这里的this是指调用这个方法的对象，因为this,name是一个字符串，所以这里的equals方法是String里面的equals方法，比较的是字符串是否相等</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="即可以比较基本数据类型（值），也可以比较引用数据类型（地址值）"><a href="#即可以比较基本数据类型（值），也可以比较引用数据类型（地址值）" class="headerlink" title="==即可以比较基本数据类型（值），也可以比较引用数据类型（地址值）"></a>==即可以比较基本数据类型（值），也可以比较引用数据类型（地址值）</h2><h1 id="Scanner、String"><a href="#Scanner、String" class="headerlink" title="Scanner、String"></a>Scanner、String</h1><hr>
+<h2 id="Scanner"><a href="#Scanner" class="headerlink" title="Scanner"></a>Scanner</h2><h3 id="构造方法："><a href="#构造方法：" class="headerlink" title="构造方法："></a>构造方法：</h3><p>Scanner (InputStream source)<br> InputS stource可以是System.in,指键盘输入</p>
+<h3 id="一般方法："><a href="#一般方法：" class="headerlink" title="一般方法："></a>一般方法：</h3><p>hasNextXxx()    判断下一个输入项是否是Xxx类型的，<br>nextXxx()    获取下一个输入项 </p>
+<h3 id="示例："><a href="#示例：" class="headerlink" title="示例："></a>示例：</h3><p>Scanner sc = new Scanner (System.in);<br>//右边就是构造方法，创建了参数是System.in的Scanner对象</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int i = Sc.nextInt();</span><br><span class="line">String line = Sc.nextLine();</span><br><span class="line">System.out.println(i+line);</span><br></pre></td></tr></table></figure>
+<p>这样输出的只是i<br>因为nextLine()遇见回车就会结束，所以nextInt()执行完以后，nextLine()就执行完了，line里面并没有存任何东西</p>
+<ul>
+<li>解决办法1：创建两个对象，但是浪费空间</li>
+<li>解决办法2：用两次nextLine(),第一个把字符串转换成整数</li>
+</ul>
+<hr>
+<h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><ul>
+<li>Java中所有的字符串（如”abc”）都是一个String的对象，<br>String str = “abc”; //就是创建一个新对象<br>相当于 String str = new String (“abc”)</li>
+<li>字符串是常量，值在创建后不能更改。<h3 id="构造方法（其中几个重要的）："><a href="#构造方法（其中几个重要的）：" class="headerlink" title="构造方法（其中几个重要的）："></a>构造方法（其中几个重要的）：</h3></li>
+</ul>
+<ol>
+<li>public String (byte[] bytes);<br>通过使用平台的默认字符集解码指定的字节数组来构造新的 String 。</li>
+<li>public String (byte[] bytes, int index, int length)<br>把字节数组的其中一部分解码转换成新的String</li>
+<li>public String (char [] value)<br>把字符数组转换成字符串</li>
+<li>public String (char[] value,int index, int count)<br>把字符数组的一部分转换为字符串</li>
+</ol>
+<hr>
+<h3 id="String的一些问题："><a href="#String的一些问题：" class="headerlink" title="String的一些问题："></a>String的一些问题：</h3><ol>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String s1 = “abc”;</span><br><span class="line">String s2 = “abc”;</span><br><span class="line">System.out.println(s1==s2);</span><br><span class="line">System.out.println(s1.equals(s2));</span><br><span class="line">//这里两个都是等于，因为String是一个常量对象，对象是储存在常量池的，所以当创建abc后，s1指向它，s2指向”abc”的时候，常量池abc已经存在，所以直接指向abc对象，所以s1 s2指向的是同一个对象</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>String s1 = new String (“abc”);<br>这句代码，创建了两个对象<br><img src="1.jpg" alt=""></p>
+</li>
+</ol>
+<p>“abc”出现时在常量池创建了对象，但是new的时候又在堆里创建了一个对象副本。所以下面这段代码，结果是false 和true<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public class Test_String &#123;</span><br><span class="line">    public static void main (String [] args)&#123;</span><br><span class="line">        String s1 = new String (“abc”);//记录的堆里的对象地址值</span><br><span class="line">        String s2 = “abc”;//常量池里对象的地址值 </span><br><span class="line">        String s3 = &quot;abc&quot;;</span><br><span class="line">        System.*out*.println(s1==s2);</span><br><span class="line">        System.*out*.println(s2==s3);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol start="3">
+<li>String s1= “a” +”b” +”c”;<br>相当于String s1 = “abc”<br>因为java中有常量优化机制，相当于a= 1+1，是把2直接赋值给a</li>
+<li>String s1 = “ab”；<br>String s2 = “abc”;<br>String s3 = s1+”c”;<br>System.out.println(s2==s3);<br>这个结果是False<br>用+串联字符串在底层是通过StringBuffer类和append方法实现的<br><img src="2.jpg" alt=""></li>
+<li>一般字符串常量和字符串变量比较，都是用字符串常量调用equals方法，防止空指针异常</li>
+</ol>
+<hr>
+<h3 id="String类的一般方法："><a href="#String类的一般方法：" class="headerlink" title="String类的一般方法："></a>String类的一般方法：</h3><ol>
+<li>int         length()<br>获取字符串长度（数组是用属性获取），也可以测量中文的长度（一个字长度就是1）</li>
+<li>char        charAt(int index)<br>根据索引找字符</li>
+<li>int         indexof(int ch)<br>找字符第一次出现的位置（参数传的是int,但是可以传char,会自动转换）不存在返回-1</li>
+<li>int        indexof(String str)<br>根据字符串找索引 （第一个字符的位置  ）必须是连着的字符串</li>
+<li>int        indexof(int ch,int fromIndex)<br>从索引处开始找字符</li>
+<li>int        indexof(String str,infromIndex)<br>从索引处开始找字符串</li>
+<li>lastindexof    和3456一样，不过是从后往前找</li>
+<li>String        substring(int start)<br>从指定位置开始截取字符串，到末尾</li>
+<li>String          substring(int start,int end)<br>截取指定位置的字符串</li>
+<li>byte[]      getBytes()  把字符串编码为<strong>字节</strong>数组<br>注意用toCharArray()得到的是字符数组，用getBytes()得到的是字节（用默认字符集gdk码表，这个码表一个中文是两个字节）<br>编码：把我们看的懂得转换成计算机看得懂的</li>
+<li>char[]       toCharArray()  把字符串转换为<strong>字符</strong>数组</li>
+<li>static  String       valueOf(char[] chs) 把字符数组转换成字符串<br>静态方法，直接类名.  就可以调用<br>这和构造方法直接转换是一样的</li>
+<li>static  String       valueOf(int i)把整型转换成字符串</li>
+</ol>
+<hr>
+<h1 id="StringBuffer"><a href="#StringBuffer" class="headerlink" title="StringBuffer"></a>StringBuffer</h1><hr>
+<h2 id="和StringBuilder关系"><a href="#和StringBuilder关系" class="headerlink" title="和StringBuilder关系"></a>和StringBuilder关系</h2><ul>
+<li>StringBuffer是线程安全的，和StringBuilder支持相同操作</li>
+<li>StringBuilder不执行同步，速度更快，所以优先使用。<h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2></li>
+<li>StringBuffer ()<br>容器初试容量为16</li>
+<li>StringBuffer(int  capacity)          容量为capacity<br>指定容量的字符缓冲区对象</li>
+<li>StringBuffer (String str)          容量为str长度+16<br>指定字符串内容<h2 id="一般方法"><a href="#一般方法" class="headerlink" title="一般方法"></a>一般方法</h2></li>
+<li>StringBuffer是重写了toString()的</li>
+<li><p>public StringBuffer append(String str)<br>注意返回的是StringBuffer本身</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">StringBuffer sb = new StringBuffer(“a”);</span><br><span class="line">StringBuffer sb2 = sb.append(“sss”)</span><br><span class="line">System.out.println(sb.toString());</span><br><span class="line">System.out.println(sb2.toString());</span><br><span class="line">//两个输出都是asss，是两个引用指向同一个StringBuffer对象</span><br><span class="line">//因为StringBuffer当new的时候是在堆内存里创建了一个对象，调用方法时不会创建新对象，和String不一样</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>public StringBuffer insert(int offset ,String str)<br>在指定位置插入字符串到字符串缓冲区里</p>
+</li>
+<li>public StringBuffer deleteCharAt(int index)<br>删除指定位置字符，并返回本身</li>
+<li>public StringBuffer delete(int start,int end)//不包含end这个位置的字符<br>删除指定的一段，返回本身<br>sb.delete(0,sb.length()) //清空缓冲区</li>
+<li>public StringBuffer replace (int start,int end,String str)<br>start到end之间用str替换</li>
+<li>public StringBuffer reverse()<br>字符串反转</li>
+<li>public String substring(int start)<br>返回的是String,不是StringBuffer<br>用法和String类的截取方法一样</li>
+</ul>
+<hr>
+<h1 id="String和StringBuffer互相转换"><a href="#String和StringBuffer互相转换" class="headerlink" title="String和StringBuffer互相转换"></a>String和StringBuffer互相转换</h1><hr>
+<h2 id="String到StringBuffer"><a href="#String到StringBuffer" class="headerlink" title="String到StringBuffer"></a>String到StringBuffer</h2><ol>
+<li>通过构造方法<br><code>Stringbuffer sb1 = new StringBuffer(“123”);</code><br>//123直接是一个String对象</li>
+<li>通过append()方法<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Stringbuffer sb = new StringBuffer();</span><br><span class="line">sb.append(“123”);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="StringBuffer到String"><a href="#StringBuffer到String" class="headerlink" title="StringBuffer到String"></a>StringBuffer到String</h2><ol>
+<li><p>通过构造方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">StringBuffer sb = new StringBuffer(“11”);</span><br><span class="line">String str = new String(sb);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>toString方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">StringBuffer sb = new StringBuffer(“11”);</span><br><span class="line">String str = sb.toString();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>截取，返回的直接是String<br><code>String str = sb.subString(0, sb.length());</code></p>
+</li>
+</ol>
+<hr>
+<h1 id="StringBuilder"><a href="#StringBuilder" class="headerlink" title="StringBuilder"></a>StringBuilder</h1><hr>
+<h2 id="String和StringBuffer和StringBuffer区别"><a href="#String和StringBuffer和StringBuffer区别" class="headerlink" title="String和StringBuffer和StringBuffer区别"></a>String和StringBuffer和StringBuffer区别</h2><ul>
+<li>String是不可变的字符序列，其他两个是可变的</li>
+<li>StringBuilder是线程不安全的，效率高</li>
+<li>StringBuffer是线程安全的</li>
+</ul>
+<hr>
+<h1 id="Java的引用问题"><a href="#Java的引用问题" class="headerlink" title="Java的引用问题"></a>Java的引用问题</h1><hr>
+<blockquote>
+<p><a href="https://blog.csdn.net/javazejian/article/details/51192130" target="_blank" rel="noopener">Java基本数据类型和引用数据类型传递区别</a></p>
+</blockquote>
+<h2 id="结论："><a href="#结论：" class="headerlink" title="结论："></a>结论：</h2><ul>
+<li>一个方法不能修改一个基本数据类型的参数（数值型和布尔型）。</li>
+<li>一个方法可以修改一个引用所指向的对象状态，<strong>但这仍然是按值调用而非引用调用</strong>。</li>
+<li>上面两种传递都进行了值拷贝的过程。</li>
+<li>Java本质都是按值调用<h2 id="基本数据类型引用"><a href="#基本数据类型引用" class="headerlink" title="基本数据类型引用"></a>基本数据类型引用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class CallByValue &#123;</span><br><span class="line">    private static int x= 10;</span><br><span class="line">    public static void main(String[] args)&#123;</span><br><span class="line">        change(x);</span><br><span class="line">        System.out.println(x);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void change(int value)&#123;</span><br><span class="line">        value = 3 * value;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>输出结果是10，执行过程如下：<br><img src="3.jpg" alt=""><br>方法结束后，参数变量value不再使用，被回收，<br>value接受的是x的一个拷贝值</p>
+<h2 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class CallByValue &#123;</span><br><span class="line">		private static User user=null;</span><br><span class="line">		public static void updateUser(User student)&#123;</span><br><span class="line">				student.setName(“Lishen”);</span><br><span class="line">				student.setAge(18);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		public static void main(String[] args) &#123;</span><br><span class="line">			user = new User(“zhangsan”,26);</span><br><span class="line">			System.out.println(“调用前user的值：+user.toString());</span><br><span class="line">			updateUser(user);</span><br><span class="line">			System.out.println(“调用后user的值：+user.toString());</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果如下<br><img src="4.jpg" alt=""><br>下面是过程：<br><img src="5.jpg" alt=""></p>
+<ol>
+<li>student被初始化为user的拷贝值，这是一个对象的引用。</li>
+<li>调用Student的set方法在这个引用对象上，user和student同时引用的User对象内部值被修改。</li>
+<li>方法结束后，student变量不再使用，被释放，但是user还是指向User对象<h2 id="但是，java都是值传递。下面看举例"><a href="#但是，java都是值传递。下面看举例" class="headerlink" title="但是，java都是值传递。下面看举例"></a>但是，java都是值传递。下面看举例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public class CallByValue &#123;</span><br><span class="line">    private static User user=null;</span><br><span class="line">    private static User stu=null;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public static void swap(User x,User y)&#123;</span><br><span class="line">        User temp =x;</span><br><span class="line">        x=y;</span><br><span class="line">        y=temp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        user= new User(“user”,26);</span><br><span class="line">        stu= new User(“stu”,18);</span><br><span class="line">        System.out.println(“调用前user的值：”+user.toString());</span><br><span class="line">        System.out.println(“调用前stu的值：”+stu.toString());</span><br><span class="line">        swap(user,stu);</span><br><span class="line">        System.out.println(“调用后user的值：”+user.toString());</span><br><span class="line">        System.out.println(“调用后stu的值：”+stu.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>我们通过一个swap函数来交换两个变量user和stu的值，在前面我们说过，如果是按引用调用那么一个方法可以修改传递引用所对应的变量值，也就是说如果java是按引用调用的话，那么swap方法将能够实现数据的交换，而实际运行结果是：<br><img src="6.jpg" alt=""><br>我们发现user和stu的值并没有发生变化，也就是方法并没有改变存储在变量user和stu中的对象引用。swap方法的参数x和y被初始化为两个对象引用的拷贝，这个方法交换的是这两个拷贝的值而已.<br><img src="7.jpg" alt=""></p>
+<h2 id="String和StringBuffer引用"><a href="#String和StringBuffer引用" class="headerlink" title="String和StringBuffer引用"></a>String和StringBuffer引用</h2><h3 id="String当参数引用"><a href="#String当参数引用" class="headerlink" title="String当参数引用"></a>String当参数引用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Test_String &#123;</span><br><span class="line">    public static void main (String [] args)&#123;</span><br><span class="line">        String str = “li”;</span><br><span class="line">        change(str);</span><br><span class="line">        System.out.println(str);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    public static void change(String str1)&#123;</span><br><span class="line">        str1 = &quot;lili&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">//结果是li</span><br></pre></td></tr></table></figure>
+<p>分析：</p>
+<ol>
+<li>str指向String对象”li”</li>
+<li>str1接受str的拷贝值，也指向”li”</li>
+<li>str1 = “lili” 就是创建了个新的String对象”lili”然后str1指向这个新对象</li>
+<li>但是str还是指向的”li”<h3 id="StringBuffer当参数引用"><a href="#StringBuffer当参数引用" class="headerlink" title="StringBuffer当参数引用"></a>StringBuffer当参数引用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class Test_String &#123;</span><br><span class="line">    public static void main (String [] args)&#123;</span><br><span class="line">        StringBuffer sb = new StringBuffer(“li&quot;);</span><br><span class="line">        *change*(sb);</span><br><span class="line">        System.*out*.println(sb.toString());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    public static void change(StringBuffer sb1)&#123;</span><br><span class="line">        sb1.append(&quot;li&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">//结果是lili</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<hr>
+<h1 id="关于静态方法-变量，非静态方法-变量"><a href="#关于静态方法-变量，非静态方法-变量" class="headerlink" title="关于静态方法/变量，非静态方法/变量"></a>关于静态方法/变量，非静态方法/变量</h1><hr>
+<h2 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h2><p>静态方法：即类方法，在类之中，以static关键字申明的方法。<br>使用方法：直接使用类名.类方法名来进行调用。</p>
+<p>非静态方法：即成员方法，没有static关键字申明。<br>使用方法：需要先创建类对象，使用类对象名.成员方法名来进行调用。</p>
+<p>静态变量：即类变量，<strong>在类之中，方法之外</strong>，以static关键字申明的变量，它属于整个类所有，而不是某个对象所有，即被类的所有对象所共享。<br>使用方法：直接使用类名.类变量名来进行访问。</p>
+<p>非静态变量：即成员变量，在类之中，方法之外。属于对象，有默认初始值<br>使用方法：需要先创建类对象，使用类对象名.成员变量名来进行调用</p>
+<blockquote>
+<p>局部变量：在方法中，属于栈，随着方法调用产生，调用完毕消失。没有默认初始值</p>
+</blockquote>
+<h2 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h2><ul>
+<li>静态方法不可以调用非静态方法或者非静态变量，因为这个时候被调用者还没有初始化。</li>
+</ul>
+<hr>
+<h1 id="Integer类"><a href="#Integer类" class="headerlink" title="Integer类"></a>Integer类</h1><hr>
+<h2 id="构造方法-1"><a href="#构造方法-1" class="headerlink" title="构造方法"></a>构造方法</h2><ul>
+<li>public Integer(int value)</li>
+<li>public Integer(String s)<br>举例：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer i1 = new Integer(100);</span><br><span class="line">Integer i2 = new Integer(“100”);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="int转String"><a href="#int转String" class="headerlink" title="int转String"></a>int转String</h2><ol>
+<li>用int型加一个” “ //推荐<br>int a = 1;<br>String s1 = 1+” “;</li>
+<li>用Integer类的静态方法toString()转<br>String s2 = Integer.toString(a);</li>
+<li>用String的静态方法valueof()转   //推荐<br>String s3 = String.valueof(a);<h2 id="String转int"><a href="#String转int" class="headerlink" title="String转int"></a>String转int</h2></li>
+<li><p>String先转Integer，再用intValue()f方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String s1 = “100”;</span><br><span class="line">Integer i1 = new Integer (s1);</span><br><span class="line">int i2 = i1.intValue();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>静态方法parseInt();    //推荐<br><code>Integer.parseInt(s1);</code></p>
+<h2 id="parseXXX方法"><a href="#parseXXX方法" class="headerlink" title="parseXXX方法"></a>parseXXX方法</h2></li>
+</ol>
+<ul>
+<li>char的包装类Character中没有parseXXX方法</li>
+<li>Boolean.parseBoolean(“true”) </li>
+<li>以此类推<h2 id="自动装箱拆箱"><a href="#自动装箱拆箱" class="headerlink" title="自动装箱拆箱"></a>自动装箱拆箱</h2></li>
+<li>基本数据类型—&gt;包装类类型  <strong>装箱</strong><br>int a = 10;<br>Integer i = new Integer (a);</li>
+<li>包装类类型—&gt;基本数据类型   <strong>拆箱</strong><br>int  b = i.intvalueof();<br>JDK5新特性</li>
+<li>自动装箱：（基本数据类型变对象）<br>Integer i1 = 100;</li>
+<li><p>自动拆箱（对象变基本数据类型）<br>int b = i1+100;</p>
+</li>
+<li><p>注意：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer  i1 = 100;</span><br><span class="line">Integer i2 = 100;</span><br><span class="line">System.out.println(i1 == i2);</span><br><span class="line">System.out.println(i1.equals(i2));</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>答案是true<br>        true<br>第一个是因为，在-128到127（既byte取值范围）内，自动装箱不会新创建对象，直接从常量池中获取</p>
+<h2 id="第二个是因为，Integer重写了equals类，比较的是两个值是否相等"><a href="#第二个是因为，Integer重写了equals类，比较的是两个值是否相等" class="headerlink" title="第二个是因为，Integer重写了equals类，比较的是两个值是否相等"></a>第二个是因为，Integer重写了equals类，比较的是两个值是否相等</h2><h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><hr>
+<h2 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h2><ul>
+<li>用来匹配符合某个语法规则的字符串 的字符串（描述密码规则）</li>
+<li>regex  即regular expression</li>
+<li>String有方法matches(regex)来判断字符串是否符合正则表达式<h2 id="字符类"><a href="#字符类" class="headerlink" title="字符类"></a>字符类</h2>[abc]  a或者b或者c<br>[^abc] 除了abc的任何字符<br>[a-zA-Z] a到z或者A到Z<br>[a-d[m-p]] a到d或者m到p<br>[a-z&amp;&amp;[^bc]]  a到z，除了b和c<br>[a-z&amp;&amp;[^m-p]] a到z，除了m到p<h2 id="预定义字符类"><a href="#预定义字符类" class="headerlink" title="预定义字符类"></a>预定义字符类</h2>.  任意一个字符（点）<br>\d   数字 [0-9]<br>\D  非数字 [^0-9]<br>\s   空白字符  [\t\n|x0B\f\r]<br>\S   非空白字符<br>\w   单词字符  [a-zA-Z_0-9]<br>\W   非单词字符</li>
+<li>注意<br>以上用的时候要多加一个\，因为要\本身就是转义字符，\才代表字符’\’<br><code>String regex = “\\d”</code><h2 id="数量词"><a href="#数量词" class="headerlink" title="数量词"></a>数量词</h2><ul>
+<li>？   0或1次</li>
+<li><ul>
+<li><blockquote>
+<p>=0多次</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><blockquote>
+<p>=1次</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>{n}  刚好n次</li>
+<li>{n,}  至少n次</li>
+<li>{n,m}  n到m次</li>
+</ul>
+</li>
+</ul>
+<h2 id="切割split"><a href="#切割split" class="headerlink" title="切割split"></a>切割split</h2><p>String类的功能<br>将此字符串分割为给定的正则表达式匹配,输出是一个字符串数组<br>String s = “一 二 三”;<br>String[] arr = s.split(“ ”);<br>String s1 = “1.2.3”;<br>String[] arr1 = s1.split(“\.”);          //单独的.表示任意字符</p>
+<h2 id="替换"><a href="#替换" class="headerlink" title="替换"></a>替换</h2><p>String类的功能<br><code>public String replaceAll(String regex, String replacement)</code><br>可以把字符串里的符合regex的，替换为传入的 字符串</p>
+<h2 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h2><ul>
+<li>“高高兴兴”<br>regex = “(.)\1(.)\2”;    1代表第一组又出现一次，2代表第二组又出现一次</li>
+<li>“不管不管”<br>regex = “(..)\1”      两个字符为一组</li>
+<li><p>sdqqfgkkkhjppppkl     按照叠词切割</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String s =  “sdqqfgkkkhjppppkl”;</span><br><span class="line">String regex = “(.)\\1+”;   </span><br><span class="line"> //1+表示第一组出现1次或多次，这个1是指第一组，不是出现的数量</span><br><span class="line">String[] arr = s.split(regex);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>一一一一一二二二三四四   改为一二三四<br>replaceAll是匹配所有符合的字符串，所以只用写一个</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Strirng s = “ 一一一一一二二二三四四   改为一二三四”;</span><br><span class="line">String s1 = s.replaceAll(“(.)\\1+”,”$1”);</span><br><span class="line">//&amp;1代表第一组中的内容</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h1 id="Pattern类"><a href="#Pattern类" class="headerlink" title="Pattern类"></a>Pattern类</h1><hr>
+<h2 id="Pattern和Matcher"><a href="#Pattern和Matcher" class="headerlink" title="Pattern和Matcher"></a>Pattern和Matcher</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Pattern p = Pattern.compile(“a*b”); //获取正则表达式</span><br><span class="line">Matcher m = p.matcher(“aaab”);	   //获取匹配器</span><br><span class="line">bollean b = m.matches();				//看是否匹配</span><br></pre></td></tr></table></figure>
+<p>上述代码和直接用String的match（regex）方法就可以完成<br>但是Pattern和Matcher可以把一个字符串里的某个字符串获取出来，如在字符串里获取手机号和邮箱</p>
+<ul>
+<li>Matcher类里的find()方法可以把字符串里符合正则表达式的字符串找到，返回true和false<br>Matcher里的group()方法获取用find找到的字符串</li>
+<li>find()用一次找一个，必须用完find()才能用group()<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//定义s 被查询的字符串</span><br><span class="line">//定义regex  要查找的字符串的正则表达</span><br><span class="line">Pattern p = Pattern.compile(regex);</span><br><span class="line">Matcher m = p.matcher(s);</span><br><span class="line">while(m.find())</span><br><span class="line">	System.out.peintln(m.group());</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/JAVA第三篇：如何写JAVA程序/" rel="next" title="JAVA第三篇：如何写JAVA程序">
+                <i class="fa fa-chevron-left"></i> JAVA第三篇：如何写JAVA程序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/OS-X命令行/" rel="prev" title="OS X命令行">
+                OS X命令行 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#多态polymorphic"><span class="nav-number"></span> <span class="nav-text">多态polymorphic</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#多态概述："><span class="nav-number"></span> <span class="nav-text">多态概述：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多态前提"><span class="nav-number"></span> <span class="nav-text">多态前提</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#成员变量访问"><span class="nav-number"></span> <span class="nav-text">成员变量访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非静态成员方法-编译看左边，运行看右边，动态绑定）"><span class="nav-number"></span> <span class="nav-text">非静态成员方法(编译看左边，运行看右边，动态绑定）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本数据类型-自动类型提升和强制类型转换"><span class="nav-number"></span> <span class="nav-text">基本数据类型 自动类型提升和强制类型转换</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#抽象类"><span class="nav-number"></span> <span class="nav-text">抽象类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Abstract修饰符"><span class="nav-number"></span> <span class="nav-text">Abstract修饰符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口"><span class="nav-number"></span> <span class="nav-text">接口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number"></span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number"></span> <span class="nav-text">特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类与接口的关系"><span class="nav-number"></span> <span class="nav-text">类与接口的关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Package"><span class="nav-number"></span> <span class="nav-text">Package</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Import"><span class="nav-number"></span> <span class="nav-text">Import</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修饰符"><span class="nav-number"></span> <span class="nav-text">修饰符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内部类"><span class="nav-number"></span> <span class="nav-text">内部类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#匿名内部类"><span class="nav-number"></span> <span class="nav-text">匿名内部类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Object类"><span class="nav-number"></span> <span class="nav-text">Object类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Object类里面的一些方法"><span class="nav-number"></span> <span class="nav-text">Object类里面的一些方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#即可以比较基本数据类型（值），也可以比较引用数据类型（地址值）"><span class="nav-number"></span> <span class="nav-text">==即可以比较基本数据类型（值），也可以比较引用数据类型（地址值）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Scanner、String"><span class="nav-number"></span> <span class="nav-text">Scanner、String</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Scanner"><span class="nav-number"></span> <span class="nav-text">Scanner</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构造方法："><span class="nav-number">1.</span> <span class="nav-text">构造方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一般方法："><span class="nav-number">2.</span> <span class="nav-text">一般方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例："><span class="nav-number">3.</span> <span class="nav-text">示例：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">4.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String"><span class="nav-number"></span> <span class="nav-text">String</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构造方法（其中几个重要的）："><span class="nav-number">1.</span> <span class="nav-text">构造方法（其中几个重要的）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String的一些问题："><span class="nav-number">2.</span> <span class="nav-text">String的一些问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String类的一般方法："><span class="nav-number">3.</span> <span class="nav-text">String类的一般方法：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#StringBuffer"><span class="nav-number"></span> <span class="nav-text">StringBuffer</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#和StringBuilder关系"><span class="nav-number"></span> <span class="nav-text">和StringBuilder关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造方法"><span class="nav-number"></span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一般方法"><span class="nav-number"></span> <span class="nav-text">一般方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#String和StringBuffer互相转换"><span class="nav-number"></span> <span class="nav-text">String和StringBuffer互相转换</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#String到StringBuffer"><span class="nav-number"></span> <span class="nav-text">String到StringBuffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StringBuffer到String"><span class="nav-number"></span> <span class="nav-text">StringBuffer到String</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#StringBuilder"><span class="nav-number"></span> <span class="nav-text">StringBuilder</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#String和StringBuffer和StringBuffer区别"><span class="nav-number"></span> <span class="nav-text">String和StringBuffer和StringBuffer区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java的引用问题"><span class="nav-number"></span> <span class="nav-text">Java的引用问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#结论："><span class="nav-number"></span> <span class="nav-text">结论：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本数据类型引用"><span class="nav-number"></span> <span class="nav-text">基本数据类型引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用类型"><span class="nav-number"></span> <span class="nav-text">引用类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#但是，java都是值传递。下面看举例"><span class="nav-number"></span> <span class="nav-text">但是，java都是值传递。下面看举例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String和StringBuffer引用"><span class="nav-number"></span> <span class="nav-text">String和StringBuffer引用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#String当参数引用"><span class="nav-number">1.</span> <span class="nav-text">String当参数引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StringBuffer当参数引用"><span class="nav-number">2.</span> <span class="nav-text">StringBuffer当参数引用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于静态方法-变量，非静态方法-变量"><span class="nav-number"></span> <span class="nav-text">关于静态方法/变量，非静态方法/变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义："><span class="nav-number"></span> <span class="nav-text">定义：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意："><span class="nav-number"></span> <span class="nav-text">注意：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Integer类"><span class="nav-number"></span> <span class="nav-text">Integer类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#构造方法-1"><span class="nav-number"></span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#int转String"><span class="nav-number"></span> <span class="nav-text">int转String</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String转int"><span class="nav-number"></span> <span class="nav-text">String转int</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parseXXX方法"><span class="nav-number"></span> <span class="nav-text">parseXXX方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动装箱拆箱"><span class="nav-number"></span> <span class="nav-text">自动装箱拆箱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二个是因为，Integer重写了equals类，比较的是两个值是否相等"><span class="nav-number"></span> <span class="nav-text">第二个是因为，Integer重写了equals类，比较的是两个值是否相等</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正则表达式"><span class="nav-number"></span> <span class="nav-text">正则表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述-1"><span class="nav-number"></span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符类"><span class="nav-number"></span> <span class="nav-text">字符类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预定义字符类"><span class="nav-number"></span> <span class="nav-text">预定义字符类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数量词"><span class="nav-number"></span> <span class="nav-text">数量词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切割split"><span class="nav-number"></span> <span class="nav-text">切割split</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#替换"><span class="nav-number"></span> <span class="nav-text">替换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分组"><span class="nav-number"></span> <span class="nav-text">分组</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pattern类"><span class="nav-number"></span> <span class="nav-text">Pattern类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Pattern和Matcher"><span class="nav-number"></span> <span class="nav-text">Pattern和Matcher</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

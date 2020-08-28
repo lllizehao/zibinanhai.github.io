@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本篇文章主要介绍MyBatis和如何配置MyBatis和使用MyBatis增删改查">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第五篇 MyBatis">
+<meta property="og:url" content="https://lizehao.info/第五篇-MyBatis/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本篇文章主要介绍MyBatis和如何配置MyBatis和使用MyBatis增删改查">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-08-26T13:53:15.092Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第五篇 MyBatis">
+<meta name="twitter:description" content="前言 本篇文章主要介绍MyBatis和如何配置MyBatis和使用MyBatis增删改查">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/第五篇-MyBatis/">
+
+
+
+
+
+  <title>第五篇 MyBatis | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/第五篇-MyBatis/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第五篇 MyBatis</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-26T20:24:24+08:00">
+                2020-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章主要介绍MyBatis和如何配置MyBatis和使用MyBatis增删改查</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h2 id="MySQL和MySQLWorkbench"><a href="#MySQL和MySQLWorkbench" class="headerlink" title="MySQL和MySQLWorkbench"></a>MySQL和MySQLWorkbench</h2><ol>
+<li>先去<a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">下载MySQL</a>和<a href="https://dev.mysql.com/downloads/workbench/" target="_blank" rel="noopener">下载MySQL Workbench</a><br>然后去搜自己的系统如何配置<br>OSx配置我是参考这篇文章的<a href="https://blog.csdn.net/qq_36004521/article/details/80637886" target="_blank" rel="noopener">MySQL环境配置OSX</a></li>
+<li>schema代表什么<br>database=一个仓库<br>dba=仓库管理员<br>schema=仓库下的一个房间，一个schema代表一个房间<br>user=房间管理员，拥有schema的管理权限，一个房间管理员可以拥有多个房间。<br>table=房间里的储物柜<br>columns=储物柜里的列<br>rows=储物柜里的行<br>data=就是存储在储物柜里面的物品了。</li>
+<li>MySql<br>这里不对MySQL多做介绍了，可以看看《SQL必知必会》<h2 id="MyBatis-简介"><a href="#MyBatis-简介" class="headerlink" title="MyBatis 简介"></a>MyBatis 简介</h2><h3 id="要了解MyBatis，先了解一些概念"><a href="#要了解MyBatis，先了解一些概念" class="headerlink" title="要了解MyBatis，先了解一些概念"></a>要了解MyBatis，先了解一些概念</h3></li>
+</ol>
+<ul>
+<li>JDBC<br>Java Database Connectivity(JAVA数据库连接）是JAVA中用来规范客户端程序如何来访问数据库的 应用程序接口，提供了诸如查询和更新数据库中数据的方法。</li>
+<li>持久化<br>持久（Persistence），即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的数据存储在关系型的数据库中，当然也可以存储在磁盘文件中、XML数据文件中等等。</li>
+<li>持久层<br>持久层（Persistence Layer），即专注于实现数据持久化应用领域的某个特定系统的一个逻辑层面，将数据使用者和数据实体相关联。</li>
+<li>ORM<br>Object-Relationl Mapping即对象关系映射，它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的时候，就不需要再去和复杂的SQL语句打交道，只要像平时操作对象一样操作它就可以了 。</li>
+<li>为什么要做ORM设计<br>ORM实现了数据处理层内部的业务逻辑和数据逻辑分离的解耦合<h3 id="MyBatis"><a href="#MyBatis" class="headerlink" title="MyBatis"></a>MyBatis</h3></li>
+<li>MyBatis是一款由 Java 编写的持久层框架，它支持定制化 SQL、存储过程以及高级映射，并且封装了 JDBC 操作的很多细节，使开发者只需要关注 SQL 语句本身，不再去管注册驱动，创建连接等过程。<br>  MyBatis 可以使用简单的 XML 或注解来配置和映射原生类型、接口和 Java 的 POJO（Plain Old Java Objects，普通老式 Java 对象）为数据库中的记录，它使用了ORM思想实现了结果集的封装。</li>
+<li>为什么使用MyBatis<br>无论是Mybatis、Hibernate都是ORM的一种实现框架，都是对JDBC的一种封装！</li>
+<li>MyBatis核心组件<br>SqlSessionFactory:创建SqlSession的工厂类<br>SqlSession：MyBatis的核心组件，用于向数据库执行SQL<br>主配置文件：XML配置文件，可以对MyBatis底层行为做出详细配置<br><strong>Mapper接口</strong>：就是DAO接口<br><strong>Mapper映射器</strong>：用于编写SQL,并将SQL和实体类映射。  用XML和注解都可以实现<br>前三个SpringBoot已经整合，只用编写后两个<h3 id="使用MyBatis"><a href="#使用MyBatis" class="headerlink" title="使用MyBatis"></a>使用MyBatis</h3></li>
+<li><p>首先添加mysql依赖 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;8.0.19&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加mybatis-springboot依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;2.1.2&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在SpringBoot整合下，就不用配置mybatis的xml文件了，直接在properties配置</p>
+</li>
+<li><p>数据库连接池配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># DataSourceProperties访问数据库要配置连接池，</span><br><span class="line">#mysql驱动</span><br><span class="line">spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver</span><br><span class="line">#mysql连接路径</span><br><span class="line">spring.datasource.url=jdbc:mysql://localhost:3306/community?characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=Hongkong</span><br><span class="line">spring.datasource.username=root</span><br><span class="line">spring.datasource.password=lizehaolizehao</span><br><span class="line">#配置连接池，连接池类型、最大连接数、最小空闲连接（刚才用了很多连接，然后用完了以后都空闲了，最小保留5个）</span><br><span class="line">spring.datasource.type=com.zaxxer.hikari.HikariDataSource</span><br><span class="line">spring.datasource.hikari.maximum-pool-size=15</span><br><span class="line">spring.datasource.hikari.minimum-idle=5</span><br><span class="line">#超时时间</span><br><span class="line">spring.datasource.hikari.idle-timeout=30000</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>mybatis配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># MybatisProperties</span><br><span class="line"># 在classpath就是target里面的classes，resource里的mapper编译以后就会到classes里面</span><br><span class="line">mybatis.mapper-locations=classpath:mapper/*.xml</span><br><span class="line"># 用实体类entity封装数据库表里的数据</span><br><span class="line">mybatis.type-aliases-package=com.lizehao.community.entity</span><br><span class="line"># id需要自增长的话，这里要启用才支持</span><br><span class="line">mybatis.configuration.useGeneratedKeys=**true**</span><br><span class="line"># 让数据库表的命名方式(不区分大小写，用下划线)和java里的驼峰命名法匹配</span><br><span class="line">mybatis.configuration.mapUnderscoreToCamelCase=**true**</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Mapper接口<br>接着就进行开发，在entity下编写和数据库表对应的类，然后再dao下编写Mapper接口（只用写接口，不用写实现类）<br>UserMapper接口（对应entity里面的User对象）:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@Mapper</span><br><span class="line">public interface UserMapper &#123;</span><br><span class="line">    //要实现这些方法，需要提供一个配置文件，给每一个方法提供它需要的sql，然后mybatis会自动生成实现类</span><br><span class="line">	  //在MyBatis中insert、update、delete语句的返回值可以是Integer、Long和Boolean。表示对数据库执行修改操作时，返回受影响的行数。对于返回类型为Boolean的情况，如果返回的值大于0，则返回True，否则返回False</span><br><span class="line">    //selevt语句直接返回查询结果的类型即可</span><br><span class="line">    User selectById(int id);</span><br><span class="line">    User selectByName(String username);</span><br><span class="line">    User selectByEmail(String email);</span><br><span class="line">    int insertUser(User user);</span><br><span class="line">    int updateStatus(int id, int status);</span><br><span class="line">    int updateHeader(int id, String headerUrl);</span><br><span class="line">    int updatePassword(int id, String password);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Mapper映射器<br>resource里的mapper下，xml文件，Mybatis官网给出了一个XML映射语句的示例，<br>里面直接写和sql语句Mapper对应的方法的sql语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=“1.0” encoding=“UTF-8” ?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">   PUBLIC “-//mybatis.org//DTD Mapper 3.0//EN”</span><br><span class="line">   “http://mybatis.org/dtd/mybatis-3-mapper.dtd”&gt;</span><br><span class="line">&lt;mapper namespace=“org.mybatis.example.BlogMapper”&gt;</span><br><span class="line">   &lt;select id=“selectBlog” resultType=“Blog”&gt;</span><br><span class="line">     select * from Blog where id = #&#123;id&#125;</span><br><span class="line">   &lt;/select&gt;</span><br><span class="line"> &lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>下面是增删改查的代码user-mapper.xml:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">        PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span><br><span class="line">        &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;</span><br><span class="line">&lt;mapper namespace=&quot;com.lizehao.community.community.dao.UserMapper&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;sql id = &quot;selectFields&quot;&gt;</span><br><span class="line">          id, username, password, salt, email, type, status, activation_code, header_url, create_time</span><br><span class="line">    &lt;/sql&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 注意插入不用id，因为插入id是自动生成的 --&gt;</span><br><span class="line">    &lt;sql id = &quot;insertFields&quot;&gt;</span><br><span class="line">          username, password, salt, email, type, status, activation_code, header_url, create_time</span><br><span class="line">    &lt;/sql&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;select id = &quot;selectById&quot; resultType=&quot;User&quot;&gt;</span><br><span class="line">          select &lt;include refid=&quot;selectFields&quot;&gt;&lt;/include&gt;</span><br><span class="line">          from user</span><br><span class="line">          where id = #&#123;id&#125;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;select id = &quot;selectByName&quot; resultType=&quot;User&quot;&gt;</span><br><span class="line">          select &lt;include refid=&quot;selectFields&quot;&gt;&lt;/include&gt;</span><br><span class="line">          from user</span><br><span class="line">          where username = #&#123;username&#125;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;select id = “selectByEmail” resultType=“User”&gt;</span><br><span class="line">          select &lt;include refid=“selectFields”&gt;&lt;/include&gt;</span><br><span class="line">          from user</span><br><span class="line">          where email = #&#123;email&#125;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;insert id =“insertUser” parameterType=“User” keyProperty=“id”&gt;</span><br><span class="line">        insert into user (&lt;include refid = “insertFields”&gt;&lt;/include&gt;)</span><br><span class="line">        values(#&#123;username&#125;, #&#123;password&#125;, #&#123;salt&#125;, #&#123;email&#125;, #&#123;type&#125;, #&#123;status&#125;, #&#123;activationCode&#125;, #&#123;headerUrl&#125;, #&#123;createTime&#125;)</span><br><span class="line">    &lt;/insert&gt;</span><br><span class="line"></span><br><span class="line">    &lt;update id = “updateHeader”&gt;</span><br><span class="line">        update user set header_url = #&#123;headerUrl&#125; where id = #&#123;id&#125;</span><br><span class="line">    &lt;/update&gt;</span><br><span class="line"></span><br><span class="line">    &lt;update id = “updateStatus”&gt;</span><br><span class="line">        update user set status = #&#123;status&#125; where id = #&#123;id&#125;</span><br><span class="line">    &lt;/update&gt;</span><br><span class="line"></span><br><span class="line">    &lt;update id = “updatePassword”&gt;</span><br><span class="line">        update user set password = #&#123;password&#125; where id = #&#123;id&#125;</span><br><span class="line">    &lt;/update&gt;</span><br><span class="line"></span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="CRUD测试"><a href="#CRUD测试" class="headerlink" title="CRUD测试"></a>CRUD测试</h3><p>增加(Create)、读取(Retrieve)、更新(Update)和删除(Delete)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">public class MapperTests &#123;	</span><br><span class="line">	  //注入userMapper</span><br><span class="line">    @Autowired</span><br><span class="line">    private UserMapper userMapper;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void testSelectUser()&#123;</span><br><span class="line">        User user = userMapper.selectById(101);</span><br><span class="line">        System.*out*.println(user);</span><br><span class="line"></span><br><span class="line">        user = userMapper.selectByName(“liubei”);</span><br><span class="line">        System.*out*.println(user);</span><br><span class="line"></span><br><span class="line">        user = userMapper.selectByEmail(“nowcoder101@sina.com”);</span><br><span class="line">        System.*out*.println(user);</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void testInnseryUser()&#123;</span><br><span class="line">        //增加的话要实例化一个User对象给usermapper里面的insertUser(User user);</span><br><span class="line">        //id会自动生成</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setCreateTime(new Date());</span><br><span class="line">        user.setEmail(“testsdfsdfsf@qq.com”);</span><br><span class="line">        user.setHeaderUrl(“http://www.nowcoder.com/101.png”);</span><br><span class="line">        user.setPassword(“12345”);</span><br><span class="line">        user.setSalt(“sdf”);</span><br><span class="line">        user.setUsername(“test”);</span><br><span class="line"></span><br><span class="line">        int rows = userMapper.insertUser(user);</span><br><span class="line">        System.*out*.println(rows);</span><br><span class="line">        System.*out*.println(user.getId());</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public  void updateUser()&#123;</span><br><span class="line">        int rows = userMapper.updateStatus(150,1);</span><br><span class="line">        System.*out*.println(rows);</span><br><span class="line"></span><br><span class="line">        rows = userMapper.updateHeader(150,”http://www.nowcoder.com/102.png”);</span><br><span class="line">        System.*out*.println(rows);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="和"><a href="#和" class="headerlink" title="}和${}"></a>}和${}</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$&#123;param&#125;传递的参数会被当成sql语句中的一部分，比如传递表名，字段名</span><br><span class="line"> </span><br><span class="line">例子：(传入值为id)</span><br><span class="line">order by $&#123;param&#125;</span><br><span class="line">则解析成的sql为：</span><br><span class="line">order by id</span><br><span class="line"> </span><br><span class="line">#&#123;parm&#125;传入的数据都当成一个字符串，会对自动传入的数据加一个双引号</span><br><span class="line"> </span><br><span class="line">例子：(传入值为id)</span><br><span class="line">select * from table where name = #&#123;param&#125;</span><br><span class="line">则解析成的sql为：</span><br><span class="line">select * from table where name = &quot;id&quot;</span><br><span class="line"> </span><br><span class="line">为了安全，能用#的地方就用#方式传参，这样可以有效的防止sql注入攻击</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">sql注入简介</span><br><span class="line">某个网站的登录验证的SQL查询代码为：</span><br><span class="line"> </span><br><span class="line">strSQL = &quot;SELECT * FROM users WHERE (name = &apos;&quot; + userName + &quot;&apos;) and (pw = &apos;&quot;+ passWord +&quot;&apos;);&quot;</span><br><span class="line"> </span><br><span class="line">恶意填入 </span><br><span class="line">userName =&quot;1&apos; OR &apos;1&apos;=&apos;1&quot;;</span><br><span class="line">与passWord = &quot;1&apos; OR &apos;1&apos;=&apos;1&quot;;</span><br><span class="line">时，将导致原本的SQL字符串被填为</span><br><span class="line"> </span><br><span class="line">strSQL = &quot;SELECT * FROM users WHERE (name = &apos;1&apos; OR &apos;1&apos;=&apos;1&apos;) and (pw = &apos;1&apos; OR &apos;1&apos;=&apos;1&apos;);&quot;</span><br><span class="line"> </span><br><span class="line">也就是实际上运行的SQL命令会变成下面这样的</span><br><span class="line">strSQL = &quot;SELECT * FROM users;&quot;</span><br><span class="line">这样在后台帐号验证的时候巧妙地绕过了检验，达到无账号密码，亦可登录网站。所以SQL注入攻击被俗称为黑客的填空游戏。</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/第四篇-Controller层如何解析请求和响应/" rel="next" title="第四篇 Controller层如何解析请求和响应 ">
+                <i class="fa fa-chevron-left"></i> 第四篇 Controller层如何解析请求和响应 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/第六篇-开发社区首页/" rel="prev" title="第六篇 开发社区首页">
+                第六篇 开发社区首页 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL和MySQLWorkbench"><span class="nav-number"></span> <span class="nav-text">MySQL和MySQLWorkbench</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MyBatis-简介"><span class="nav-number"></span> <span class="nav-text">MyBatis 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#要了解MyBatis，先了解一些概念"><span class="nav-number">1.</span> <span class="nav-text">要了解MyBatis，先了解一些概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MyBatis"><span class="nav-number">2.</span> <span class="nav-text">MyBatis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用MyBatis"><span class="nav-number">3.</span> <span class="nav-text">使用MyBatis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CRUD测试"><span class="nav-number">4.</span> <span class="nav-text">CRUD测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和"><span class="nav-number">5.</span> <span class="nav-text">}和${}</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

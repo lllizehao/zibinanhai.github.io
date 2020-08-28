@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本篇文章记录了使用AJAX实现异步发布帖子和开发帖子详情模块的流程">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第十二篇 异步发布帖子和帖子详情">
+<meta property="og:url" content="https://lizehao.info/第十二篇-异步发布帖子和帖子详情/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本篇文章记录了使用AJAX实现异步发布帖子和开发帖子详情模块的流程">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lizehao.info/第十二篇-异步发布帖子和帖子详情/1.png">
+<meta property="og:updated_time" content="2020-08-28T08:33:35.618Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第十二篇 异步发布帖子和帖子详情">
+<meta name="twitter:description" content="前言 本篇文章记录了使用AJAX实现异步发布帖子和开发帖子详情模块的流程">
+<meta name="twitter:image" content="https://lizehao.info/第十二篇-异步发布帖子和帖子详情/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/第十二篇-异步发布帖子和帖子详情/">
+
+
+
+
+
+  <title>第十二篇 异步发布帖子和帖子详情 | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/第十二篇-异步发布帖子和帖子详情/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第十二篇 异步发布帖子和帖子详情</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-26T20:27:28+08:00">
+                2020-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章记录了使用AJAX实现异步发布帖子和开发帖子详情模块的流程</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h2 id="AJAX"><a href="#AJAX" class="headerlink" title="AJAX"></a>AJAX</h2><h3 id="Asynchronous-JavaScript-and-XML"><a href="#Asynchronous-JavaScript-and-XML" class="headerlink" title="Asynchronous JavaScript and XML"></a>Asynchronous JavaScript and XML</h3><ul>
+<li>异步的JavaScript与XML</li>
+<li>使用AJAX，网页能够异步呈现更新，不需要刷新网页</li>
+<li>JSON目前比XML更普遍</li>
+<li><p>AJAX基本结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;          </span><br><span class="line">       	 url:&quot;发送请求（提交或读取数据）的地址&quot;, </span><br><span class="line">         dataType:&quot;预期服务器返回数据的类型&quot;,  </span><br><span class="line">         type:&quot;请求方式&quot;, </span><br><span class="line">         async:&quot;true/false&quot;,</span><br><span class="line">         data:&#123;发送到/读取后台（服务器）的数据&#125;,</span><br><span class="line">         success:function(data)&#123;请求成功时执行&#125;,      </span><br><span class="line">         error:function()&#123;请求失败时执行&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>post方式的简单结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$.post(</span><br><span class="line">		//1.路径</span><br><span class="line">		//2.要向服务器提交的数据（js对象）</span><br><span class="line">		//就是controller要接收的数据</span><br><span class="line">		//3.回调函数(匿名）</span><br><span class="line">		//当服务器响应后，服务器会调用这个回调函数，data就是服务器返回的数据</span><br><span class="line">		//传回来的是JSON字符串，如果需要JSON对象，可以用</span><br><span class="line">date = $.parseJSON(data);转换成JSON对象</span><br><span class="line">	</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="把数据转换为JSON的工具"><a href="#把数据转换为JSON的工具" class="headerlink" title="把数据转换为JSON的工具"></a>把数据转换为JSON的工具</h3><p>需要先配置Fastjson包<br>异步返回给浏览器的可能有这几种数据：</p>
+<ol>
+<li>返回码： 表示成功失败等信息</li>
+<li>提示： 提示信息</li>
+<li>业务数据<br>所以把这几种情况服务器的返回数据，都用这个工具转换成json数据，可以在前端使用。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">/</span><br><span class="line">  把传入数据转换成json数据</span><br><span class="line"> <span class="meta">@paramcode</span> 编号</span><br><span class="line"> <span class="meta">@parammsg</span> 提示</span><br><span class="line"> <span class="meta">@parammap</span> 业务数据</span><br><span class="line"> <span class="meta">@return</span></span><br><span class="line">/</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getJSONString</span><span class="params">(<span class="keyword">int</span> code, String msg, Map&lt;String, Object&gt; map)</span> </span>&#123;</span><br><span class="line">    JSONObject json = <span class="keyword">new</span> JSONObject();</span><br><span class="line">    json.put(“code”, code);</span><br><span class="line">    json.put(“msg”, msg);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(map != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span>(String key : map.keySet()) &#123;</span><br><span class="line">            json.put(key, map.get(key));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> json.toJSONString();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//重载</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getJSONString</span> <span class="params">(<span class="keyword">int</span> code, String msg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> getJSONString(code, msg, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//重载</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getJSONString</span> <span class="params">(<span class="keyword">int</span> code)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> getJSONString(code, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="使用AJAX"><a href="#使用AJAX" class="headerlink" title="使用AJAX"></a>使用AJAX</h2><h3 id="DAO层"><a href="#DAO层" class="headerlink" title="DAO层"></a>DAO层</h3><ul>
+<li><p>mapper</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insertDiscussPost</span><span class="params">(DiscussPost discussPost)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>mapper映射器</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;insert id=“insertDiscussPost” parameterType=“DiscussPost”&gt;</span><br><span class="line">    <span class="keyword">insert</span> <span class="keyword">into</span> discuss_post (&lt;<span class="keyword">include</span> refid=“insertFields”&gt;&lt;/<span class="keyword">include</span>&gt;)</span><br><span class="line">    <span class="keyword">values</span>(<span class="comment">#&#123;userId&#125;,#&#123;title&#125;,#&#123;content&#125;,#&#123;type&#125;,#&#123;status&#125;,#&#123;createTime&#125;,#&#123;commentCount&#125;,#&#123;score&#125;)</span></span><br><span class="line">&lt;/<span class="keyword">insert</span>&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="业务层"><a href="#业务层" class="headerlink" title="业务层"></a>业务层</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> SensitiveFilter sensitiveFilter;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">addDiscussPost</span><span class="params">(DiscussPost post)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (post == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(“参数不能为空”);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//转义HTML标记</span></span><br><span class="line">    <span class="comment">//让浏览器认为这只是文本，而不是网页标签</span></span><br><span class="line">    post.setTitle(HtmlUtils.htmlEscape(post.getTitle()));</span><br><span class="line">    post.setContent(HtmlUtils.htmlEscape(post.getContent()));</span><br><span class="line"></span><br><span class="line">    <span class="comment">//敏感词过滤，title和content</span></span><br><span class="line">    post.setTitle(sensitiveFilter.filter(post.getTitle()));</span><br><span class="line">    post.setContent(sensitiveFilter.filter(post.getContent()));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> discussPostMapper.insertDiscussPost(post);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="视图层"><a href="#视图层" class="headerlink" title="视图层"></a>视图层</h3><ul>
+<li><p>Controller</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(path = “/add”, method = RequestMethod.POST)</span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">addDiscussPost</span> <span class="params">(String title, String content)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    User user = hostHolder.getUser();</span><br><span class="line">    <span class="comment">//403代表没有权限</span></span><br><span class="line">    <span class="keyword">if</span> (user == <span class="keyword">null</span>)  &#123;</span><br><span class="line">         <span class="keyword">return</span> CommunityUtil.getJSONString(<span class="number">403</span>, <span class="string">"你还没有登录!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    DiscussPost post = <span class="keyword">new</span> DiscussPost();</span><br><span class="line">    post.setUserId(user.getId());</span><br><span class="line">    post.setTitle(title);</span><br><span class="line">    post.setContent(content);</span><br><span class="line">    post.setCreateTime(<span class="keyword">new</span> Date());</span><br><span class="line">    discussPostService.addDiscussPost(post);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//报错统一处理</span></span><br><span class="line">    <span class="keyword">return</span> CommunityUtil.getJSONString(<span class="number">0</span>, <span class="string">"发布成功"</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>JS<br>点击发布按钮的时候访问publish方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	$(“#publishBtn”)”click(publish);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>publish方法内容<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>  <span class="title">publish</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	$(<span class="string">"#publishModal"</span>).modal(<span class="string">"hide"</span>);</span><br><span class="line">	$(<span class="string">"#hintModal"</span>).modal(<span class="string">"show"</span>);</span><br><span class="line">	setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		$(<span class="string">"#hintModal"</span>).modal(<span class="string">"hide"</span>);</span><br><span class="line">	&#125;, <span class="number">2000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>点击发布按钮后，先把发布框隐藏，<br>然后出现提示框，两秒后提示框也隐藏</p>
+<ul>
+<li>异步后完整的JS<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">$( <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	$(<span class="string">"#publishBtn"</span>).click(publish);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span>  <span class="title">publish</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">//关闭发布框</span></span><br><span class="line">	$(<span class="string">"#publishModal"</span>).modal(<span class="string">"hide"</span>);</span><br><span class="line">	<span class="comment">//获取标题和内容的值</span></span><br><span class="line">	  <span class="keyword">var</span> title = $(<span class="string">"#recipient-name"</span>).val();</span><br><span class="line">	  <span class="keyword">var</span> conntent = $(<span class="string">"#message-text"</span>).val();</span><br><span class="line"></span><br><span class="line">	<span class="comment">//发送异步请求post</span></span><br><span class="line">	$.post(</span><br><span class="line">		<span class="comment">//1.路径 2.向服务器提交的数据 3.回调函数（服务器返回的数据）</span></span><br><span class="line">		CONTEXT_PATH + <span class="string">"/discuss/add"</span>,</span><br><span class="line">		&#123;<span class="string">"title"</span>:title,<span class="string">"content"</span>:content&#125;,</span><br><span class="line">		  <span class="function"><span class="keyword">function</span>  (<span class="params">data</span>) </span>&#123;</span><br><span class="line">			data = $.parseJSON(date);</span><br><span class="line">			<span class="comment">//在提示框中显示返回消息</span></span><br><span class="line">			$(<span class="string">"#hintBody"</span>).text(data.msg);</span><br><span class="line">			<span class="comment">//显示提示框</span></span><br><span class="line">			$(<span class="string">"#hintModal"</span>).modal(<span class="string">"show"</span>);</span><br><span class="line">			<span class="comment">//出现提示框并在两秒后关闭</span></span><br><span class="line">			setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">				$(<span class="string">"#hintModal"</span>).modal(<span class="string">"hide"</span>);</span><br><span class="line">				<span class="comment">//成功后刷新页面</span></span><br><span class="line">				<span class="keyword">if</span>(data.code == <span class="number">0</span>) &#123;</span><br><span class="line">					<span class="built_in">window</span>.location.reload();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;, <span class="number">2000</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="AJAX异步消息全部流程"><a href="#AJAX异步消息全部流程" class="headerlink" title="AJAX异步消息全部流程"></a>AJAX异步消息全部流程</h3><p>用户填写title 和content并点击发布按钮—-&gt;<br>访问publish方法—-&gt;<br>publish方法获取title和content的值—-&gt;<br>访问Controller(/discuss/add)并传入title和content的值—-&gt;<br>Controller处理帖子并返回code和msg数据(转换成JSON）——&gt;<br> data接收到JSON字符串并转换成JSON对象—-&gt;<br>方法中调用JSON对象中的msg并且显示在提示框—-&gt;<br>两秒后提示框关闭（如果发布成功，就重载到首页）</p>
+<ul>
+<li><p>画了个图，更方便理解<br><img src="1.png" alt=""></p>
+<h2 id="帖子详情"><a href="#帖子详情" class="headerlink" title="帖子详情"></a>帖子详情</h2><h3 id="Mapper"><a href="#Mapper" class="headerlink" title="Mapper"></a>Mapper</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//查询特定帖子</span><br><span class="line">DiscussPost selectDiscussPostById(int id);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>映射器</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=“selectDiscussPostById” resultType=“DiscussPost”&gt;</span><br><span class="line">    <span class="keyword">select</span> &lt;<span class="keyword">include</span> refid=“selectFields”&gt;&lt;/<span class="keyword">include</span>&gt;</span><br><span class="line">    <span class="keyword">from</span> discuss_post</span><br><span class="line">    <span class="keyword">where</span> <span class="keyword">id</span> = <span class="comment">#&#123;id&#125;</span></span><br><span class="line">&lt;/<span class="keyword">select</span>&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> DiscussPost <span class="title">findDiscussPostById</span><span class="params">(<span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> discussPostMapper.selectDiscussPostById(id); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@RequestMapping</span>(path = “/detail/&#123;discussPostId&#125;”, method = RequestMethod.GET)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getDiscussPost</span><span class="params">(@PathVariable(“discussPostId<span class="string">") int discussPostId, Model model) &#123;</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string">    DiscussPost post = discussPostService.findDiscussPostById(discussPostId);</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string">    model.addAttribute("</span>post<span class="string">", post);</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string"></span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string">    User user = userService.findUserById(post.getUserId());</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string">    model.addAttribute("</span>user<span class="string">", user);</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string"></span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string">    return “/site/discuss-detail”;</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string"></span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="string">&#125;</span></span></span></span><br></pre></td></tr></table></figure>
+<h3 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h3><p>index里把帖子的链接改为和Controller相同的路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a th:href=“@&#123;|/discuss/detail/$&#123;map.post.id&#125;|&#125;” th:utext = “$&#123;map.post.title&#125;”&gt;什么是Ioc？&lt;/a&gt;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>discuss-detail.html<br>先做初始设置<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;html lang=“en” xmlns:th=“http://www.thymeleaf.org”&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>CSS、JS、Jquery设置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;link rel=“stylesheet” th:href=“@&#123;/css/global.css&#125;” /&gt;</span><br><span class="line">&lt;link rel=“stylesheet” th:href=“@&#123;/css/discuss-detail.css&#125;” /&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=“https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js”&gt;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script th:src=“@&#123;/js/global.js&#125;”&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>头部尾部复用设置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;header class=“bg-dark sticky-top” th:replace=“index::header”&gt;</span><br><span class="line">&lt;footer class=“bg-dark” th:replace=“index::footer”&gt;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>thymeleaf动态替换<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;span th:utext=“$&#123;post.title&#125;” &gt;我没说过&lt;/span&gt;</span><br><span class="line"></span><br><span class="line">&lt;img th:src=“@&#123;user.headerUrl&#125;” class=“align-self-start mr-4 rounded-circle user-header” alt=“用户头像” &gt;</span><br><span class="line">&lt;div class=“mt-0 text-warning” th:utext=“$&#123;user.username&#125;”&gt;鲁迅&lt;/div&gt;</span><br><span class="line">&lt;div class=“text-muted mt-3”&gt;</span><br><span class="line">	发布于 &lt;b th:text=“$&#123;#dates.format(post.createTime,’yyyy-MM-dd HH:mm:ss’)&#125;”&gt;2020-07-15 15:32:18&lt;/b&gt;</span><br><span class="line"></span><br><span class="line">&lt;div class=“mt-4 mb-3 content”  th:utext=“$&#123;post.content&#125;”&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="帖子格式"><a href="#帖子格式" class="headerlink" title="帖子格式"></a>帖子格式</h3><ul>
+<li>注意要在正文前后加上<pre></pre>才能在帖子详情里保留回车和换行符</li>
+<li>但这时文本在div宽度不足时不会自动换行，而是撞破边界延伸到div外部去，所以还得在css里的content里加上<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">white-space: pre-wrap;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/第十一篇-过滤敏感词/" rel="next" title="第十一篇 过滤敏感词">
+                <i class="fa fa-chevron-left"></i> 第十一篇 过滤敏感词
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/第十三篇-事务管理和评论/" rel="prev" title="第十三篇 事务管理和评论">
+                第十三篇 事务管理和评论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#AJAX"><span class="nav-number"></span> <span class="nav-text">AJAX</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Asynchronous-JavaScript-and-XML"><span class="nav-number">1.</span> <span class="nav-text">Asynchronous JavaScript and XML</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#把数据转换为JSON的工具"><span class="nav-number">2.</span> <span class="nav-text">把数据转换为JSON的工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用AJAX"><span class="nav-number"></span> <span class="nav-text">使用AJAX</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DAO层"><span class="nav-number">1.</span> <span class="nav-text">DAO层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#业务层"><span class="nav-number">2.</span> <span class="nav-text">业务层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#视图层"><span class="nav-number">3.</span> <span class="nav-text">视图层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AJAX异步消息全部流程"><span class="nav-number">4.</span> <span class="nav-text">AJAX异步消息全部流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#帖子详情"><span class="nav-number"></span> <span class="nav-text">帖子详情</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mapper"><span class="nav-number">1.</span> <span class="nav-text">Mapper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Service"><span class="nav-number">2.</span> <span class="nav-text">Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Controller"><span class="nav-number">3.</span> <span class="nav-text">Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板"><span class="nav-number">4.</span> <span class="nav-text">模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#帖子格式"><span class="nav-number">5.</span> <span class="nav-text">帖子格式</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

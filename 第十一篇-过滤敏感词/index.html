@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本篇文章讲解了如何使用前缀树来对文本进行敏感词过滤">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第十一篇 过滤敏感词">
+<meta property="og:url" content="https://lizehao.info/第十一篇-过滤敏感词/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本篇文章讲解了如何使用前缀树来对文本进行敏感词过滤">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lizehao.info/第十一篇-过滤敏感词/1.png">
+<meta property="og:image" content="https://lizehao.info/第十一篇-过滤敏感词/2.png">
+<meta property="og:updated_time" content="2020-08-28T07:24:13.231Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第十一篇 过滤敏感词">
+<meta name="twitter:description" content="前言 本篇文章讲解了如何使用前缀树来对文本进行敏感词过滤">
+<meta name="twitter:image" content="https://lizehao.info/第十一篇-过滤敏感词/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/第十一篇-过滤敏感词/">
+
+
+
+
+
+  <title>第十一篇 过滤敏感词 | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/第十一篇-过滤敏感词/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第十一篇 过滤敏感词</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-26T20:26:52+08:00">
+                2020-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章讲解了如何使用前缀树来对文本进行敏感词过滤</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h2 id="前缀树"><a href="#前缀树" class="headerlink" title="前缀树"></a>前缀树</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>名称：Trie、字典树、查找树<br>特点：效率高、消耗内存大（空间换时间）<br>应用：字符串检索、词频统计、字符串排序等<br>     Trie的核心思想是空间换时间。利用字符串的公共前缀来降低查询时间的开销以达到提高效率的目的。<br>它有3个基本性质：<br>1 根节点不包含字符，除根节点外每一个节点都只包含一个字符。<br>2 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串。<br>3 每个节点的所有子节点包含的字符都不相同。</p>
+<h2 id="敏感词过滤器"><a href="#敏感词过滤器" class="headerlink" title="敏感词过滤器"></a>敏感词过滤器</h2><p>先把所有敏感词构造一个前缀树<br><img src="1.png" alt=""></p>
+<ul>
+<li>构造敏感词过滤器需要三个指针，一个指向根节点 ，另外两个指向敏感词的开头和结尾，用来替换</li>
+<li>节点是以字符为单位的，所以各种语言都可以用<h3 id="定义前缀树"><a href="#定义前缀树" class="headerlink" title="定义前缀树"></a>定义前缀树</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 定义前缀树</span></span><br><span class="line"><span class="comment">     * 这个类描述的是一个节点</span></span><br><span class="line"><span class="comment">     * 这个结构只在这里用，所以可以用内部类</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//关键词结束标识</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">boolean</span> isKeyWordEnd = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//子节点(key是子字符，value是子节点）</span></span><br><span class="line">        <span class="keyword">private</span> Map&lt;Character,TrieNode&gt; subNodes = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isKeyWordEnd</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> isKeyWordEnd;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setKeyWoedEnd</span><span class="params">(<span class="keyword">boolean</span> keyWoedEnd)</span> </span>&#123;</span><br><span class="line">            isKeyWordEnd = keyWoedEnd;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//添加子节点方法</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addSubNode</span><span class="params">(Character c, TrieNode node)</span> </span>&#123;</span><br><span class="line">            subNodes.put(c, node);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取子节点</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> TrieNode <span class="title">getSubNode</span><span class="params">(Character c)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> subNodes.get(c);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h3><p><img src="2.png" alt=""><br>Java中所有的类都是通过加载器加载到虚拟机中的。<br>类加载器之间存在父子关系，不同的子加载的类型之间是无法访问的（虽然它们都被放在方法区中）<br><code>this.getClass().getClassLoader().getResourceAsStream(name)</code><br>是通过当前类的加载器来加载资源，也就是保证是和类类型同一个加载器加载的。</p>
+<h3 id="初始化前缀树"><a href="#初始化前缀树" class="headerlink" title="初始化前缀树"></a>初始化前缀树</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//注解表示这是初始化方法</span></span><br><span class="line"><span class="meta">@PostConstruct</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//编译以后所有class和静态资源都会加载到target下</span></span><br><span class="line">    <span class="comment">//.getClass().getClassLoader()是获取调用对象的类加载器</span></span><br><span class="line">    <span class="keyword">try</span>(</span><br><span class="line">            InputStream is = <span class="keyword">this</span>.getClass().getClassLoader().getResourceAsStream(“sensitive-words.txt”);</span><br><span class="line">            <span class="comment">//把字节流转换成字符流，并且用缓冲</span></span><br><span class="line">            BufferedReader reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(is));</span><br><span class="line">    ) &#123;</span><br><span class="line">        <span class="comment">//敏感词文件是一行一个敏感词，</span></span><br><span class="line">        String keyword;</span><br><span class="line">        <span class="keyword">while</span> ((keyword = reader.readLine()) != <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="comment">//读到敏感词，添加到前缀树</span></span><br><span class="line">            <span class="keyword">this</span>.addKeyword(keyword);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e)&#123;</span><br><span class="line">        *logger*.error(<span class="string">"读取敏感词文件失败："</span> + e.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="把敏感词添加到前缀树"><a href="#把敏感词添加到前缀树" class="headerlink" title="把敏感词添加到前缀树"></a>把敏感词添加到前缀树</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">*<span class="comment">/***</span></span><br><span class="line"><span class="comment">* *把一个敏感词添加到前缀树*</span></span><br><span class="line"><span class="comment">* */</span>*</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addKeyword</span><span class="params">(String keyword)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//相当于一个临时指针，先指向根节点</span></span><br><span class="line">    TrieNode temptNode = rootNode;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; keyword.length(); i++) &#123;</span><br><span class="line">        <span class="keyword">char</span> c = keyword.charAt(i);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//添加子节点指针</span></span><br><span class="line">        <span class="comment">//子节点指针指向 临时指针的 c子节点</span></span><br><span class="line">        <span class="comment">//c子节点不存在就初始化添加子节点，存在就到下一层添加c后面的字符</span></span><br><span class="line">        TrieNode subNode = temptNode.getSubNode(c);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(subNode == <span class="keyword">null</span>) &#123;</span><br><span class="line">            subNode = <span class="keyword">new</span> TrieNode();</span><br><span class="line">            temptNode.addSubNode(c, subNode);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//已经有字节点，或者已经初始化了c字符，所以进入下一层</span></span><br><span class="line">        temptNode = subNode;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置敏感词结束标志</span></span><br><span class="line">        <span class="keyword">if</span> (i == keyword.length() - <span class="number">1</span>) &#123;</span><br><span class="line">            temptNode.setKeyWoedEnd(<span class="keyword">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="敏感词过滤"><a href="#敏感词过滤" class="headerlink" title="敏感词过滤"></a>敏感词过滤</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">*<span class="comment">/***</span></span><br><span class="line"><span class="comment">* * 敏感词过滤*</span></span><br><span class="line"><span class="comment">* ****<span class="doctag">@param</span>***text 传进来一个字符串*</span></span><br><span class="line"><span class="comment">* ****<span class="doctag">@return</span>***检索前缀树，把敏感词替换后返回*</span></span><br><span class="line"><span class="comment">* * */</span>*</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">filter</span><span class="params">(String text)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(StringUtils.*isBlank*(text)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//前缀树指针</span></span><br><span class="line">    TrieNode temptNode = rootNode;</span><br><span class="line">    <span class="comment">//字符串两个索引</span></span><br><span class="line">    <span class="keyword">int</span> begin = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> end = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//记录返回的字符串</span></span><br><span class="line">    StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//end先到结尾，所以用end遍历</span></span><br><span class="line">    <span class="keyword">while</span> (end &lt;  text.length()) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">char</span> c = text.charAt(end);</span><br><span class="line">        <span class="comment">//跳过符号</span></span><br><span class="line">        <span class="keyword">if</span> (isSymbol(c)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (temptNode == rootNode) &#123;</span><br><span class="line">                sb.append(c);</span><br><span class="line">                begin++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//不论end在开头或者中间，都向下走一步</span></span><br><span class="line">            end++;</span><br><span class="line">            <span class="comment">//continue指跳过单次循环，而不是跳过整个循环体</span></span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        temptNode = temptNode.getSubNode(c);</span><br><span class="line">        <span class="comment">//tempt有三种情况，null、不为null但不是结尾、不为null且是结尾</span></span><br><span class="line">        <span class="comment">//不为null但不是结尾的情况，树要继续往下走</span></span><br><span class="line">        <span class="keyword">if</span> (temptNode == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">//节点是null</span></span><br><span class="line">            sb.append(text.charAt(begin));</span><br><span class="line">            end = ++begin;</span><br><span class="line">            <span class="comment">//树指针归位</span></span><br><span class="line">            temptNode = rootNode;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (temptNode.isKeyWordEnd()) &#123;</span><br><span class="line">            <span class="comment">//找到敏感词</span></span><br><span class="line">            sb.append(*REPLACEMENT*);</span><br><span class="line">            begin = ++end;</span><br><span class="line">            temptNode = rootNode;</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//不是null也不是结束节点，往下走</span></span><br><span class="line">            <span class="comment">//只需要end++，进入下一个循环，此时树指针还没归位</span></span><br><span class="line">            <span class="comment">//树指针会指向下一个字符的子节点，然后再判断这个节点</span></span><br><span class="line">            <span class="comment">//终点不是null就是找到了</span></span><br><span class="line">            end++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    <span class="comment">//加最后几个字符</span></span><br><span class="line">    sb.append(text.substring(begin));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sb.toString();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>判断字符是否为特殊符号<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">*<span class="comment">/***</span></span><br><span class="line"><span class="comment">* *判断字符是否为特殊符号*</span></span><br><span class="line"><span class="comment">* */</span>*</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isSymbol</span><span class="params">(Character c)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//isAsciiAlphanumeric()是判断是不是合法字符</span></span><br><span class="line">    <span class="comment">//不是合法字符并且不是东亚文字</span></span><br><span class="line">    <span class="keyword">return</span> !CharUtils.*isAsciiAlphanumeric*(c) &amp;&amp; (c &lt; <span class="number">0X2E80</span> || c &gt; <span class="number">0x9FFF</span> );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/第十篇-开发登录、退出功能、显示登录信息和账号设置/" rel="next" title="第十篇 开发登录、退出功能、显示登录信息和账号设置">
+                <i class="fa fa-chevron-left"></i> 第十篇 开发登录、退出功能、显示登录信息和账号设置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/第十二篇-异步发布帖子和帖子详情/" rel="prev" title="第十二篇 异步发布帖子和帖子详情">
+                第十二篇 异步发布帖子和帖子详情 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#前缀树"><span class="nav-number"></span> <span class="nav-text">前缀树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#敏感词过滤器"><span class="nav-number"></span> <span class="nav-text">敏感词过滤器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义前缀树"><span class="nav-number">1.</span> <span class="nav-text">定义前缀树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载器"><span class="nav-number">2.</span> <span class="nav-text">类加载器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化前缀树"><span class="nav-number">3.</span> <span class="nav-text">初始化前缀树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#把敏感词添加到前缀树"><span class="nav-number">4.</span> <span class="nav-text">把敏感词添加到前缀树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#敏感词过滤"><span class="nav-number">5.</span> <span class="nav-text">敏感词过滤</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

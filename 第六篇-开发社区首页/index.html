@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本篇文章主要介绍了表现层、业务层、数据访问层的整体开发流程、MVC和分页功能的运行逻辑">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第六篇 开发社区首页">
+<meta property="og:url" content="https://lizehao.info/第六篇-开发社区首页/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本篇文章主要介绍了表现层、业务层、数据访问层的整体开发流程、MVC和分页功能的运行逻辑">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lizehao.info/第六篇-开发社区首页/1.png">
+<meta property="og:image" content="https://lizehao.info/第六篇-开发社区首页/2.png">
+<meta property="og:image" content="https://lizehao.info/第六篇-开发社区首页/3.png">
+<meta property="og:updated_time" content="2020-08-28T08:33:00.597Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第六篇 开发社区首页">
+<meta name="twitter:description" content="前言 本篇文章主要介绍了表现层、业务层、数据访问层的整体开发流程、MVC和分页功能的运行逻辑">
+<meta name="twitter:image" content="https://lizehao.info/第六篇-开发社区首页/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/第六篇-开发社区首页/">
+
+
+
+
+
+  <title>第六篇 开发社区首页 | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/第六篇-开发社区首页/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第六篇 开发社区首页</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-26T20:24:38+08:00">
+                2020-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章主要介绍了表现层、业务层、数据访问层的整体开发流程、MVC和分页功能的运行逻辑</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h2 id="一次请求的过程"><a href="#一次请求的过程" class="headerlink" title="一次请求的过程"></a>一次请求的过程</h2><ol>
+<li>浏览器发送请求给服务器视表现层(MVC)</li>
+<li>Controller在处理请求的时候会访问业务层<br>业务组件Service处理具体业务</li>
+<li>业务组件处理的时候会访问数据访问组件</li>
+<li>数据访问组件(Mapper)通过xml映射访问数据库<br><img src="1.png" alt=""><br>因为上面依赖于下面，所以开发从下往上开发的顺序比较好<h2 id="开发第一步-DB"><a href="#开发第一步-DB" class="headerlink" title="开发第一步:DB"></a>开发第一步:DB</h2>先在数据库添加”discuss_post”表：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `discuss_post` (</span><br><span class="line">  `id` int NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `user_id` varchar(45) DEFAULT NULL,</span><br><span class="line">  `title` varchar(100) DEFAULT NULL,</span><br><span class="line">  `content` text,</span><br><span class="line">  `type` int DEFAULT NULL COMMENT &apos;0-普通; 1-置顶;&apos;,</span><br><span class="line">  `status` int DEFAULT NULL COMMENT &apos;0-正常; 1-精华; 2-拉黑;&apos;,</span><br><span class="line">  `create_time` timestamp NULL DEFAULT NULL,</span><br><span class="line">  `comment_count` int DEFAULT NULL,</span><br><span class="line">  `score` double DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  KEY `index_user_id` (`user_id`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=281 DEFAULT CHARSET=utf8</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>给表里添加数据</p>
+<h2 id="开发第二步-DAO"><a href="#开发第二步-DAO" class="headerlink" title="开发第二步:DAO"></a>开发第二步:DAO</h2><h3 id="开发DAO层步骤："><a href="#开发DAO层步骤：" class="headerlink" title="开发DAO层步骤："></a>开发DAO层步骤：</h3><p><strong>entity—&gt;Mapper–&gt;Mapper映射器</strong><br>也就是先写与数据相对应的对象，再写Mapper接口，说明与实体对应的方法， 然后映射器在XML文件里用SQL语句实现方法</p>
+<h3 id="entity"><a href="#entity" class="headerlink" title="entity"></a>entity</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class DIscussPost &#123;</span><br><span class="line">    private int id;</span><br><span class="line">    private int userId;</span><br><span class="line">    private String title;</span><br><span class="line">    private String content;</span><br><span class="line">    private int type;</span><br><span class="line">    private int status;</span><br><span class="line">    private Date createTime;</span><br><span class="line">    private int commentCount;</span><br><span class="line">    private double score;</span><br><span class="line"></span><br><span class="line">		//重写getter()、setter()、toString()	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Mapper"><a href="#Mapper" class="headerlink" title="Mapper"></a>Mapper</h3><p>实现查询帖子页面和显示页数的方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Mapper</span><br><span class="line">public interface DiscussPostMapper &#123;</span><br><span class="line"></span><br><span class="line">    //查询帖子页面方法</span><br><span class="line">    //实现查询功能，查询返回的是一页，所以要是一个List，多条数据</span><br><span class="line">    //为什么传入userId是因为，以后要开发用户主页，显示用户发过的帖子</span><br><span class="line">    //传入offset（这一页起始行号）和limit（一页最多多少数据）实现分页</span><br><span class="line">    List&lt;DiscussPost&gt; selectDiscussPosts(int userId,int offset, int limit);</span><br><span class="line"></span><br><span class="line">    //计算帖子总数</span><br><span class="line">    //为了显示页数，要查到一共多少帖子，然后除以每页显示的帖子数</span><br><span class="line">    //@Param用于给参数取别名</span><br><span class="line">    //注意：如果只有一个参数并且sql里要动态地(比如&lt;if&gt;)使用这个参数时，必须加上Param</span><br><span class="line">    int selectDiscussPostRows(@Param(“userId”) int userId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Mapper映射器"><a href="#Mapper映射器" class="headerlink" title="Mapper映射器"></a>Mapper映射器</h3><p>xml头部和以前一样，现在只用用sql语句实现Mapper接口里的两个方法即可：</p>
+<ul>
+<li><p>第一个方法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;!—  List只用声明&lt;&gt;里面的类型即可—&gt;</span><br><span class="line">&lt;!—  XML里面if表示 如果test是true就拼接里面的语句，如果不是就不显示 —&gt;</span><br><span class="line">&lt;!—  这里面的if是指，如果userId=0说明要查的不是用户主页，那就把帖子全部查询</span><br><span class="line">如果userId!=0,说明查的是用户主页，那就拼接上条件，帖子的用户要是userId发的—&gt;</span><br><span class="line">&lt;select id=“selectDiscussPosts” resultType=“DiscussPost&quot;&gt;</span><br><span class="line">    select &lt;include refid=&quot;selectFields&quot;&gt;&lt;/include&gt;</span><br><span class="line">    from discuss_post</span><br><span class="line">    where status!=2</span><br><span class="line">    &lt;if test=&quot;userId!=0&quot;&gt;</span><br><span class="line">      and user_id = #&#123;userId&#125;</span><br><span class="line">    &lt;/if&gt;</span><br><span class="line">    order by type desc, create_time desc</span><br><span class="line">    limit #&#123;offset&#125;, #&#123;limit&#125;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二个方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=“selectDiscussPostRows” resultType=“Int”&gt;</span><br><span class="line">    select *count*(id)</span><br><span class="line">    from discuss_post</span><br><span class="line">    where status!=2</span><br><span class="line">    &lt;if test=“userId!=0”&gt;</span><br><span class="line">        and user_id = #&#123;userId&#125;</span><br><span class="line">    &lt;/if&gt;</span><br><span class="line"></span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>注意：XML不报错，所以每个单词的拼写和格式都要注意。否则bug要找很久</p>
+</blockquote>
+<h2 id="开发第三步-Service"><a href="#开发第三步-Service" class="headerlink" title="开发第三步:Service"></a>开发第三步:Service</h2><ul>
+<li>即使业务简单也要分层，不要直接从Cotroller调用DAO</li>
+<li>先写DiscussPostService</li>
+<li>在UserService里面去通过userId找到用户信息，在用户主页显示<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">public class DiscussPostService &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private DiscussPostMapper discussPostMapper;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">    public List&lt;DiscussPost&gt; findDiscussPosts(int userId, int offset, int limit)&#123;</span><br><span class="line">        return discussPostMapper.selectDiscussPosts(userId, offset, limit);</span><br><span class="line">    &#125;</span><br><span class="line">    public int findDiscussPostRows(int userId)&#123;</span><br><span class="line">        return discussPostMapper.selectDiscussPostRows(userId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">public class UserService &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private UserMapper userMapper;</span><br><span class="line"></span><br><span class="line">    public User finndUserById(int id)&#123;</span><br><span class="line">        return userMapper.selectById(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="开发第四步-Controller"><a href="#开发第四步-Controller" class="headerlink" title="开发第四步:Controller"></a>开发第四步:Controller</h2><h3 id="准备静态资源"><a href="#准备静态资源" class="headerlink" title="准备静态资源"></a>准备静态资源</h3><ul>
+<li>本次项目主要学习后端技术，所以前端页面暂时用模板，以后学前端的话再更新</li>
+<li>包括css、img、js、index.html、mail、site文件，在项目代码的static和templates里<h3 id="写Cotroller"><a href="#写Cotroller" class="headerlink" title="写Cotroller"></a>写Cotroller</h3></li>
+<li>给model里添加一个包含用户帖子和用户信息的List<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">public class HomeController &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private DiscussPostService discussPostService;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private UserService userService;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(path = “/index”, method = RequestMethod.*GET*)</span><br><span class="line">    public String getIndexPage(Model model)&#123;</span><br><span class="line">        List&lt;DiscussPost&gt; list = discussPostService.findDiscussPosts(0,0,10);</span><br><span class="line">        //写一个包含用户帖子和用户信息的List，用List嵌套Map实现</span><br><span class="line">        List&lt;Map&lt;String, Object&gt;&gt; discussPosts = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        for (DiscussPost post:list) &#123;</span><br><span class="line">           //每取一个帖子信息，就创建一个Map，并把这个Map存在List&lt;Map&lt;String, Object&gt;&gt;里面</span><br><span class="line">            Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">            map.put(&quot;post&quot;,post);</span><br><span class="line">            //每个Post都是一个DiscussPost对象,获得的外键UserId，就是User里的主键Id</span><br><span class="line">            User user = userService.finndUserById(post.getUserId());</span><br><span class="line">            map.put(“user”,user);</span><br><span class="line">            discussPosts.add(map);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">       model.addAttribute(&quot;discussPosts&quot;, discussPosts);</span><br><span class="line">        return &quot;/index&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="开发第五步-模板引擎"><a href="#开发第五步-模板引擎" class="headerlink" title="开发第五步:模板引擎"></a>开发第五步:模板引擎</h2><ul>
+<li>在index.html里面对静态网页进行修改，用thymeleaf把网页变成动态的。</li>
+<li>由于是首页，所以需要改的地方有</li>
+</ul>
+<ol>
+<li>遍历List&lt;Map&lt;String, Object&gt;&gt; discussPosts里的帖子，展示在首页</li>
+<li>用户的头像、用户名、帖子发布时间都改为动态的</li>
+<li>判断帖子是否为精华帖和是否置顶<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 帖子列表 --&gt;</span><br><span class="line">&lt;ul class=&quot;list-unstyled&quot;&gt;</span><br><span class="line">	&lt;li class=&quot;media pb-3 pt-3 mb-3 border-bottom&quot; th:each=&quot;map:$&#123;discussPosts&#125;&quot;&gt;</span><br><span class="line">		&lt;a href=&quot;site/profile.html&quot;&gt;</span><br><span class="line">			&lt;!-- 动态获取头像,相当map.get(&quot;user&quot;).getHeaderUrl()--&gt;</span><br><span class="line">			&lt;img th:src=&quot;$&#123;map.user.headerUrl&#125;&quot; class=&quot;mr-4 rounded-circle&quot; alt=&quot;用户头像&quot; style=&quot;width:50px;height:50px;&quot;&gt;</span><br><span class="line">		&lt;/a&gt;</span><br><span class="line">		&lt;div class=&quot;media-body&quot;&gt;</span><br><span class="line">			&lt;h6 class=“mt-0 mb-3”&gt;</span><br><span class="line">				&lt;!— 动态获取标题 —&gt;</span><br><span class="line">				&lt;a href=“#&quot;”th:utext = &quot;$“map.post.title&#125;&quot;&gt;”么是Ioc？&lt;/a&gt;</span><br><span class="line">				&lt;!— 判断是否为精华帖和是否置顶 —&gt;</span><br><span class="line">				&lt;span class=&quot;b“dge badge-secondary bg-primary&quot; ”h:if=&quot;$“map.post.type==1&#125;&quot;&gt;”顶&lt;/span&gt;</span><br><span class="line">				&lt;span class=&quot;badge badge-secondary bg-danger&quot; th:if=&quot;$&#123;map.post.status==1&#125;&quot;&gt;精华&lt;/span&gt;</span><br><span class="line">			&lt;/h6&gt;</span><br><span class="line">			&lt;div class=&quot;text-muted font-size-12&quot;&gt;</span><br><span class="line">				&lt;!-- 动态获取发帖时间并用dates工具格式化 --&gt;</span><br><span class="line">				&lt;u class=&quot;mr-3&quot; th:utext=&quot;$&#123;map.user.username&#125;&quot;&gt;特朗普&lt;/u&gt; 发布于 &lt;b th:text= &quot;$&#123;#dates.format(map.post.createTime,&apos;yyyy-MM-dd HH:mm:ss&apos;)&#125;&quot;&gt; 2020-06-15 15:32:18&lt;/b&gt;</span><br><span class="line">				&lt;ul class=&quot;d-inline float-right&quot;&gt;</span><br><span class="line">					&lt;li class=&quot;d-inline ml-2&quot;&gt;赞 11&lt;/li&gt;</span><br><span class="line">					&lt;li class=&quot;d-inline ml-2&quot;&gt;|&lt;/li&gt;</span><br><span class="line">					&lt;li class=&quot;d-inline ml-2&quot;&gt;回帖 7&lt;/li&gt;</span><br><span class="line">				&lt;/ul&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">		&lt;/div&gt;						</span><br><span class="line">	&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="运行逻辑"><a href="#运行逻辑" class="headerlink" title="运行逻辑"></a>运行逻辑</h2><ul>
+<li>前面的步骤如果都正确，那么进入8080端口输入访问路径就会得到正确的页面</li>
+<li>运行逻辑是：<br>Controller接收浏览器请求—&gt;Service层调用—&gt;DAO层调用DB获取数据<br>—-&gt;DAO层获取数据后处理Mapper方法—&gt;Service通过Mapper处理事务<br>—-&gt;Controller层通过Service传给Model数据—&gt;Model和模板文件生成动态网页返回给浏览器</li>
+<li>MVC的运行逻辑<br><img src="2.png" alt=""><h2 id="添加分页功能"><a href="#添加分页功能" class="headerlink" title="添加分页功能"></a>添加分页功能</h2><h3 id="添加page实体"><a href="#添加page实体" class="headerlink" title="添加page实体"></a>添加page实体</h3>分页功能不牵扯业务和取数据，所以只用写一个page实体，在MVC里面传输数据即可。<br>注意：有些变量不用定义（可能是只读的属性不用定义？暂时没找到答案），只要写了getter方法，就可以在模板文件里直接取到<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">//封装分页相关信息，利用这个对象让服务器接收页面传入的信息</span><br><span class="line"></span><br><span class="line">public class Page &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    //当前页码</span><br><span class="line">    private int current = 1;</span><br><span class="line">    //显示上限</span><br><span class="line">    private int limit = 10;</span><br><span class="line">    //查数据总数(用来计算总页数)</span><br><span class="line">    private int rows;</span><br><span class="line">    //查询路径（要显示的页面的路径）</span><br><span class="line">    private String path;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * setter getter方法</span><br><span class="line">     */</span><br><span class="line"></span><br><span class="line">    public int getCurrent() &#123;</span><br><span class="line">        return current;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setCurrent(int current) &#123;</span><br><span class="line">        if(current &gt;= 1 )</span><br><span class="line">        this.current = current;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getLimit() &#123;</span><br><span class="line">        return limit;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setLimit(int limit) &#123;</span><br><span class="line"></span><br><span class="line">        if (limit &gt;= 1 &amp;&amp; limit &lt;= 100) &#123;</span><br><span class="line">            this.limit = limit;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getRows() &#123;</span><br><span class="line">        return rows;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setRows(int rows) &#123;</span><br><span class="line">        if (rows &gt;= 0)</span><br><span class="line">        this.rows = rows;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getPath() &#123;</span><br><span class="line">        return path;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setPath(String path) &#123;</span><br><span class="line">        this.path = path;</span><br><span class="line">    &#125;</span><br><span class="line">    //获取当前页起始行，因为selectDiscussPosts方法中给数据库传的是当前页起始行</span><br><span class="line">    public int getOffset()&#123;</span><br><span class="line">        return (current-1)*limit;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * 返回总页数</span><br><span class="line">     * 不用定义变量，只要写了getter方法，就可以在模板文件里直接取到</span><br><span class="line">     */</span><br><span class="line">    public int getTotal() &#123;</span><br><span class="line"></span><br><span class="line">        if (rows % limit == 0)&#123;</span><br><span class="line">            return rows / limit;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            return rows / limit +1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 返回显示的页码范围（当前页的附近页）,From起始，To结束</span><br><span class="line">     */</span><br><span class="line">    public int getFrom()&#123;</span><br><span class="line">        int from = current - 2;</span><br><span class="line">        return from &lt; 1 ? 1 : from;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getTo()&#123;</span><br><span class="line"></span><br><span class="line">        int to = current + 2;</span><br><span class="line">        return to &gt; getTotal() ? getTotal() : to;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="更改Controller"><a href="#更改Controller" class="headerlink" title="更改Controller"></a>更改Controller</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> *</span><br><span class="line"> * @param model</span><br><span class="line"> * @param page 页面会通过Page实体传入分页有关的条件，服务器也要对page做一些设置</span><br><span class="line"> * @return</span><br><span class="line"> */</span><br><span class="line">@RequestMapping(path = “/index”, method = RequestMethod.GET)</span><br><span class="line">public String getIndexPage(Model model, Page page)&#123;</span><br><span class="line">        //方法调用前，Spring MVC自动实例化了参数model和page，并且把page注入到了model里面</span><br><span class="line">        //所以不用model.addAttribute，这样page的参数就可以自动获取，不用一个一个声明获取@RequestParam</span><br><span class="line">        page.setRows(discussPostService.findDiscussPostRows(0));</span><br><span class="line">        page.setPath(&quot;/index&quot;);</span><br><span class="line"></span><br><span class="line">        /*</span><br><span class="line">         * 获取一个页面的所有帖子</span><br><span class="line">         * userId：判断要显示的是首页还是用户</span><br><span class="line">         * offset和limit：判断当前页面显示哪一页的帖子</span><br><span class="line">         */</span><br><span class="line">        List&lt;DiscussPost&gt; list = discussPostService.findDiscussPosts(0,page.getOffset(),page.getLimit());</span><br><span class="line">        /*</span><br><span class="line">         * 把上面的List遍历，存储在一个包含用户帖子和用户信息的List，用List嵌套Map实现</span><br><span class="line">         * Map里面只有两行数据，帖子和用户信息</span><br><span class="line">         */</span><br><span class="line">        List&lt;Map&lt;String, Object&gt;&gt; discussPosts = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        for (DiscussPost post:list) &#123;</span><br><span class="line">           //每取一个帖子信息，就创建一个Map，并把这个Map存在List&lt;Map&lt;String, Object&gt;&gt;里面</span><br><span class="line">            Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">            map.put(&quot;post&quot;, post);</span><br><span class="line">            //每个Post都是一个DiscussPost对象,获得的外键UserId，就是User里的主键Id</span><br><span class="line">            User user = userService.finndUserById(post.getUserId());</span><br><span class="line">            map.put(&quot;user&quot;, user);</span><br><span class="line">            discussPosts.add(map);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        model.addAttribute(&quot;discussPosts”, discussPosts);</span><br><span class="line">        return &quot;/index&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="模板文件里分页部分"><a href="#模板文件里分页部分" class="headerlink" title="模板文件里分页部分"></a>模板文件里分页部分</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;!— 分页 —&gt;</span><br><span class="line">&lt;!— href是超链接  th:href=“@&#123;路径&#125;”—&gt;</span><br><span class="line">&lt;!— th:href=“@&#123;$&#123;page.path&#125;(current=1,limit=10)&#125;”表示的路径就是/index?current=1&amp;limit=10 —&gt;</span><br><span class="line">&lt;!— Thymeleaf有一个#number工具类，返回一个连续数组（可以设定开始和结尾数字） —&gt;</span><br><span class="line">&lt;nav class=“mt-5” th:if=&quot;$&#123;page.rows&gt;0&#125;&quot;&gt;</span><br><span class="line">	&lt;ul class=&quot;pagination justify-content-center&quot;&gt;</span><br><span class="line">		&lt;li class=&quot;page-item&quot;&gt;</span><br><span class="line">			&lt;a class=&quot;page-link&quot; th:href=&quot;@&#123;$&#123;page.path&#125;(current=1)&#125;&quot;&gt;首页&lt;/a&gt;</span><br><span class="line">		&lt;/li&gt;</span><br><span class="line">		&lt;li th:class=&quot;|page-item $&#123;page.current==1?&apos;disabled&apos;:&apos;&apos;&#125;|&quot;&gt;</span><br><span class="line">			&lt;a class=&quot;page-link&quot; th:href=&quot;@&#123;$&#123;page.path&#125;(current=$&#123;page.current-1&#125;)&#125;&quot;&gt;上一页&lt;/a&gt;</span><br><span class="line">		&lt;/li&gt;</span><br><span class="line">		&lt;li th:class=&quot;|page-item $&#123;i==page.current?&apos;active&apos;:&apos;&apos;&#125;|&quot; th:each=&quot;i:$&#123;#numbers.sequence(page.from,page.to)&#125;&quot;&gt;</span><br><span class="line">			&lt;a class=&quot;page-link&quot; th:href=&quot;@&#123;$&#123;page.path&#125;(current=$&#123;i&#125;)&#125;” th:text=“$&#123;i&#125;”&gt;1&lt;/a&gt;</span><br><span class="line">		&lt;/li&gt;</span><br><span class="line">		&lt;li th:class=“|page-item $&#123;page.current==page.total?’disabled’:’’&#125;|”&gt;</span><br><span class="line">			&lt;a class=“page-link” th:href=“@&#123;$&#123;page.path&#125;(current=$&#123;page.current+1&#125;)&#125;”&gt;下一页&lt;/a&gt;</span><br><span class="line">		&lt;/li&gt;</span><br><span class="line">		&lt;li class=&quot;page-item&quot;&gt;</span><br><span class="line">			&lt;a class=&quot;page-link&quot; th:href=&quot;@&#123;$&#123;page.path&#125;(current=$&#123;page.total&#125;)&#125;&quot;&gt;末页&lt;/a&gt;</span><br><span class="line">		&lt;/li&gt;</span><br><span class="line">	&lt;/ul&gt;</span><br><span class="line">&lt;/nav&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="分页处理运行逻辑"><a href="#分页处理运行逻辑" class="headerlink" title="分页处理运行逻辑"></a>分页处理运行逻辑</h3><p><img src="3.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/第五篇-MyBatis/" rel="next" title="第五篇 MyBatis">
+                <i class="fa fa-chevron-left"></i> 第五篇 MyBatis
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/第七篇-发送邮件/" rel="prev" title="第七篇 发送邮件">
+                第七篇 发送邮件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#一次请求的过程"><span class="nav-number"></span> <span class="nav-text">一次请求的过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发第一步-DB"><span class="nav-number"></span> <span class="nav-text">开发第一步:DB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发第二步-DAO"><span class="nav-number"></span> <span class="nav-text">开发第二步:DAO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#开发DAO层步骤："><span class="nav-number">1.</span> <span class="nav-text">开发DAO层步骤：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#entity"><span class="nav-number">2.</span> <span class="nav-text">entity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mapper"><span class="nav-number">3.</span> <span class="nav-text">Mapper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mapper映射器"><span class="nav-number">4.</span> <span class="nav-text">Mapper映射器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发第三步-Service"><span class="nav-number"></span> <span class="nav-text">开发第三步:Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发第四步-Controller"><span class="nav-number"></span> <span class="nav-text">开发第四步:Controller</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备静态资源"><span class="nav-number">1.</span> <span class="nav-text">准备静态资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写Cotroller"><span class="nav-number">2.</span> <span class="nav-text">写Cotroller</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发第五步-模板引擎"><span class="nav-number"></span> <span class="nav-text">开发第五步:模板引擎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行逻辑"><span class="nav-number"></span> <span class="nav-text">运行逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加分页功能"><span class="nav-number"></span> <span class="nav-text">添加分页功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加page实体"><span class="nav-number">1.</span> <span class="nav-text">添加page实体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更改Controller"><span class="nav-number">2.</span> <span class="nav-text">更改Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板文件里分页部分"><span class="nav-number">3.</span> <span class="nav-text">模板文件里分页部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分页处理运行逻辑"><span class="nav-number">4.</span> <span class="nav-text">分页处理运行逻辑</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本篇文章主要总结了Collection、List、Set和泛型、Map的相关知识">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java第五篇 集合框架">
+<meta property="og:url" content="https://lizehao.info/Java第五篇-集合框架/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本篇文章主要总结了Collection、List、Set和泛型、Map的相关知识">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lizehao.info/Java第五篇-集合框架/1.png">
+<meta property="og:image" content="https://lizehao.info/Java第五篇-集合框架/2.png">
+<meta property="og:image" content="https://lizehao.info/Java第五篇-集合框架/3.png">
+<meta property="og:image" content="https://lizehao.info/Java第五篇-集合框架/4.png">
+<meta property="og:updated_time" content="2020-08-26T13:30:42.327Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java第五篇 集合框架">
+<meta name="twitter:description" content="前言 本篇文章主要总结了Collection、List、Set和泛型、Map的相关知识">
+<meta name="twitter:image" content="https://lizehao.info/Java第五篇-集合框架/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/Java第五篇-集合框架/">
+
+
+
+
+
+  <title>Java第五篇 集合框架 | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/Java第五篇-集合框架/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java第五篇 集合框架</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-06T20:31:05+08:00">
+                2020-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章主要总结了Collection、List、Set和泛型、Map的相关知识</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h1><hr>
+<h2 id="引用类型数组举例"><a href="#引用类型数组举例" class="headerlink" title="引用类型数组举例"></a>引用类型数组举例</h2><p>Student[] arr = new Student[5]；</p>
+<p>其中，数组的引用存在栈，数组对象存在堆中，数组对象里的arr[0]、arr[1]等存的是Student对象的地址值</p>
+<p><img src="1.png" alt=""><br>注：引用类型不一定存在栈还是堆，在方法内创建的就在栈，在类中方法外创建的就在堆（在类中创建的就是成员变量，属于对象）</p>
+<h2 id="集合由来"><a href="#集合由来" class="headerlink" title="集合由来"></a>集合由来</h2><p>数组长度是固定的，集合类可以存储任意对象，长度可以改变（类似链表）<br>集合存的不是对象是对象的引用</p>
+<h2 id="数组和集合区别"><a href="#数组和集合区别" class="headerlink" title="数组和集合区别"></a>数组和集合区别</h2><ol>
+<li>数组可以存储基本数据类型和引用数据类型<br>集合只能存储引用数据类型（存基本数据类型的话会自动装箱变成对象）</li>
+<li><p>集合长度可变，所以长度不固定的时候用集合</p>
+<h2 id="集合体系"><a href="#集合体系" class="headerlink" title="集合体系"></a>集合体系</h2><p><img src="2.png" alt=""></p>
+</li>
+</ol>
+<h1 id="Collection接口"><a href="#Collection接口" class="headerlink" title="Collection接口"></a>Collection接口</h1><hr>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ol>
+<li>boolean  add(object o )方法<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Collection c = new ArrayList();//父类引用指向子类对象</span><br><span class="line">boolean b1 = c.add(“123”);     //放进去以后元素会提升为object</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>在Arraylist里面可以添加重复的对象，所以一直是true<br>Set里面可能有false</p>
+<ol start="2">
+<li>boolean remove(object o )方法<br>删除指定元素<br>底层和contains一样依赖equals方法</li>
+<li>void clear()<br>清空集合</li>
+<li>boolean contains(object o )<br>判断是否包含元素<br><strong>注意，底层用的是传进来的对象的类的equals方法来比较，所以要找的对象的类里必须重写equals方法，比较的才是对象值而不是地址值</strong></li>
+<li>boolean isEmpty()<br>判读是否为空</li>
+<li>int size()<br>返回长度<h2 id="集合遍历"><a href="#集合遍历" class="headerlink" title="集合遍历"></a>集合遍历</h2>Objct []   toArray()方法把集合转换为数组<br><code>Object[] arr = c.toArray();</code><br>但是add时会把原本元素向上转型为Objet类，所以要使用原本对象的方法的时候要向下转型再使用。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Collection c = new Arraylist();</span><br><span class="line">c.add(new Student (李，23))；</span><br><span class="line">c.add(new Student (李，22))；</span><br><span class="line">c.add(new Student (李，21))；</span><br><span class="line">Object [] arr = c.toArray();</span><br><span class="line">for (int i = 0 ;i&lt; arr.length;i++)&#123;</span><br><span class="line">	Student s = (Student)arr[i];</span><br><span class="line">	system.out.println(s.getName()  +s.getAge());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="普通方法加All-参数是集合不是普通对象）"><a href="#普通方法加All-参数是集合不是普通对象）" class="headerlink" title="普通方法加All(参数是集合不是普通对象）"></a>普通方法加All(参数是集合不是普通对象）</h2><ol>
+<li>boolean addAll(Collection c)<br>把集合c里面的每个元素添加进去，<br>如果用add添加一个Collection对象,那就是把整个集合当成一个元素添加进去</li>
+<li>boolean removeAll(Collection c)<br>删除的是交集</li>
+<li>boolean containsAll(Collection c) </li>
+<li>boolean retainAll(Collection c)<br>取交集<br>当两个没有交集的时候，返回的也是true,只要调用的集合改变就是true<br>没有改变就是false<h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2></li>
+</ol>
+<ul>
+<li>Collection里有iterator()方法，返回类型是接口Iterator<br><img src="3.png" alt=""></li>
+<li>接口Iterator里的方法（三个）</li>
+</ul>
+<ol>
+<li>boolean hasNext()</li>
+<li>E next()   返回迭代中的下一个元素</li>
+<li><p>void  remove()删除迭代器返回的最后一个元素</p>
+</li>
+<li><p>遍历</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> Iterator it = c.iterator();</span><br><span class="line"> while(it.hasNext()) &#123;</span><br><span class="line"> System.out.println(it.next());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>需要对每个元素操作的话，还是需要向下转型</p>
+<h2 id="迭代器原理"><a href="#迭代器原理" class="headerlink" title="迭代器原理"></a>迭代器原理</h2><p>每一个集合内部存储结构是不一样的，存取操作也是不一样的，所以向上抽取成接口，然后在每个类里定义自己的迭代方式</p>
+<p>这样整个集合体系遍历都可以用hasNext()和next（）方法，并且使用者不用管内部实现。</p>
+<h1 id="List接口"><a href="#List接口" class="headerlink" title="List接口"></a>List接口</h1><hr>
+<h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><ol>
+<li>void add (int index,E element)<br>在指定位置插入元素,0=&lt;index&lt;=size</li>
+<li>E remove(int index)<br>删除索引位置的元素并返回被删除元素<br>删除的时候不会自动装箱，如果集合里有Integer对象1，remove(1)删除的只是索引1位置的元素而不是这个对象</li>
+<li>E get(int index)<br>获取索引的元素，可以用来遍历，这个是list特有的</li>
+<li>E set(int index,E element)<br>修改指定元素<h2 id="并发异常"><a href="#并发异常" class="headerlink" title="并发异常"></a>并发异常</h2>当List集合用Iterator遍历的时候，添加元素，就会发生并发异常，这个时候可以用List特有的迭代器ListIterator来迭代<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ListIterator it = list.listIterator();</span><br><span class="line">while(it.hasNext())&#123;</span><br><span class="line">	it.add(“添加”)；//用ListIterator独有的add方法来添加</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="ListIterator特有方法"><a href="#ListIterator特有方法" class="headerlink" title="ListIterator特有方法"></a>ListIterator特有方法</h2><p>hasPrevious()  是否有前一个元素<br>previous()    获取元素并把指针向前移动<br>和hasNext()和next()相对，但是必须先正着遍历，然后才能反着遍历，因为指针刚开始为0</p>
+<hr>
+<h1 id="List三个子类特点以及LinkedList"><a href="#List三个子类特点以及LinkedList" class="headerlink" title="List三个子类特点以及LinkedList"></a>List三个子类特点以及LinkedList</h1><hr>
+<p>ArrayList    查询快，增删慢，线程不安全<br>Vector        查询快，增删慢，线程安全，效率低<br>LinkedList  查询慢，增删快，线程不安全</p>
+<h2 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h2><ul>
+<li>方法</li>
+</ul>
+<ol>
+<li>public void   addFirst(E e)/addLast(E  e)<br>在链表头部和尾部添加元素</li>
+<li>public   E    getFirst()/getLast()</li>
+<li>public   E    removeFirst()/removeLast()</li>
+<li>public   E    get(int index)</li>
+</ol>
+<ul>
+<li>用LinkedList来模拟栈<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class Stack &#123;</span><br><span class="line">	private LinkedList list = new LinkedList();</span><br><span class="line">	//模拟进栈</span><br><span class="line">	public void in (object obj)&#123;</span><br><span class="line">		list.addLast(obj);</span><br><span class="line">	&#125;</span><br><span class="line">	//模拟出栈</span><br><span class="line">	public  object out(j)&#123;</span><br><span class="line">		return list.removeLast();</span><br><span class="line">	&#125;</span><br><span class="line">	//模拟是否为空</span><br><span class="line">	Public boolean isEmpty()&#123;</span><br><span class="line">		return list.isEmpty();</span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h1 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h1><hr>
+<h2 id="泛型概述"><a href="#泛型概述" class="headerlink" title="泛型概述"></a>泛型概述</h2><ul>
+<li>Collection<e>中的<e>即为泛型，E是一个引用数据类型，</e></e></li>
+<li>用来限定Collection里只能放E类型的对象或者E类型的子类对象<br>注意：在ArrayLIst<person> list = new ArrayList<student>();<br>是错的，但是可以在后面添加Student对象m</student></person></li>
+</ul>
+<h2 id="泛型好处"><a href="#泛型好处" class="headerlink" title="泛型好处"></a>泛型好处</h2><ul>
+<li>提高安全性（把运行期的错误转换到编译期）<br>当没有泛型的时候，遍历的时候要用到子类特有的方法的时候要强转，就会出错</li>
+<li>不用强转类型<h2 id="泛型由来"><a href="#泛型由来" class="headerlink" title="泛型由来"></a>泛型由来</h2></li>
+<li>没有泛型的时候，通过Object类型来接收任意的对象类型，但是实际使用中，会有类型转换的问题，所以用泛型来解决这个安全问题</li>
+</ul>
+<p>比如把Student对象向上转型为Object类，再向下转型为Worker对象，编译是可以通过的，但是运行就肯定是错误的。</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/qq_39975542/article/details/81367119" target="_blank" rel="noopener">编译错误和运行错误区别</a></p>
+</blockquote>
+<h2 id="自定义类泛型"><a href="#自定义类泛型" class="headerlink" title="自定义类泛型"></a>自定义类泛型</h2><ul>
+<li>Collection类可以有泛型，自定义类也可以有泛型</li>
+<li>一般要求是一个大写字母</li>
+<li>当用这个自定义类创建对象的时候，给泛型赋值（引用数据类型）<h2 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public&lt;T&gt; void show(T t) &#123;</span><br><span class="line">	System.out.println(t);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>方法的泛型最好与类的泛型一致<br>如果不一致，要在方法上声明该泛型</p>
+<ul>
+<li>泛型方法不能是静态的，因为静态方法是随着类的加载而加载，但是泛型需要创建对象的时候才赋值she<h2 id="泛型接口"><a href="#泛型接口" class="headerlink" title="泛型接口"></a>泛型接口</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">interface Inter&lt;T&gt; &#123;</span><br><span class="line">	public void show(T t);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>有两种泛型接口的方式</p>
+<ol>
+<li><p>在实现接口的类定义的时候给泛型赋值(推荐)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Demo implements Inter&lt;String &gt;&#123;</span><br><span class="line">	public void show (String  s )&#123;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不再类定义的时候赋值，创建对象的时候再去赋值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Demo&lt;T&gt; implements Inter&lt;T&gt;&#123;</span><br><span class="line">	public void show(T t)  &#123;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="泛型通配符-lt-gt"><a href="#泛型通配符-lt-gt" class="headerlink" title="泛型通配符&lt;?&gt;"></a>泛型通配符&lt;?&gt;</h2><ol>
+<li>泛型通配符表示任意类型<br><code>List&lt;?&gt;  list = new ArrayList&lt;&gt;();</code></li>
+<li>当右边不确定时，左边可以指定为？</li>
+<li><strong>&lt;?extends E&gt;</strong>   泛型固定<strong>上</strong>边界，代表E及其子类（<strong>不可添加，可读</strong>）<br><code>ArrayList&lt;? extends Person&gt; list = new ArrayList&lt;Student&gt;();</code><br>所以上行代码是可以编译通过的。</li>
+</ol>
+<ul>
+<li>add<br>不能添加元素，因为：<br><strong>&lt;? extends Person&gt;只是告诉编译器集合中元素的类型上限，但是编译器并不知道具体是哪种类型的，list可以指向ArrayList<student>(),也可以指向ArrayList<person>()，也可以指向ArrayList<worker>()也就是list指向的集合类型是不确定的，所以为了类型安全，编译器只能阻止添加元素</worker></person></student></strong><br>例如，假如list指向Student集合，现在往里添加Worker对象，肯定会出错。</li>
+<li>get<br>可以获取元素，但是必须使用 <strong>E</strong> 来接受元素！</li>
+</ul>
+<ol start="4">
+<li><strong>&lt;？super E &gt;</strong>泛型固定<strong>下</strong>边界，代表E及其父类<br><code>ArrayList&lt;? super Student&gt; list = new ArrayList&lt;Person&gt;();</code><br>是可以通过编译的</li>
+</ol>
+<ul>
+<li>add<br>  可以写入，因为尽管编译器不知道list指向的是Student还是Student的父类，但是往集合里存入Student类或者Student的子类对象，都是可以和list指向的类兼容的</li>
+<li>get<br>  可以获取，但是因为list可能指向E的任何父类，所以接受一定要用Object来接收。<br>TreeSet(Comparator&lt;?super E&gt; comparator)  比较器<br>TreeMap(Comparator&lt;?super E&gt; comparator)<br>不管比较器是E还是E的父类类型，都可以添加两个E或者E的子类进去比较。</li>
+</ul>
+<ol start="5">
+<li>PECS法则<br>生产者（Producer）使用extends，生产者提供数据。<strong>频繁往外读取内容的，适合用上界Extends。</strong><br>消费者（Consumer）使用super，消费者消费数据。<strong>经常往里插入的，适合用下界Super。</strong></li>
+<li><p>为什么要引入泛型通配符？一句话：为了保证类型安全。</p>
+<h2 id="泛型是使用擦除来实现的"><a href="#泛型是使用擦除来实现的" class="headerlink" title="泛型是使用擦除来实现的"></a>泛型是使用擦除来实现的</h2><ul>
+<li><p>·当你深入研究泛型时，你会发现有大量的东西初看起来是没有意义的。例如，尽管可以声明为ArrayList.class，但是不能声明为ArrayList<integer>.class</integer></p>
+</li>
+<li><p>因为声明为ArrayList<integer>.class 中的 <integer>是没有任何意义的。在编译器后<integer>是没有的，是被擦除的。</integer></integer></integer></p>
+</li>
+<li><p>·java泛型是使用擦除来实现的，这意味着当你在使用泛型的时，任何具体的  类型信息  都被擦除了，你唯一知道的就是你在使用一个对象。</p>
+</li>
+<li><p>因此List<string>和List<integer>在运行时  事实上是相同的类型的。这两种形式都被擦除成它们的”原生”的类型</integer></string></p>
+</li>
+<li>泛型是为了编译前去除错误，但是运行的时候，泛型就被擦除了</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h1 id="迭代删除"><a href="#迭代删除" class="headerlink" title="迭代删除"></a>迭代删除</h1><hr>
+<h2 id="1-增强for"><a href="#1-增强for" class="headerlink" title="1. 增强for"></a>1. 增强for</h2><ul>
+<li>底层是迭代器实现的，格式:<br>for (元素数据类型  变量名：数组或者Collection集合){}</li>
+<li><p>数组遍历</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[]  arr= &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i:arr)&#123;</span><br><span class="line">	System.out.println(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>集合遍历</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ArrayLIst&lt;String&gt; list = <span class="keyword">new</span> ArrayLIst&lt;&gt;();</span><br><span class="line">	list.add(“sdf”);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (String str: list)&#123;</span><br><span class="line">		System.out.println(str):</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="2-迭代删除集合元素的三种方法"><a href="#2-迭代删除集合元素的三种方法" class="headerlink" title="2.迭代删除集合元素的三种方法"></a>2.迭代删除集合元素的三种方法</h2><ol>
+<li>普通for循环（要i–）<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size();i++)&#123;</span><br><span class="line">	<span class="keyword">if</span> (list.get(i).equals(目标元素))</span><br><span class="line">		list.remove(i--);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>需要–是因为，remove删除元素后，后面的元素会整体上移一个位置。再i++就会多走一个位置。<br>所以在不符合删除条件的时候，索引继续往下走，符合的时候，删除以后要i减减 一下，这样在i++就会在原地，继续往下检查</p>
+<ol start="2">
+<li>迭代器删除</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Iterater&lt;String&gt; it = list.iterater()</span><br><span class="line"><span class="keyword">while</span> (!it.hasNext())&#123;</span><br><span class="line">	<span class="keyword">if</span>(it.next().equals(目标元素))</span><br><span class="line">	remove();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意迭代器里面只能用迭代器自己的3个方法，否则会导致并发异常。</p>
+<ol start="3">
+<li><p>增强for循环不能删除，只能遍历<br>因为增强for循环底层用的是迭代器，删除会导致并发异常</p>
+<hr>
+</li>
+</ol>
+<h2 id="静态导入"><a href="#静态导入" class="headerlink" title="静态导入"></a>静态导入</h2><hr>
+<h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h2><p>导入类中的静态方法，在导入包的时候，加上static和静态方法名<br>import static java.util.Arrays.sort;<br>这样就可以省略静态方法的前缀<br>sort()而不是Array.sort()</p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>方法必须是静态的，如果有多个同名的静态方法，不知道使用是谁，所以意义不大，可以看懂即可。</p>
+<h1 id="可变参数"><a href="#可变参数" class="headerlink" title="可变参数"></a>可变参数</h1><hr>
+<h2 id="定义方法的时候不知道定义多少个参数"><a href="#定义方法的时候不知道定义多少个参数" class="headerlink" title="定义方法的时候不知道定义多少个参数"></a>定义方法的时候不知道定义多少个参数</h2><ul>
+<li>可变参数其实是一个数组</li>
+<li>格式<br>数组类型… 变量名<br>int…arr<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Varable</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		System.out.println(add(<span class="number">2</span>, <span class="number">3</span>));</span><br><span class="line">		System.out.println(add(<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span>… args)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> sum = x;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; args.length; i++) &#123;</span><br><span class="line">			sum += args[i];</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> sum;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>用数组的话不能直接add(1，2，3),因为需要传进去数组的地址值。</p>
+<ul>
+<li>如果有多个参数，可变参数要在最后一个</li>
+</ul>
+<hr>
+<h1 id="Arrays工具类"><a href="#Arrays工具类" class="headerlink" title="Arrays工具类"></a>Arrays工具类</h1><hr>
+<h2 id="数组转集合asList-arr）"><a href="#数组转集合asList-arr）" class="headerlink" title="数组转集合asList (arr）"></a>数组转集合asList (arr）</h2><ul>
+<li>数组可以转集合但还是不能增删</li>
+<li>好处是可以用集合的操作</li>
+<li>list只能存引用数据类型，所以当基本数据类型的数组转成集合的时候，是把整个数组看做一个对象放进集合。</li>
+<li>想把基本数据类型转换成集合，可以用Integer类似的引用数据类型（包装类）来创建数组<h2 id="集合转数组"><a href="#集合转数组" class="headerlink" title="集合转数组"></a>集合转数组</h2></li>
+<li><t> T[]   toArray(T[]  a)</t></li>
+<li>当集合转数组时，数组长度如果是小于等于集合的size，转换后数组长度等于集合长度，如果数组长度大于size，数组长度就是指定的长度</li>
+</ul>
+<hr>
+<h1 id="45-Set集合"><a href="#45-Set集合" class="headerlink" title="45.Set集合"></a>45.Set集合</h1><hr>
+<h2 id="1-Set方法"><a href="#1-Set方法" class="headerlink" title="1. Set方法"></a>1. Set方法</h2><p>Set方法和Collection一模一样，要学习的是如何让元素唯一</p>
+<ul>
+<li>无索引</li>
+<li>不可以重复</li>
+<li>无序（存取不一致）</li>
+<li>可以用增强for遍历，因为增强for底层是迭代器，迭代器支持整个collection</li>
+</ul>
+<hr>
+<h2 id="2-子类HashSet"><a href="#2-子类HashSet" class="headerlink" title="2.子类HashSet"></a>2.子类HashSet<e></e></h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
+<li>不保证set迭代顺序，不保证顺序一直不变</li>
+<li>允许null元素  </li>
+<li>HashSet的继承体系中有重写toString方法</li>
+<li>原理<br>HashSet调用add()存储对象的时候，先调用对象的hashCode（）得到哈希值，在集合中找是否有哈希值相同的对象<br>如果有，则调用equals方法比较，false就存，true就不存<br>如果没有，直接存入集合<h3 id="保证元素唯一"><a href="#保证元素唯一" class="headerlink" title="保证元素唯一"></a>保证元素唯一</h3>要重写存储对象的equsle方法，和hashCode方法，才能保证元素唯一</li>
+</ul>
+<ol>
+<li>如果不重写hashCode方法，则相同的元素进来，通过hashCode方法，有不同的地址值，就没必要比较，就都存储进来了</li>
+<li>重写hashCode给一个固定值的时候，相同的值则会比较，如果调用equals发现元素相同，那就不存，但是这样会调用很多次equals方法，效率低</li>
+<li>重写hashCode要让不同的对象返回的值尽量是不一样的，ide可以自动生成hashCode方法和equals方法<h3 id="自动生成的hashCode方法和equals方法"><a href="#自动生成的hashCode方法和equals方法" class="headerlink" title="自动生成的hashCode方法和equals方法"></a>自动生成的hashCode方法和equals方法</h3>equals(Object obj)</li>
+<li>先判断地址值是否相等，判断是不是一个对象</li>
+<li>判断是不是Null</li>
+<li>判断两个对象的getClass是不是一样，返回false</li>
+<li>只有上一步是true的时候，就可以去强转，来判断对象的元素是否相等<br>hashCode()<br>prime=31<br>质数，不大不小，2^5-1好计算</li>
+</ol>
+<hr>
+<h2 id="3-LinkedHashSet"><a href="#3-LinkedHashSet" class="headerlink" title="3.LinkedHashSet"></a>3.LinkedHashSet</h2><ul>
+<li>继承HashSet</li>
+<li>底层用链表实现，set集合中唯一一个能保证怎么存就怎么取</li>
+<li>HashSet保证元素唯一<h1 id="TreeSet"><a href="#TreeSet" class="headerlink" title="TreeSet"></a>TreeSet</h1></li>
+</ul>
+<hr>
+<ul>
+<li>TreeSet集合是用来对元素进行排序的，并且保证元素唯一</li>
+<li>TreeSet直接存自定义类，是不能输出的，因为无法比较大小，不能排序<br>要把自定义类（如Person）实现comparable接口并且重写int   compareTo(T  o)方法<h2 id="compareTo-T-o-方法"><a href="#compareTo-T-o-方法" class="headerlink" title="compareTo(T o)方法"></a>compareTo(T o)方法</h2></li>
+<li>当compareTo里面返回0的时候，只有一个元素</li>
+<li>当compareTo里面返回正数的时候，怎么存就怎么取</li>
+<li>当compareTo里面返回负数的时候，会倒序存储<h2 id="TreeSet原理"><a href="#TreeSet原理" class="headerlink" title="TreeSet原理"></a>TreeSet原理</h2></li>
+<li>二叉树</li>
+<li>小的存左边（负数），大的存右边（正数），等于不存（0）</li>
+<li>TreeSet如何存储元素取决于compareTo的返回值 </li>
+<li>举例：Person对象如果比较重写compareTo方法用年龄来排序，同年龄不同的对象就不会存进去（因为返回值为0）<br>所以用以下的方法<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public int compareTo(Person o)&#123;</span><br><span class="line">	int  num = this.age - o.age;</span><br><span class="line">	return num ==0? this.name.compareto(o.name) : num;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="比较器"><a href="#比较器" class="headerlink" title="比较器"></a>比较器</h2><p>TreeSet有一个构造方法，可以根据比较器进行排序<br>TreeSet(Comparator&lt;?super E&gt; comparator)<br>因为是接口，所以可以传入子类对象</p>
+<ul>
+<li>Comparator是一个接口，所以去写一个类实现这个比较器<br><img src="4.png" alt=""><br>抽象方法只有compare和equals，因为Object类里有equals,所以实现的时候只用重写compare方法即可。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//字符串按长度排序，长度相等时按内容排序</span><br><span class="line">class CompareByLen implements Comparator&lt;String&gt;&#123;</span><br><span class="line">	public int compare(String s1,String s2) &#123;</span><br><span class="line">		int num = s1.length() - s2.length();</span><br><span class="line">		return num == 0 ? s1.compareTo(s2) :num;</span><br><span class="line">	) </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>现在可以用<br>TreeSet<string> ts = new TreeSet&lt;&gt;(new CompareByLen());来创建根据构造器排序的集合</string></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>TreeSet是用来排序的，可以按照指定的顺序排列（）</li>
+<li>有两种方法来比较自定义类</li>
+</ul>
+<ol>
+<li>自然方式<br>把自定义类加上实现comparable接口并重写compareTo()方法<br>TreeSet调用add()方法的时候会根据compareTo()返回的结果进行存储</li>
+<li>比较器<br>传入Comparator的子类对象，TreeSet就会根据比较器中的顺序排序<br>add()方法内部会调用Comparator接口中compare()方法排序</li>
+<li>如果有比较器，会用比较器排序<h2 id="用匿名内部类实现比较器"><a href="#用匿名内部类实现比较器" class="headerlink" title="用匿名内部类实现比较器"></a>用匿名内部类实现比较器</h2></li>
+</ol>
+<ul>
+<li>因为比较器是一个接口，需要写一个子类去</li>
+<li>实现它，并且在括号里传进去一个子类对象，这个刚好和匿名内部类符合</li>
+<li>匿名内部类定义</li>
+<li>new 接口(  ){<br> 实现接口；//大括号里相当于接口的一个子类<br>}  </li>
+</ul>
+<hr>
+<h1 id="接口Map（K-V）"><a href="#接口Map（K-V）" class="headerlink" title="接口Map（K,V）"></a>接口Map（K,V）</h1><hr>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li>将键映射导值的对象</li>
+<li>一个映射不能包含重复的键，每个键最多只能映射到一个值<h2 id="Map和Collection的不同"><a href="#Map和Collection的不同" class="headerlink" title="Map和Collection的不同"></a>Map和Collection的不同</h2></li>
+<li>Map是双列的，Collection是单列的</li>
+<li>Map键是唯一的，Collection的子体系Set是唯一的</li>
+<li>HashSet底层用的是map，只不过隐藏了V的一列<h2 id="map方法"><a href="#map方法" class="headerlink" title="map方法"></a>map方法</h2></li>
+</ul>
+<ol>
+<li>V  put(K key,V value)<br>因为相同的键不存储，值覆盖<br>所以返回的是被覆盖的值，如果是第一次给键对应值，那返回就是Null</li>
+<li>void clear()    清空</li>
+<li>V  remove（Object key）根据键删除值</li>
+<li>boolean  containsKey(Object key)</li>
+<li>boolean containsValue(Object value)</li>
+<li>boolean isEmpty()</li>
+<li><strong>entrySet()</strong>  返回一个 集合Set&lt;Map.Entry&lt;K,V&gt;&gt;</li>
+</ol>
+<ul>
+<li>Map.Entry&lt;K,V&gt;是Map的内部接口，把键和值封装成一个对象，把双列变成单列，存储在Set集合中</li>
+<li>里面有getKey()和getValue()   （谁实现的？）</li>
+</ul>
+<ol start="8">
+<li>V get(Object key)   根据K获取V</li>
+<li>Set<k>  KeySet()   把所有键放在一个Set集合里</k></li>
+<li>Collection<v>  values()  把map里的value值返回到一个集合里</v></li>
+<li>int  size()  :返回键的个数<h2 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h2></li>
+</ol>
+<ul>
+<li>Map里面没有迭代器</li>
+<li>遍历要用KeySet获取键的集合，在通过get找到键对应的值<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for(String key : map.KeySet()) &#123;</span><br><span class="line">	System.out.println(key + “=“ + map.get(key));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="第二种遍历方法entrySet-方法"><a href="#第二种遍历方法entrySet-方法" class="headerlink" title="第二种遍历方法entrySet()方法"></a>第二种遍历方法entrySet()方法</h2><ul>
+<li>把整个键值对看成一个对象，然后存在一个单列集合</li>
+<li>遍历单列集合，获取键值对对象</li>
+<li>根据键值对获取键和值<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//把键和值封装成了一个Entry对象，吧对象存在Set集合中</span><br><span class="line">Set&lt;Map.Entry&lt;String,Integer&gt;&gt; entrySet = hashmap.entrySet();</span><br><span class="line">//集合中每一个元素是一个Entry对象，&lt;&gt;里面的整体只是一个泛型</span><br><span class="line">Iterator&lt;Map.Entry&lt;String,Integer&gt;&gt; it = entrySet.iterator();</span><br><span class="line"></span><br><span class="line">while(it.hasNext())&#123;</span><br><span class="line">    Map.Entry&lt;String,Integer&gt; en = it.next();</span><br><span class="line">		//多态，父类引用，指向子类对象</span><br><span class="line">    String key = en.getKey();</span><br><span class="line">    Integer value = en.getValue();</span><br><span class="line">    System.*out*.println(key + “=“ + value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>增强for遍历<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for (Map.Entry&lt;String,Integer&gt; en :hashmap.entrySet())</span><br><span class="line">	System.out.println(en.getKey() + “=” + en.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>entrySet()原理<br>HashMap类有一个内部类Entry（不是子类）<br>实现了Map.Entry,Entry是Map.Entry的一个子类<br>里面重写了getKey和getValue方法<br><a href="https://blog.csdn.net/yue_hu/article/details/79657272" target="_blank" rel="noopener">entrySet比KeySet效率更高</a><br><a href="https://www.cnblogs.com/gjmhome/p/11290327.html" target="_blank" rel="noopener">Entry源码和为什么用entrySet()</a><h2 id="自定义类作为键"><a href="#自定义类作为键" class="headerlink" title="自定义类作为键"></a>自定义类作为键</h2>自定义类作为键的时候，这个类要重写equals和hashCode两个方法才能保证键唯一，和HashSet一样，因为HashSet底层用的也是HashMap<h2 id="LinkedMap"><a href="#LinkedMap" class="headerlink" title="LinkedMap"></a>LinkedMap</h2>存取一致<h2 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h2>根据键排序<br>要在键所属类里实现Comparable并重写comparableTo方法<br>或者写比较器，比较Key （new Comparator&lt;键的泛型&gt;(){实现compare方法}）<h2 id="Map应用"><a href="#Map应用" class="headerlink" title="Map应用"></a>Map应用</h2><h3 id="统计字符串出现次数"><a href="#统计字符串出现次数" class="headerlink" title="统计字符串出现次数"></a>统计字符串出现次数</h3>把字符串转换成字符数组，遍历字符数组然后存在Map里面<br>第一列存字符，第二列存出现的次数<br>存储的时候做判断，没出现过就当键，存过就值加1<br><code>hm.put(c, !hm.contains(c)?  1:hm.get(c)+1)</code><h2 id="HashMap嵌套HashMap"><a href="#HashMap嵌套HashMap" class="headerlink" title="HashMap嵌套HashMap"></a>HashMap嵌套HashMap</h2>Set集合里面是不能直接存放Map元素的<br>但是HashMap的K或者V是可以存Map元素，形成嵌套<h2 id="HashMap和Hashtable的区别"><a href="#HashMap和Hashtable的区别" class="headerlink" title="HashMap和Hashtable的区别"></a>HashMap和Hashtable的区别</h2></li>
+<li>共同点</li>
+</ul>
+<ol>
+<li>底层都是哈希算法</li>
+<li>都是双列集合</li>
+</ol>
+<ul>
+<li>不同点</li>
+</ul>
+<ol>
+<li>HashMap是线程不安全的，效率高，JDK1.2<br>Hashtable是线程安全的，效率低，JDK1.0</li>
+<li>HashMap可以存储Null键和Null值<br>Hashtableu不可以</li>
+</ol>
+<hr>
+<h1 id="Collections工具类"><a href="#Collections工具类" class="headerlink" title="Collections工具类"></a>Collections工具类</h1><hr>
+<p><strong>当一个类里面所有方法都是静态方法，就会私有构造方法，目的是不让创建对象，直接类名.调用</strong></p>
+<ul>
+<li>Collections就是私有构造方法<h2 id="Collections中常见方法"><a href="#Collections中常见方法" class="headerlink" title="Collections中常见方法"></a>Collections中常见方法</h2></li>
+<li>public static<t> void sor(List <t> list)<br>List是怎么存怎么取，这个方法可以让LIst有序，前提是，T这个类实现comparable接口并重写compareTo()方法</t></t></li>
+<li>public static <t> int binarySearch (List&lt;?&gt; List,T k)<br>二分查找，如果搜索键包含在列表中，返回索引，否则返回（-（应该插入的点）-1）</t></li>
+<li>public static <t> T max(Collection&lt;?&gt; coll)<br>返回集合中最大值</t></li>
+<li>public static void reverse(List&lt;?&gt; list)<br>集合反转</li>
+<li>public static void shuffle(List&lt;?&gt; list)<br>随机打乱顺序（洗牌）</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/OS-X命令行/" rel="next" title="OS X命令行">
+                <i class="fa fa-chevron-left"></i> OS X命令行
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/读书笔记-把时间当朋友（上）/" rel="prev" title="读书笔记-把时间当朋友（上）">
+                读书笔记-把时间当朋友（上） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#集合"><span class="nav-number"></span> <span class="nav-text">集合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#引用类型数组举例"><span class="nav-number"></span> <span class="nav-text">引用类型数组举例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集合由来"><span class="nav-number"></span> <span class="nav-text">集合由来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组和集合区别"><span class="nav-number"></span> <span class="nav-text">数组和集合区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集合体系"><span class="nav-number"></span> <span class="nav-text">集合体系</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Collection接口"><span class="nav-number"></span> <span class="nav-text">Collection接口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法"><span class="nav-number"></span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集合遍历"><span class="nav-number"></span> <span class="nav-text">集合遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#普通方法加All-参数是集合不是普通对象）"><span class="nav-number"></span> <span class="nav-text">普通方法加All(参数是集合不是普通对象）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#迭代器"><span class="nav-number"></span> <span class="nav-text">迭代器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#迭代器原理"><span class="nav-number"></span> <span class="nav-text">迭代器原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#List接口"><span class="nav-number"></span> <span class="nav-text">List接口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#常用方法"><span class="nav-number"></span> <span class="nav-text">常用方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并发异常"><span class="nav-number"></span> <span class="nav-text">并发异常</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ListIterator特有方法"><span class="nav-number"></span> <span class="nav-text">ListIterator特有方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#List三个子类特点以及LinkedList"><span class="nav-number"></span> <span class="nav-text">List三个子类特点以及LinkedList</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LinkedList"><span class="nav-number"></span> <span class="nav-text">LinkedList</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#泛型"><span class="nav-number"></span> <span class="nav-text">泛型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型概述"><span class="nav-number"></span> <span class="nav-text">泛型概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型好处"><span class="nav-number"></span> <span class="nav-text">泛型好处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型由来"><span class="nav-number"></span> <span class="nav-text">泛型由来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义类泛型"><span class="nav-number"></span> <span class="nav-text">自定义类泛型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型方法"><span class="nav-number"></span> <span class="nav-text">泛型方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型接口"><span class="nav-number"></span> <span class="nav-text">泛型接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型通配符-lt-gt"><span class="nav-number"></span> <span class="nav-text">泛型通配符&lt;?&gt;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型是使用擦除来实现的"><span class="nav-number"></span> <span class="nav-text">泛型是使用擦除来实现的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#迭代删除"><span class="nav-number"></span> <span class="nav-text">迭代删除</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-增强for"><span class="nav-number"></span> <span class="nav-text">1. 增强for</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-迭代删除集合元素的三种方法"><span class="nav-number"></span> <span class="nav-text">2.迭代删除集合元素的三种方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态导入"><span class="nav-number"></span> <span class="nav-text">静态导入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-概述"><span class="nav-number"></span> <span class="nav-text">1.概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意"><span class="nav-number"></span> <span class="nav-text">注意</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可变参数"><span class="nav-number"></span> <span class="nav-text">可变参数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义方法的时候不知道定义多少个参数"><span class="nav-number"></span> <span class="nav-text">定义方法的时候不知道定义多少个参数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Arrays工具类"><span class="nav-number"></span> <span class="nav-text">Arrays工具类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数组转集合asList-arr）"><span class="nav-number"></span> <span class="nav-text">数组转集合asList (arr）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集合转数组"><span class="nav-number"></span> <span class="nav-text">集合转数组</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#45-Set集合"><span class="nav-number"></span> <span class="nav-text">45.Set集合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Set方法"><span class="nav-number"></span> <span class="nav-text">1. Set方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-子类HashSet"><span class="nav-number"></span> <span class="nav-text">2.子类HashSet</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#特点"><span class="nav-number">1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保证元素唯一"><span class="nav-number">2.</span> <span class="nav-text">保证元素唯一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动生成的hashCode方法和equals方法"><span class="nav-number">3.</span> <span class="nav-text">自动生成的hashCode方法和equals方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-LinkedHashSet"><span class="nav-number"></span> <span class="nav-text">3.LinkedHashSet</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TreeSet"><span class="nav-number"></span> <span class="nav-text">TreeSet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#compareTo-T-o-方法"><span class="nav-number"></span> <span class="nav-text">compareTo(T o)方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TreeSet原理"><span class="nav-number"></span> <span class="nav-text">TreeSet原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#比较器"><span class="nav-number"></span> <span class="nav-text">比较器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number"></span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用匿名内部类实现比较器"><span class="nav-number"></span> <span class="nav-text">用匿名内部类实现比较器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口Map（K-V）"><span class="nav-number"></span> <span class="nav-text">接口Map（K,V）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number"></span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Map和Collection的不同"><span class="nav-number"></span> <span class="nav-text">Map和Collection的不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#map方法"><span class="nav-number"></span> <span class="nav-text">map方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遍历"><span class="nav-number"></span> <span class="nav-text">遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二种遍历方法entrySet-方法"><span class="nav-number"></span> <span class="nav-text">第二种遍历方法entrySet()方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义类作为键"><span class="nav-number"></span> <span class="nav-text">自定义类作为键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LinkedMap"><span class="nav-number"></span> <span class="nav-text">LinkedMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TreeMap"><span class="nav-number"></span> <span class="nav-text">TreeMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Map应用"><span class="nav-number"></span> <span class="nav-text">Map应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#统计字符串出现次数"><span class="nav-number">1.</span> <span class="nav-text">统计字符串出现次数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap嵌套HashMap"><span class="nav-number"></span> <span class="nav-text">HashMap嵌套HashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap和Hashtable的区别"><span class="nav-number"></span> <span class="nav-text">HashMap和Hashtable的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Collections工具类"><span class="nav-number"></span> <span class="nav-text">Collections工具类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Collections中常见方法"><span class="nav-number"></span> <span class="nav-text">Collections中常见方法</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

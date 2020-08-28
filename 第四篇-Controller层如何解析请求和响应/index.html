@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本篇文章主要介绍了Controller层是如何解析请求和如何响应的。">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第四篇 Controller层如何解析请求和响应 ">
+<meta property="og:url" content="https://lizehao.info/第四篇-Controller层如何解析请求和响应/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本篇文章主要介绍了Controller层是如何解析请求和如何响应的。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-08-28T08:32:33.708Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第四篇 Controller层如何解析请求和响应 ">
+<meta name="twitter:description" content="前言 本篇文章主要介绍了Controller层是如何解析请求和如何响应的。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/第四篇-Controller层如何解析请求和响应/">
+
+
+
+
+
+  <title>第四篇 Controller层如何解析请求和响应  | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/第四篇-Controller层如何解析请求和响应/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第四篇 Controller层如何解析请求和响应 </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-26T20:23:35+08:00">
+                2020-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章主要介绍了Controller层是如何解析请求和如何响应的。</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h2 id="解析请求"><a href="#解析请求" class="headerlink" title="解析请求"></a>解析请求</h2><h3 id="最简单的解析"><a href="#最简单的解析" class="headerlink" title="最简单的解析"></a>最简单的解析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(“/test”)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(“/hello”)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">Hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> “Hello World”;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="手动获取请求信息和返回响应数据"><a href="#手动获取请求信息和返回响应数据" class="headerlink" title="手动获取请求信息和返回响应数据"></a>手动获取请求信息和返回响应数据</h3><p>只是演示底层如何处理，实际开发不用这种方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(“/http”)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">http</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//不需要返回值，因为Response对象可以向浏览器输入数据</span></span><br><span class="line">    <span class="comment">//获取请求对象，响应对象</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取请求数据</span></span><br><span class="line">    <span class="comment">//请求行</span></span><br><span class="line">    System.out.println(request.getMethod());</span><br><span class="line">    System.out.println(request.getServletPath());</span><br><span class="line">    <span class="comment">//请求消息头部</span></span><br><span class="line">    Enumeration&lt;String&gt; enumeration = request.getHeaderNames();</span><br><span class="line">    <span class="keyword">while</span> (enumeration.hasMoreElements()) &#123;</span><br><span class="line">        String name = enumeration.nextElement();</span><br><span class="line">        String value = request.getHeader(name);</span><br><span class="line">        System.out.println(name + “:” + value);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//访问方法的时候传入参数的话，用下行代码获取参数,比如code = 123</span></span><br><span class="line">    System.out.println(request.getParameter(“code”));</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回响应数据</span></span><br><span class="line">    response.setContentType(“text/html; charset=UTF-<span class="number">8</span>”);</span><br><span class="line">    <span class="keyword">try</span> (</span><br><span class="line">            PrintWriter writer = response.getWriter();</span><br><span class="line">    ) &#123;</span><br><span class="line">        writer.write(“&lt;h1&gt; 标题 &lt;h1&gt;”);</span><br><span class="line">        <span class="comment">//底层就是用这种方式一步一步写网页</span></span><br><span class="line">        <span class="comment">//实际开发不这样做</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="处理带参数的GET请求"><a href="#处理带参数的GET请求" class="headerlink" title="处理带参数的GET请求"></a>处理带参数的GET请求</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">//怎么处理带参数的GET请求</span></span><br><span class="line"> <span class="comment">// /students?current=1&amp;limit=20</span></span><br><span class="line"> <span class="comment">// 请求学生数据，分页显示，当前在第一页，一页最多20个</span></span><br><span class="line"></span><br><span class="line"> <span class="comment">//指定路径和强制只有GET方法才能访问</span></span><br><span class="line"> <span class="meta">@RequestMapping</span>(path = “/students”, method = RequestMethod.GET)</span><br><span class="line"> <span class="meta">@ResponseBody</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> String <span class="title">getStudents</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params"> //有两种获取参数的方法，这种可以指定参数名、是否为必传、默认值等参数</span></span></span><br><span class="line"><span class="function"><span class="params">//直接传参数也可以</span></span></span><br><span class="line"><span class="function"><span class="params">         @RequestParam (name = “current”,required = <span class="keyword">false</span>,defaultValue = “<span class="number">1</span>”)</span> <span class="keyword">int</span> current,</span></span><br><span class="line"><span class="function">         @<span class="title">RequestParam</span> <span class="params">(name = “limit”,required = <span class="keyword">false</span>,defaultValue = “<span class="number">10</span>”)</span> <span class="keyword">int</span> limit)</span>&#123;</span><br><span class="line">     System.out.println(current);</span><br><span class="line">     System.out.println(limit);</span><br><span class="line">     <span class="keyword">return</span> “some students”;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="处理带路径变量的GET请求"><a href="#处理带路径变量的GET请求" class="headerlink" title="处理带路径变量的GET请求"></a>处理带路径变量的GET请求</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  /student/123</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(path = “/student/(id)”,method = RequestMethod.GET)</span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getStudent</span><span class="params">(@PathVariable(“id”)</span> <span class="keyword">int</span> id)</span>&#123;</span><br><span class="line">    System.out.println(id);</span><br><span class="line">    <span class="keyword">return</span> “a student”;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="如何处理post请求"><a href="#如何处理post请求" class="headerlink" title="如何处理post请求"></a>如何处理post请求</h3><ul>
+<li>post请求是要上传数据，所以要在static里面创建表单来接收数据</li>
+<li>不用get传数据是因为用get传路径就会变得很长，而且长度有限制<ul>
+<li>用户访问post请求的路径时，会进入一个静态的表单，填入数据后，传入这个程序，并return<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//post请求</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(path = “/student”, method = RequestMethod.POST)</span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">saveStudent</span><span class="params">(String name,<span class="keyword">int</span> age)</span></span>&#123;</span><br><span class="line"><span class="comment">//参数和表单一致，就会把数据传过来</span></span><br><span class="line">    System.out.println(name);</span><br><span class="line">    System.out.println(age);</span><br><span class="line">    <span class="keyword">return</span> “success”;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="响应"><a href="#响应" class="headerlink" title="响应"></a>响应</h2><h3 id="向浏览器响应html的两种方法，一般用第二种"><a href="#向浏览器响应html的两种方法，一般用第二种" class="headerlink" title="向浏览器响应html的两种方法，一般用第二种"></a>向浏览器响应html的两种方法，一般用第二种</h3><p>前面的处理请求里面，只是简单的响应了个字符串，下面看看怎么响应html</p>
+<ul>
+<li><p>第一种</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(path = “/teacher”,method = RequestMethod.GET)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">getTeacher</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//所有组件都是DispatcherServlet调度的，Controller把Model传给它</span></span><br><span class="line">    <span class="comment">//它再把model传给模板引擎，（model和模板文件生成动态网页）得到一个动态网页，返回给浏览器</span></span><br><span class="line">    ModelAndView mav= <span class="keyword">new</span> ModelAndView();</span><br><span class="line">    mav.addObject(“name”,”张三”);</span><br><span class="line">    mav.addObject(“age”,<span class="number">30</span>);</span><br><span class="line">    <span class="comment">//路径名和文件名给model</span></span><br><span class="line">    mav.setViewName(“/demo/view”);</span><br><span class="line">    <span class="keyword">return</span> mav;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二种</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//另一种响应html方式，更简洁</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(path = “/school”,method = RequestMethod.GET)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getSchool</span><span class="params">(Model model)</span></span>&#123;</span><br><span class="line">    model.addAttribute(“name”,”北京大学”);</span><br><span class="line">    model.addAttribute(“age”,<span class="number">80</span>);</span><br><span class="line">    <span class="keyword">return</span> “/demo/view”;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>响应JSON数据<br>响应JSON数据（用于异步请求——当前页面不刷新，访问了数据库，<br>例如注册用户名enter以后就自动查找服务器是否有相同名字）<br>JAVA对象 -&gt; JSON字符串 -&gt; JS对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返回JSON要加上@ResponseBody</span></span><br><span class="line">  <span class="meta">@RequestMapping</span>(path = “/emp”,method = RequestMethod.GET)</span><br><span class="line">  <span class="meta">@ResponseBody</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Map&lt;String,Object&gt; <span class="title">getEmp</span><span class="params">()</span></span>&#123;</span><br><span class="line">      Map&lt;String,Object&gt; emp = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">      emp.put(“name”,”张三”);</span><br><span class="line">      emp.put(“age”,<span class="number">23</span>);</span><br><span class="line">      emp.put(“salary”,<span class="number">20000</span>);</span><br><span class="line">      <span class="keyword">return</span> emp;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>输出为<code>{“name”:”张三”,”salary”:20000,”age”:23}</code>，这个是JSON通用格式</p>
+<ul>
+<li>查询所有员工<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">    <span class="meta">@RequestMapping</span>(path = “/emps”,method = RequestMethod.GET)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Map&lt;String,Object&gt;&gt; getEmps()&#123;</span><br><span class="line">        List&lt;Map&lt;String,Object&gt;&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        Map&lt;String,Object&gt; emp = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        emp.put(“name”,”张三”);</span><br><span class="line">        emp.put(“age”,<span class="number">23</span>);</span><br><span class="line">        emp.put(“salary”,<span class="number">30000</span>);</span><br><span class="line">        list.add(emp);</span><br><span class="line"></span><br><span class="line">        emp = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        emp.put(“name”,”李四”);</span><br><span class="line">        emp.put(“age”,<span class="number">24</span>);</span><br><span class="line">        emp.put(“salary”,<span class="number">40000</span>);</span><br><span class="line">        list.add(emp);</span><br><span class="line"></span><br><span class="line">        emp = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        emp.put(“name”,”王五”);</span><br><span class="line">        emp.put(“age”,<span class="number">25</span>);</span><br><span class="line">        emp.put(“salary”,<span class="number">50000</span>);</span><br><span class="line">        list.add(emp);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>输出为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//输出为[&#123;“name”:”张三”,”salary”:30000,”age”:23&#125;,</span></span><br><span class="line">     <span class="comment">// &#123;“name”:”李四”,”salary”:40000,”age”:24&#125;,</span></span><br><span class="line">     <span class="comment">// &#123;“name”:”王五”,”salary”:50000,”age”:25&#125;]</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/第三篇-Spring-MVC和HTTP/" rel="next" title="第三篇 Spring MVC和HTTP">
+                <i class="fa fa-chevron-left"></i> 第三篇 Spring MVC和HTTP
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/第五篇-MyBatis/" rel="prev" title="第五篇 MyBatis">
+                第五篇 MyBatis <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#解析请求"><span class="nav-number"></span> <span class="nav-text">解析请求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#最简单的解析"><span class="nav-number">1.</span> <span class="nav-text">最简单的解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#手动获取请求信息和返回响应数据"><span class="nav-number">2.</span> <span class="nav-text">手动获取请求信息和返回响应数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理带参数的GET请求"><span class="nav-number">3.</span> <span class="nav-text">处理带参数的GET请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理带路径变量的GET请求"><span class="nav-number">4.</span> <span class="nav-text">处理带路径变量的GET请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何处理post请求"><span class="nav-number">5.</span> <span class="nav-text">如何处理post请求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#响应"><span class="nav-number"></span> <span class="nav-text">响应</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#向浏览器响应html的两种方法，一般用第二种"><span class="nav-number">1.</span> <span class="nav-text">向浏览器响应html的两种方法，一般用第二种</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

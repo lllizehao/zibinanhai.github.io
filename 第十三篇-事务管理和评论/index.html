@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spriing,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言 本篇文章首先介绍了事务及其特性，然后介绍并使用Spring事务管理，最后开发了显示评论和评论模块，评论分为帖子的评论和评论的回复以及指定用户的回复。分页模块与首页逻辑相同，在模板页面可以复用。">
+<meta name="keywords" content="Spriing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第十三篇 事务管理和评论">
+<meta property="og:url" content="https://lizehao.info/第十三篇-事务管理和评论/index.html">
+<meta property="og:site_name" content="Li Zehao&#39; Blog">
+<meta property="og:description" content="前言 本篇文章首先介绍了事务及其特性，然后介绍并使用Spring事务管理，最后开发了显示评论和评论模块，评论分为帖子的评论和评论的回复以及指定用户的回复。分页模块与首页逻辑相同，在模板页面可以复用。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lizehao.info/第十三篇-事务管理和评论/1.png">
+<meta property="og:image" content="https://lizehao.info/第十三篇-事务管理和评论/2.png">
+<meta property="og:image" content="https://lizehao.info/第十三篇-事务管理和评论/3.png">
+<meta property="og:image" content="https://lizehao.info/第十三篇-事务管理和评论/4.png">
+<meta property="og:image" content="https://lizehao.info/第十三篇-事务管理和评论/5.png">
+<meta property="og:image" content="https://lizehao.info/第十三篇-事务管理和评论/6.png">
+<meta property="og:updated_time" content="2020-08-28T08:33:45.307Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第十三篇 事务管理和评论">
+<meta name="twitter:description" content="前言 本篇文章首先介绍了事务及其特性，然后介绍并使用Spring事务管理，最后开发了显示评论和评论模块，评论分为帖子的评论和评论的回复以及指定用户的回复。分页模块与首页逻辑相同，在模板页面可以复用。">
+<meta name="twitter:image" content="https://lizehao.info/第十三篇-事务管理和评论/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lizehao.info/第十三篇-事务管理和评论/">
+
+
+
+
+
+  <title>第十三篇 事务管理和评论 | Li Zehao' Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Li Zehao' Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">The unfed mind devours itself.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lizehao.info/第十三篇-事务管理和评论/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zehao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/boy.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Li Zehao' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第十三篇 事务管理和评论</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-26T20:27:49+08:00">
+                2020-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p>本篇文章首先介绍了事务及其特性，然后介绍并使用Spring事务管理，最后开发了显示评论和评论模块，评论分为帖子的评论和评论的回复以及指定用户的回复。分页模块与首页逻辑相同，在模板页面可以复用。</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><ul>
+<li>在 MySQL 中只有使用了 Innodb 数据库引擎的数据库或表才支持事务。</li>
+<li>事务处理可以用来维护数据库的完整性，保证成批的 SQL 语句要么全部执行，要么全部不执行。</li>
+<li>事务用来管理 insert,update,delete 语句</li>
+</ul>
+<h3 id="事务四个特性"><a href="#事务四个特性" class="headerlink" title="事务四个特性"></a>事务四个特性</h3><ol>
+<li>原子性（Atomicity，或称不可分割性）<br>一个事务（transaction）中的所有操作，要么全部完成，要么全部不完成，不会结束在中间某个环节。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样。</li>
+<li>一致性（Consistency）<br>在事务开始之前和事务结束以后，数据库的完整性没有被破坏。这表示写入的资料必须完全符合所有的预设规则，这包含资料的精确度、串联性以及后续数据库可以自发性地完成预定的工作。</li>
+<li>隔离性（Isolation，又称独立性）<br>数据库允许多个并发事务同时对其数据进行读写和修改的能力，隔离性可以防止多个事务并发执行时由于交叉执行而导致数据的不一致。<br>事务隔离分为不同级别<br>读未提交（Read uncommitted<br>读提交（read committed）<br>可重复读（repeatable read<br>串行化（Serializable）<blockquote>
+<p>如果没有做隔离，可能发生脏读、不可重复读、幻读。 第一类丢失更新，第二类丢失更新</p>
+</blockquote>
+</li>
+<li>持久性（Durability）<br>事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失。</li>
+</ol>
+<h3 id="并发异常"><a href="#并发异常" class="headerlink" title="并发异常"></a>并发异常</h3><ul>
+<li>第一类丢失更新<br>某一个事务的回滚，导致另外一个事务已更新的数据丢失了<br><img src="1.png" alt=""></li>
+<li>第二类丢失更新<br>某一个事务的提交，导致另外一个事务已更新的数据丢失了<br><img src="2.png" alt=""></li>
+<li>脏读<br>某一个事务，读取了另外一个事务未提交的数据<br><img src="3.png" alt=""></li>
+<li>不可重复读<br>某一个事务，对同一个数据前后读取的结果不一致<br><img src="4.png" alt=""></li>
+<li>幻读<br>对同一个表前后查询到的行数不一致<br><img src="5.png" alt=""></li>
+<li>事务隔离级别<br><img src="6.png" alt=""><h3 id="实现机制"><a href="#实现机制" class="headerlink" title="实现机制"></a>实现机制</h3></li>
+<li>悲观锁（数据库）<br>共享锁（S锁） 对某数据加共享锁后，其他事务只能对该数据加共享锁，不能加排它锁<br>排它锁（X锁）对某数据加了排他锁后，其他事务对该数据不能加锁。</li>
+<li>乐观锁（自己实现）<br>版本号、时间戳等<br>在更新数据前，检查版本号是否变化，若变化则取消本次更新，否则就更新</li>
+</ul>
+<h2 id="Spring事务管理"><a href="#Spring事务管理" class="headerlink" title="Spring事务管理"></a>Spring事务管理</h2><ul>
+<li>Spring对任何底层数据库都用的是一套</li>
+<li>声明式事务<br>通过XML配置，声明某方法的事务特征<br>通过注解，声明某方法的事务特征</li>
+<li>编程式事务（比较复杂的用这种）<br>通过Transaction Template 管理事务，<br>通过它执行数据库操作<h3 id="事务传播机制"><a href="#事务传播机制" class="headerlink" title="事务传播机制"></a>事务传播机制</h3>事务的传播性一般用在事务嵌套的场景，比如一个事务方法里面调用了另外一个事务方法，那么两个方法是各自作为独立的方法提交还是内层的事务合并到外层的事务一起提交，这就是需要事务传播机制的配置来确定怎么样执行。<br>常用的事务传播机制如下：</li>
+<li>PROPAGATION_REQUIRED<br>Spring默认的传播机制，能满足绝大部分业务需求，如果外层有事务，则当前事务加入到外层事务，一块提交，一块回滚。如果外层没有事务，新建一个事务执行</li>
+<li>PROPAGATION_REQUES_NEW<br>该事务传播机制是每次都会新开启一个事务，同时把外层事务挂起，当当前事务执行完毕，恢复上层事务的执行。如果外层没有事务，执行当前新开启的事务即可</li>
+<li>PROPAGATION_NESTED<br>该传播机制的特点是可以保存状态保存点，当前事务回滚到某一个点，从而避免所有的嵌套事务都回滚，即各自回滚各自的，如果子事务没有把异常吃掉，基本还是会引起全部回滚的。</li>
+<li>记忆<br>Required:必须的。说明必须要有事务，没有就新建事务。<br>supports:支持。说明仅仅是支持事务，没有事务就非事务方式执行。<br>mandatory:强制的。说明一定要有事务，没有事务就抛出异常。<br>required_new:必须新建事务。如果当前存在事务就挂起。<br>not_supported:不支持事务，如果存在事务就挂起。<br>never:绝不有事务。如果存在事务就抛出异常</li>
+</ul>
+<h3 id="声明式事务示例"><a href="#声明式事务示例" class="headerlink" title="声明式事务示例"></a>声明式事务示例</h3><ul>
+<li>声明式事务需要配置两个 个参数，隔离级别和Propagation（传播）<br>Propagation是一个枚举，里面的实例就是上面说的 事务传播机制：<br>REQUIRED、REQUIRES_NEW、NESTED</li>
+<li>在方法上加上注解，示例：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Transactional(isolation = Isolation.READ_COMMITED, propagation = Propagation.REQUIRED)</span><br><span class="line">public Object save() &#123;</span><br><span class="line">	</span><br><span class="line">	//新增用户</span><br><span class="line"></span><br><span class="line">	//新增帖子</span><br><span class="line"></span><br><span class="line">  return “OK”;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="编程式事务示例"><a href="#编程式事务示例" class="headerlink" title="编程式事务示例"></a>编程式事务示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> TransactionTemplate transactionTemplate;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">save</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line"><span class="comment">//隔离级别</span></span><br><span class="line">transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//传播模式</span></span><br><span class="line"> transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);</span><br><span class="line">    </span><br><span class="line"><span class="comment">//回调方法，是transactionTemplate底部自动调用的，方法是自己实现的</span></span><br><span class="line">    <span class="keyword">return</span> transactionTemplate.execute(<span class="keyword">new</span> TransactionCallback&lt;Object&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">doInTransaction</span><span class="params">(TransactionStatus transactionStatus)</span> </span>&#123;</span><br><span class="line">            </span><br><span class="line">            </span><br><span class="line">            <span class="comment">//新增用户</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">//新增帖子</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> “OK”;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="显示评论"><a href="#显示评论" class="headerlink" title="显示评论"></a>显示评论</h2><h3 id="数据层"><a href="#数据层" class="headerlink" title="数据层"></a>数据层</h3><p>评论表DDL<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `comment` (</span><br><span class="line">  `id` int NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `user_id` int DEFAULT NULL,</span><br><span class="line">  `entity_type` int DEFAULT NULL,</span><br><span class="line">  `entity_id` int DEFAULT NULL,</span><br><span class="line">  `target_id` int DEFAULT NULL,</span><br><span class="line">  `content` text,</span><br><span class="line">  `status` int DEFAULT NULL,</span><br><span class="line">  `create_time` timestamp NULL DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  KEY `index_user_id` (`user_id`) /*!80000 INVISIBLE */,</span><br><span class="line">  KEY `index_entity_id` (`entity_id`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=232 DEFAULT CHARSET=utf8</span><br></pre></td></tr></table></figure></p>
+<p>entity_type：是评论的类型，比如1代表帖子的评论，2代表评论层的评论等<br>entity_id:  目标帖子的id或者目标评论楼层的id<br>target_id: 指定回复某个人（像朋友圈一样 ）</p>
+<ul>
+<li><p>实体</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Comment</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> userId;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> entityType;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> entityId;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> targetId;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> status;</span><br><span class="line">    <span class="keyword">private</span> String content;</span><br><span class="line">    <span class="keyword">private</span> Date createTime;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//getter setter toString</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Mapper</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">CommentMapper</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 实现评论分页</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> entityType 评论类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> entityId   评论目标的Id</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> offset   分页</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> limit 每页显示评论数量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">List&lt;Comment&gt; <span class="title">selectCommentByEntity</span><span class="params">(<span class="keyword">int</span> entityType, <span class="keyword">int</span> entityId, <span class="keyword">int</span> offset, <span class="keyword">int</span> limit)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//查询条目数</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">selectCountByentity</span><span class="params">(<span class="keyword">int</span> entityType, <span class="keyword">int</span> entityId)</span></span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>映射器<br>实现前面两个方法，第一个是根据评论类型，评论目标找到所有帖子，然后从offset开始显示limit条评论。<br>第二个就是查询当前评论类型评论目标的所有评论</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">    &lt;sql  id=“selectFields” &gt;</span><br><span class="line">        id, user_id, entity_type, entity_id, target_id, cotent, status, create_time</span><br><span class="line">    &lt;/sql&gt;</span><br><span class="line"></span><br><span class="line">    &lt;select id=“selectCommentByEntity” resultType=“Comment”&gt;</span><br><span class="line">        <span class="keyword">select</span> &lt;<span class="keyword">include</span> refid=“selectFields”&gt;&lt;/<span class="keyword">include</span>&gt;</span><br><span class="line">        <span class="keyword">from</span> <span class="keyword">comment</span></span><br><span class="line">        <span class="keyword">where</span> <span class="keyword">status</span> = <span class="number">0</span></span><br><span class="line">        <span class="keyword">and</span> entity_type = <span class="comment">#&#123;entityType&#125;</span></span><br><span class="line">        <span class="keyword">and</span> entity_id = <span class="comment">#&#123;entityId&#125;</span></span><br><span class="line">        oder <span class="keyword">by</span> create_time <span class="keyword">asc</span></span><br><span class="line">        <span class="keyword">limit</span> <span class="comment">#&#123;offset&#125;,#&#123;limit&#125;</span></span><br><span class="line">    &lt;/<span class="keyword">select</span>&gt;</span><br><span class="line"></span><br><span class="line">    &lt;<span class="keyword">select</span> <span class="keyword">id</span>=“selectCountByentity” resultType=“<span class="built_in">int</span>”&gt;</span><br><span class="line">        <span class="keyword">select</span> <span class="keyword">count</span>(<span class="keyword">id</span>)</span><br><span class="line">        <span class="keyword">from</span> <span class="keyword">comment</span></span><br><span class="line">        <span class="keyword">where</span> <span class="keyword">status</span> = <span class="number">0</span></span><br><span class="line">        <span class="keyword">and</span> entity_type = <span class="comment">#&#123;entityType&#125;</span></span><br><span class="line">        <span class="keyword">and</span> entity_id = <span class="comment">#&#123;entityId&#125;</span></span><br><span class="line">    &lt;/<span class="keyword">select</span>&gt;</span><br><span class="line"></span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="业务层"><a href="#业务层" class="headerlink" title="业务层"></a>业务层</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommentService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> CommentMapper commentMapper;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Comment&gt; <span class="title">findCommentByEntity</span> <span class="params">(<span class="keyword">int</span> entityType, <span class="keyword">int</span> entityId, <span class="keyword">int</span> offset, <span class="keyword">int</span> limit)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> commentMapper.selectCommentByEntity(entityType, entityId, offset, limit);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findCommentCount</span><span class="params">(<span class="keyword">int</span> entityType, <span class="keyword">int</span> entityId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> commentMapper.selectCountByentity(entityType, entityId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="表现层"><a href="#表现层" class="headerlink" title="表现层"></a>表现层</h3><ul>
+<li><p>常量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/***</span></span><br><span class="line"><span class="comment">* * 实体类型 帖子*</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">int</span> ENTITY_TYPE_POST= <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/***</span></span><br><span class="line"><span class="comment">* * 实体类型 评论*</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="keyword">int</span> ENTITY_TYPE_COMMENT= <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Controller</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">/***</span></span><br><span class="line"><span class="comment">*     * 查询评论直接在查询帖子详情页里面一起做，因为是在同一个页面*</span></span><br><span class="line"><span class="comment">*     ****<span class="doctag">@param</span>***discussPostId*</span></span><br><span class="line"><span class="comment">*     ****<span class="doctag">@param</span>***page 和首页帖子分页用的同一个逻辑，用同一个分页对象处理*</span></span><br><span class="line"><span class="comment">*     ****<span class="doctag">@return</span>**</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(path = <span class="string">"/detail/&#123;discussPostId&#125;"</span>, method = RequestMethod.GET)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDiscussPost</span><span class="params">(@PathVariable(<span class="string">"discussPostId"</span>)</span> <span class="keyword">int</span> discussPostId, Model model, Page page) </span>&#123;</span><br><span class="line">        <span class="comment">//查询帖子</span></span><br><span class="line">        DiscussPost post = discussPostService.findDiscussPostById(discussPostId);</span><br><span class="line">        model.addAttribute(<span class="string">"post"</span>, post);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//查询帖子作者信息</span></span><br><span class="line">        User user = userService.findUserById(post.getUserId());</span><br><span class="line">        model.addAttribute(<span class="string">"user"</span>, user);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//评论分页信息</span></span><br><span class="line">        <span class="comment">//默认current=1,当点第n页的时候，链接是path+ ?current=n</span></span><br><span class="line">        <span class="comment">//根据current得出offset，查询某一页的List</span></span><br><span class="line">        page.setLimit(<span class="number">5</span>);</span><br><span class="line">        page.setPath(<span class="string">"/discuss/detail/"</span> + discussPostId);</span><br><span class="line">        page.setRows(post.getCommentCount());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//评论：帖子的评论</span></span><br><span class="line">        <span class="comment">//回复：给评论的评论</span></span><br><span class="line">        <span class="comment">//先查找到某个帖子里的某一页的全部评论</span></span><br><span class="line">        List&lt;Comment&gt; commentList = commentService.findCommentByEntity(ENTITY_TYPE_POST, post.getId(), page.getOffset(), page.getLimit());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//评论里要显示用户头像名字，所以用一个map来存评论和用户信息（遍历前面的评论）</span></span><br><span class="line">        List&lt;Map&lt;String, Object&gt;&gt; commentUserList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span>(commentList != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (Comment comment : commentList) &#123;</span><br><span class="line">                Map&lt;String, Object&gt;  commentMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">                commentMap.put(<span class="string">"user"</span>, userService.findUserById(comment.getUserId()));</span><br><span class="line">                commentMap.put(<span class="string">"comment"</span>, comment);</span><br><span class="line"></span><br><span class="line">                <span class="comment">//指定评论下的所有回复(不分页）</span></span><br><span class="line">                List&lt;Comment&gt; replyList =  commentService.findCommentByEntity(</span><br><span class="line">                        ENTITY_TYPE_COMMENT, comment.getId(), <span class="number">0</span>, Integer.MAX_VALUE);</span><br><span class="line">                <span class="comment">//回复的map列表</span></span><br><span class="line">                List&lt;Map&lt;String, Object&gt;&gt; replyUserList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">                <span class="comment">//回复的map里要包括，回复，回复的用户，回复的目标用户</span></span><br><span class="line">                <span class="keyword">if</span>(replyList != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">for</span> (Comment reply : replyList) &#123;</span><br><span class="line">                        Map&lt;String, Object&gt; replyMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">                        replyMap.put(“reply”, reply);</span><br><span class="line">                        replyMap.put(“user”, userService.findUserById(reply.getUserId()));</span><br><span class="line"></span><br><span class="line">                        <span class="comment">//回复目标</span></span><br><span class="line">                        User target = reply.getTargetId() == <span class="number">0</span> ? <span class="keyword">null</span> : userService.findUserById(reply.getUserId());</span><br><span class="line">                        replyMap.put(“target”, target);</span><br><span class="line"></span><br><span class="line">                        replyUserList.add(replyMap);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//把评论下的回复信息集合添加到评论map里</span></span><br><span class="line">                <span class="comment">//最终给页面展现的数据都存在这个map里</span></span><br><span class="line">                commentMap.put(“replies”, replyUserList);</span><br><span class="line"></span><br><span class="line">                <span class="comment">//回复数量</span></span><br><span class="line">                <span class="keyword">int</span> replyCount = commentService.findCommentCount(ENTITY_TYPE_COMMENT, comment.getId());</span><br><span class="line">                commentMap.put(“replyCount”, replyCount);</span><br><span class="line"></span><br><span class="line">                <span class="comment">//把所有数据都添加到commentMap里面以后，把map放进List</span></span><br><span class="line">                commentUserList.add(commentMap);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        model.addAttribute(“comments”, commentUserList);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> “/site/discuss-detail”;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h3><ul>
+<li><p>回帖数量</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h6</span>&gt;</span><span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">“square”</span>&gt;</span><span class="tag">&lt;/<span class="name">b</span>&gt;</span> <span class="tag">&lt;<span class="name">i</span> <span class="attr">th:text</span>=<span class="string">“$&#123;post.commentCount&#125;”</span>&gt;</span>30<span class="tag">&lt;/<span class="name">i</span>&gt;</span>条回帖<span class="tag">&lt;/<span class="name">h6</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>遍历commentUserList</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">“media</span> <span class="attr">pb-3</span> <span class="attr">pt-3</span> <span class="attr">mb-3</span> <span class="attr">border-bottom</span>”  <span class="attr">th:each</span>=<span class="string">“cmap:$&#123;comments&#125;”</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>头像</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">“profile.html”</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">img</span> <span class="attr">th:src</span>=<span class="string">“$&#123;cmap.user.headerUrl&#125;”</span> <span class="attr">class</span>=<span class="string">“align-self-start</span> <span class="attr">mr-4</span> <span class="attr">rounded-circle</span> <span class="attr">user-header</span>” <span class="attr">alt</span>=<span class="string">“用户头像”</span> &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>楼层<br>评论分页的话，每一页都是重新生成一个commentUserList，模板页面也是每次都重新进，所以楼层不能直接按照循环次数来算楼层，应该是当前页的offset加上循环次数<br>thymeleaf会给循环变量提供一个状态对象，是循环变量名加Stat, 如cmapStat，可以获取循环次数</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">i</span> <span class="attr">th:text</span>=<span class="string">“$&#123;page.offset</span> + <span class="attr">cmapStat.count</span>&#125;”&gt;</span>1<span class="tag">&lt;/<span class="name">i</span>&gt;</span>#</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>内容</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">“mt-2”</span> <span class="attr">th:utext</span>=<span class="string">“$&#123;cmap.comment.content&#125;”</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>发布时间</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>发布于 <span class="tag">&lt;<span class="name">b</span> <span class="attr">th:text</span>=<span class="string">"$&#123;#dates.format(cmap.comment.createTime,'yyyy-MM-dd HH:mm:ss')&#125;"</span>&gt;</span>2019-04-15 15:32:18<span class="tag">&lt;/<span class="name">b</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>注意yyyy-MM-dd和YYYY-MM-dd是不一样的格式</p>
+<ul>
+<li><p>回复数量</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"d-inline ml-2"</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span> <span class="attr">class</span>=<span class="string">"text-primary"</span>&gt;</span>回复(<span class="tag">&lt;<span class="name">i</span> <span class="attr">th:text</span>=<span class="string">"cmap.replyCount"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">i</span>&gt;</span>)<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>循环回复</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">“pb-3</span> <span class="attr">pt-3</span> <span class="attr">mb-3</span> <span class="attr">border-bottom</span>” <span class="attr">th:each</span>=<span class="string">“reply:$&#123;cmap.replies&#125;”</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>判断回复是否有指定人并根据判断显示</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:if</span>=<span class="string">“$&#123;rmap.target</span>==<span class="string">null&#125;”</span>&gt;</span></span><br><span class="line">                                  <span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">“text-info”</span> <span class="attr">th:text</span>=<span class="string">“$&#123;rmap.user.username&#125;”</span>&gt;</span>鲁迅<span class="tag">&lt;/<span class="name">b</span>&gt;</span>:&amp;nbsp;&amp;nbsp;</span><br><span class="line">                               <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">                               <span class="tag">&lt;<span class="name">span</span> <span class="attr">th:if</span>=<span class="string">“$&#123;rmap.target!</span>=<span class="string">null&#125;”</span>&gt;</span></span><br><span class="line">                                   <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">“text-info”</span> <span class="attr">th:text</span>=<span class="string">“$&#123;rmap.target.username&#125;”</span>&gt;</span>王小波<span class="tag">&lt;/<span class="name">i</span>&gt;</span> 回复</span><br><span class="line">                                   <span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">“text-info”</span> <span class="attr">th:text</span>=<span class="string">“$&#123;rmap.user.username&#125;”</span>&gt;</span>鲁迅<span class="tag">&lt;/<span class="name">b</span>&gt;</span>:&amp;nbsp;&amp;nbsp;</span><br><span class="line">                               <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:utext</span>=<span class="string">“$&#123;rmap.reply.content&#125;”</span>&gt;</span>顶<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>回复时间</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">“$&#123;#dates.format(rmap.reply.createTime,’yyyy-MM-dd</span> <span class="attr">HH:mm:ss</span>’)&#125;”&gt;</span>2020-04-15 15:32:18<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>每个回复按钮和回复框匹配，点击哪一个评论的回复键，就会链接到下面的回复框，展开哪一个评论的回复框<br>注意：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a href =“” 默认打开的还是当前页面，会刷新一下重新打开。</span><br><span class="line">a href =“#” 浏览器地址栏网址后面会多显示1个#。不会刷新页面，会回到页面顶部。</span><br><span class="line">所以评论回复用#</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"d“inline ml-2”&gt;&lt;a th:href="</span>|“<span class="attr">huifu-</span>$&#123;<span class="attr">rmapStat.count</span>&#125;|" ”<span class="attr">ata-toggle</span>=<span class="string">"collapse"</span> ”<span class="attr">lass</span>=<span class="string">"t“xt-primary"</span>&gt;</span>”复<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">“|“huifu-$&#123;rmapStat.count&#125;|”</span> ”<span class="attr">lass</span>=<span class="string">“m“-4</span> <span class="attr">collapse</span>”&gt;</span>”</span><br></pre></td></tr></table></figure>
+<ul>
+<li>分页逻辑可以直接复用首页的分页<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">!—</span> 分页 —&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">!—</span> <span class="attr">href</span>是超链接  <span class="attr">th:href</span>=<span class="string">“@&#123;路径&#125;”—</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">!—</span> <span class="attr">th:href</span>=<span class="string">“@&#123;$&#123;page.path&#125;(current</span>=<span class="string">1,limit</span>=<span class="string">10)&#125;”表示的路径就是/index?current</span>=<span class="string">1&amp;limit</span>=<span class="string">10</span> —&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">!—</span> <span class="attr">Thymeleaf</span>有一个#<span class="attr">number</span>工具类，返回一个连续数组（可以设定开始和结尾数字） —&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">nav</span> <span class="attr">class</span>=<span class="string">“mt-5”</span> <span class="attr">th:if</span>=<span class="string">“$&#123;page.rows</span>&gt;</span>0&#125;” th:fragment=“page”&gt;</span><br><span class="line">	<span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">“pagination</span> <span class="attr">justify-content-center</span>”&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">“page-item”</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">“page-link”</span> <span class="attr">th:href</span>=<span class="string">“@&#123;$&#123;page.path&#125;(current</span>=<span class="string">1)&#125;”</span>&gt;</span>首页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">li</span> <span class="attr">th:class</span>=<span class="string">“|page-item</span> $&#123;<span class="attr">page.current</span>==<span class="string">1?’disabled’:’’&#125;|”</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">“page-link”</span> <span class="attr">th:href</span>=<span class="string">“@&#123;$&#123;page.path&#125;(current</span>=<span class="string">$&#123;page.current-1&#125;)&#125;”</span>&gt;</span>上一页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">li</span> <span class="attr">th:class</span>=<span class="string">“|page-item</span> $&#123;<span class="attr">i</span>==<span class="string">page.current?’active’:’’&#125;|”</span> <span class="attr">th:each</span>=<span class="string">“i:$&#123;#numbers.sequence(page.from,page.to)&#125;”</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">“page-link”</span> <span class="attr">th:href</span>=<span class="string">“@&#123;$&#123;page.path&#125;(current</span>=<span class="string">$&#123;i&#125;)&#125;”</span> <span class="attr">th:text</span>=<span class="string">“$&#123;i&#125;”</span>&gt;</span>1<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">li</span> <span class="attr">th:class</span>=<span class="string">“|page-item</span> $&#123;<span class="attr">page.current</span>==<span class="string">page.total?’disabled’:’’&#125;|”</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">“page-link”</span> <span class="attr">th:href</span>=<span class="string">“@&#123;$&#123;page.path&#125;(current</span>=<span class="string">$&#123;page.current+1&#125;)&#125;”</span>&gt;</span>下一页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">“page-item”</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">“page-link”</span> <span class="attr">th:href</span>=<span class="string">“@&#123;$&#123;page.path&#125;(current</span>=<span class="string">$&#123;page.total&#125;)&#125;”</span>&gt;</span>末页<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">nav</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="添加评论"><a href="#添加评论" class="headerlink" title="添加评论"></a>添加评论</h2><h3 id="数据层-1"><a href="#数据层-1" class="headerlink" title="数据层"></a>数据层</h3><p>增加评论数据方法（CommentMapper里）</p>
+<ul>
+<li><p>mapper</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//添加评论</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insertComment</span><span class="params">(Comment comment)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>mapper映射器</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;insert id="insertComment" parameterType="Comment"&gt;</span><br><span class="line">    <span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">comment</span>(&lt;<span class="keyword">include</span> refid=<span class="string">"insertFields"</span>&gt;&lt;/<span class="keyword">include</span>&gt;)</span><br><span class="line">    <span class="keyword">values</span>(<span class="comment">#&#123;userId&#125;,#&#123;entityType&#125;,#&#123;entityId&#125;,#&#123;targetId&#125;,#&#123;content&#125;,#&#123;status&#125;,#&#123;createTime&#125;)</span></span><br><span class="line">&lt;/<span class="keyword">insert</span>&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>修改帖子的评论数量（在DIscussPostMapper里）</p>
+<ul>
+<li><p>mapper</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//更新帖子评论数量</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">updateCommentCount</span><span class="params">(<span class="keyword">int</span> id, <span class="keyword">int</span> commentCount)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>mapper映射器</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;update id=“updateCommentCount”&gt;</span><br><span class="line">    <span class="keyword">update</span> discuss_post <span class="keyword">set</span> comment_count = <span class="comment">#&#123;commentCount&#125; where id = #&#123;id&#125;</span></span><br><span class="line">&lt;/<span class="keyword">update</span>&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="业务层-1"><a href="#业务层-1" class="headerlink" title="业务层"></a>业务层</h3><p>处理添加评论的业务<br>增加评论，然后更新帖子评论数量</p>
+<ul>
+<li><p>DiscussPostService 添加更新评论数量的事务</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//更新帖子评论数量</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">updateCommentCount</span><span class="params">(<span class="keyword">int</span> id, <span class="keyword">int</span> commentCount)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> discussPostMapper.updateCommentCount(id, commentCount);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>CommentService 添加评论并更新帖子评论数量的事务</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//事务管理（这里用声明式事务）</span></span><br><span class="line"><span class="comment">//添加评论并且更新帖子的评论数量</span></span><br><span class="line"><span class="meta">@Transactional</span>(isolation = Isolation.*READ_COMMITTED*, propagation = Propagation.*REQUIRED*)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">insertComment</span><span class="params">(Comment comment)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (comment == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(“参数不能为空”);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//添加评论</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//把文本里的html特殊符号转义，不要让网页把文本里的字符当成标签</span></span><br><span class="line">    comment.setContent(HtmlUtils.*htmlEscape*(comment.getContent()));</span><br><span class="line">    <span class="comment">//过滤敏感词</span></span><br><span class="line">    comment.setContent(sensitiveFilter.filter(comment.getContent()));</span><br><span class="line">    <span class="keyword">int</span> rows = commentMapper.insertComment(comment);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//更新帖子评论数量</span></span><br><span class="line">    <span class="keyword">if</span>(comment.getEntityType() == *ENTITY_TYPE_POST*) &#123;</span><br><span class="line">        <span class="comment">//添加评论以后重新计算帖子的评论数量</span></span><br><span class="line">        <span class="keyword">int</span> count = commentMapper.selectCountByentity(comment.getEntityType(),comment.getEntityId());</span><br><span class="line">        <span class="comment">//更新帖子的评论数量</span></span><br><span class="line">        discussPostService.updateCommentCount(comment.getEntityId(),count);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> rows;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><p>处理添加评论请求<br>设置添加评论的表单<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(“/comment”)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommentController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> CommentService commentService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> HostHolder hostHolder;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//重定向需要帖子id，所以可以直接把帖子id也传过来</span></span><br><span class="line">    <span class="comment">//用Comment实体来接收各种评论的参数</span></span><br><span class="line">    <span class="meta">@RequestMapping</span>(value = “/add/&#123;discussPostId&#125;”, method = RequestMethod.*POST*)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">insertComment</span><span class="params">(@PathVariable(“discussPostId”)</span> <span class="keyword">int</span> discussPostId, Comment comment)</span>&#123;</span><br><span class="line">        <span class="comment">//可能没有登录，获取不到User,后面统一做异常处理</span></span><br><span class="line">        comment.setUserId(hostHolder.getUser().getId());</span><br><span class="line">        comment.setStatus(<span class="number">0</span>);</span><br><span class="line">        comment.setCreateTime(<span class="keyword">new</span> Date());</span><br><span class="line">        commentService.insertComment(comment);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> “redirect:/discuss/detail/“ + discussPostId;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="模板-1"><a href="#模板-1" class="headerlink" title="模板"></a>模板</h3><ul>
+<li><p>帖子评论框<br>方法是post，action是动态的，因为要拼接帖子的id（重定向需要）,路径要和上面controller里面的接收路径一样<br>还要设置两个隐藏的输入框，把comment必要的信息传给Controller，这里固定是帖子，值就是1，entityId需要动态设置。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">“replyform”</span> <span class="attr">method</span>=<span class="string">“post”</span> <span class="attr">th:action</span>=<span class="string">“@&#123;/comment/add/$&#123;post.id&#125;|&#125;”</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">“mt-3”</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">a</span> <span class="attr">name</span>=<span class="string">“replyform”</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">textarea</span> <span class="attr">placeholder</span>=<span class="string">“在这里畅所欲言你的看法吧!”</span> <span class="attr">name</span>=<span class="string">“content”</span>&gt;</span><span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">“hidden”</span> <span class="attr">name</span>=<span class="string">“entityType”</span> <span class="attr">value</span>=<span class="string">“1”</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">“hidden”</span> <span class="attr">name</span>=<span class="string">“entityId”</span> <span class="attr">th:value</span>=<span class="string">“$&#123;post.id&#125;”</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>评论的回复框（不指定人）</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">“post”</span> <span class="attr">th:action</span>=<span class="string">“@&#123;|/comment/add/$&#123;post.id&#125;|&#125;”</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">“text”</span> <span class="attr">class</span>=<span class="string">“input-size”</span> <span class="attr">name</span>=<span class="string">“content”</span> <span class="attr">placeholder</span>=<span class="string">“请输入你的观点”/</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">“hidden”</span> <span class="attr">name</span>=<span class="string">“entityType”</span> <span class="attr">value</span>=<span class="string">“2”</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">“hidden”</span> <span class="attr">name</span>=<span class="string">“entityId”</span> <span class="attr">th:value</span>=<span class="string">“$&#123;cmap.comment.id&#125;”</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">“text-right</span> <span class="attr">mt-2</span>”&gt;</span></span><br><span class="line">		&lt;button type=“submit” class=“btn btn-primary btn-sm” onclick=“#””&amp;nbsp;&amp;nbsp;回&amp;nbsp;&amp;nbsp;复&amp;nbsp;&amp;nbsp;&lt;/button&gt;</span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>评论的回复框（指定人）<br>注意：这里的tatget是要<strong>设定</strong>回复输入框的目标用户，而不是找这个被回复的评论的target，所以值应该是rmap.user，而不是rmap.target</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">“text”</span> <span class="attr">class</span>=<span class="string">“input-size”</span> <span class="attr">name</span>=<span class="string">“content”</span> <span class="attr">th:placeholder</span>=<span class="string">“|回复$&#123;rmap.user.username&#125;|”/</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">“hidden”</span> <span class="attr">name</span>=<span class="string">“entityType”</span> <span class="attr">value</span>=<span class="string">“3”</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">“hidden”</span> <span class="attr">name</span>=<span class="string">“entityId”</span> <span class="attr">th:value</span>=<span class="string">“$&#123;cmap.comment.id&#125;”</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">“hidden”</span> <span class="attr">name</span>=<span class="string">“targetId”</span> <span class="attr">th:value</span>=<span class="string">“$&#123;rmap.user.id&#125;”</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spriing/" rel="tag"># Spriing</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/第十二篇-异步发布帖子和帖子详情/" rel="next" title="第十二篇 异步发布帖子和帖子详情">
+                <i class="fa fa-chevron-left"></i> 第十二篇 异步发布帖子和帖子详情
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/第十四篇-私信/" rel="prev" title="第十四篇 私信">
+                第十四篇 私信 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/boy.jpg" alt="Li Zehao">
+            
+              <p class="site-author-name" itemprop="name">Li Zehao</p>
+              <p class="site-description motion-element" itemprop="description">李泽豪的个人博客，主要涉及后端学习记录、技术分享、阅读笔记等内容</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#事务"><span class="nav-number"></span> <span class="nav-text">事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事务四个特性"><span class="nav-number">1.</span> <span class="nav-text">事务四个特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#并发异常"><span class="nav-number">2.</span> <span class="nav-text">并发异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现机制"><span class="nav-number">3.</span> <span class="nav-text">实现机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring事务管理"><span class="nav-number"></span> <span class="nav-text">Spring事务管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事务传播机制"><span class="nav-number">1.</span> <span class="nav-text">事务传播机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#声明式事务示例"><span class="nav-number">2.</span> <span class="nav-text">声明式事务示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编程式事务示例"><span class="nav-number">3.</span> <span class="nav-text">编程式事务示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#显示评论"><span class="nav-number"></span> <span class="nav-text">显示评论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据层"><span class="nav-number">1.</span> <span class="nav-text">数据层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#业务层"><span class="nav-number">2.</span> <span class="nav-text">业务层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表现层"><span class="nav-number">3.</span> <span class="nav-text">表现层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板"><span class="nav-number">4.</span> <span class="nav-text">模板</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加评论"><span class="nav-number"></span> <span class="nav-text">添加评论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据层-1"><span class="nav-number">1.</span> <span class="nav-text">数据层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#业务层-1"><span class="nav-number">2.</span> <span class="nav-text">业务层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Controller"><span class="nav-number">3.</span> <span class="nav-text">Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板-1"><span class="nav-number">4.</span> <span class="nav-text">模板</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+ 本站访客数:<span id="busuanzi_value_site_pv"></span>
+</span>
+</div>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zehao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
